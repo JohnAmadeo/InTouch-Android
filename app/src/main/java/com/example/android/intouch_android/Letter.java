@@ -35,4 +35,10 @@ public class Letter {
         return this.text;
     }
 
+    public String getId() { return this.id; }
+    public String getRecipient() { return this.recipient; }
+    public String getSubject() { return this.subject; }
+    public String getText() { return this.text; }
+    public String getTimeSent() { return this.timeSent; }
+
 }

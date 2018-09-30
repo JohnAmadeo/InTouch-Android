@@ -1,40 +1,42 @@
 package com.example.android.intouch_android;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModelProviders;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
-import com.example.android.intouch_android.dummy.DummyContent;
-import com.example.android.intouch_android.dummy.DummyContent.DummyItem;
-
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
 public class LettersFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private RecyclerView mRecyclerView;
+    private LettersAdapter mRecyclerViewAdapter;
+    private LinearLayoutManager mLayoutManager;
     private OnListFragmentInteractionListener mListener;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
+    /* ************************************************************ */
+    /*                      Public Functions                        */
+    /* ************************************************************ */
+
+    /* Mandatory empty constructor for the fragment manager to instantiate the fragment */
     public LettersFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static LettersFragment newInstance(int columnCount) {
         LettersFragment fragment = new LettersFragment();
         Bundle args = new Bundle();
@@ -46,30 +48,40 @@ public class LettersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        if (getArguments() != null) {
-//            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-//        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Associate the Letters fragment with the letters list XML
         View view = inflater.inflate(R.layout.fragment_letters_list, container, false);
 
-        // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            mRecyclerView = (RecyclerView) view;
+            mRecyclerViewAdapter = new LettersAdapter(mListener);
+            mLayoutManager = new LinearLayoutManager(context);
+
+            /* Update the letters list whenever new letters are received */
+            LettersViewModel lettersViewModel =
+                    ViewModelProviders.of(this).get(LettersViewModel.class);
+
+            lettersViewModel.getLetters().observe(
+                    this,
+                    createLettersObserver(mRecyclerViewAdapter)
+            );
+
+            /* Configure the RecyclerView */
 
             // set layout of RecyclerView to a list of vertically scrolling items
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            mRecyclerView.setLayoutManager(mLayoutManager);
             // specify what each list item looks like
-            recyclerView.setAdapter(new LettersRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            mRecyclerView.setAdapter(mRecyclerViewAdapter);
+            // add a line in between each list item
+            mRecyclerView.addItemDecoration(createListDivider(mRecyclerView, mLayoutManager));
         }
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -88,18 +100,32 @@ public class LettersFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
+    /* ************************************************************ */
+    /*                      Private Functions                       */
+    /* ************************************************************ */
+
+    private Observer<List<Letter>> createLettersObserver(final LettersAdapter adapter) {
+        return new Observer<List<Letter>>() {
+            @Override
+            public void onChanged(@Nullable final List<Letter> letters) {
+                adapter.setLetters(letters);
+            }
+        };
+    }
+
+    private DividerItemDecoration createListDivider(
+            RecyclerView recyclerView,
+            LinearLayoutManager layoutManager
+    ) {
+        return new DividerItemDecoration(
+                recyclerView.getContext(),
+                layoutManager.getOrientation()
+        );
+    }
+
+    /* See "http://developer.android.com/training/basics/fragments/communicating.html" */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Letter item);
     }
 }
