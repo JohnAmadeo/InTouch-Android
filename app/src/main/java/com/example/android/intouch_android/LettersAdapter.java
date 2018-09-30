@@ -100,9 +100,26 @@ public class LettersAdapter extends RecyclerView.Adapter<LetterViewHolder> {
     public int getItemCount() { return mSortedLetters.size(); }
 
     public void setLetters(List<Letter> letters) {
+        // Initial load
         if (mSortedLetters.size() == 0) {
             Log.w("Adapter", "Initializing letters!");
             mSortedLetters.addAll(letters);
+        }
+        // Change list of letters based on search query results
+        else {
+            mSortedLetters.beginBatchedUpdates();
+            // Loop has to be in reverse since otherwise removing an item would mess up the indexes
+            // of all the items that come after it
+            for (int i = mSortedLetters.size() - 1; i >= 0; i--) {
+                Letter letter = mSortedLetters.get(i);
+                if (!letters.contains(letter)) {
+                    mSortedLetters.remove(letter);
+                }
+            }
+
+            // SortedList's addAll function does not add duplicates based on areContentsTheSame()
+            mSortedLetters.addAll(letters);
+            mSortedLetters.endBatchedUpdates();
         }
     }
 }

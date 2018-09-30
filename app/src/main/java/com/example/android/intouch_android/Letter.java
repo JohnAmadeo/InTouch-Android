@@ -41,4 +41,19 @@ public class Letter {
     public String getText() { return this.text; }
     public String getTimeSent() { return this.timeSent; }
 
+    public boolean equals(Letter letter) {
+        return getId().equals(letter.getId()) &&
+                getRecipient().equals(letter.getRecipient()) &&
+                getSubject().equals(letter.getSubject()) &&
+                getText().equals(letter.getText()) &&
+                getTimeSent().equals(letter.getTimeSent());
+    }
+
+    public boolean contains(String searchQuery) {
+        searchQuery = searchQuery.toLowerCase();
+        return getRecipient().toLowerCase().contains(searchQuery) ||
+                getSubject().toLowerCase().contains(searchQuery) ||
+                getText().toLowerCase().contains(searchQuery) ||
+                getTimeSent().contains(searchQuery);
+    }
 }

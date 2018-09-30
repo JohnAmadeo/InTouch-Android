@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">InTouch-Android</string>
+    <string name="search_hint">Search letters</string>
+    <string name="search_title">Search</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
