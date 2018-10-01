@@ -27,6 +27,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.navigation.Navigation;
+
 public class SentLettersFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
 
@@ -98,6 +100,8 @@ public class SentLettersFragment extends Fragment {
         mLettersViewModel =
                 ViewModelProviders.of(this).get(LettersViewModel.class);
         mLettersViewModel.getLetters().observe(this, createLettersObserver());
+
+        mNewLetterButton.setOnClickListener(createNewLetterButtonListener());
 
         return mParentView;
     }
@@ -209,6 +213,16 @@ public class SentLettersFragment extends Fragment {
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 mNewLetterButton.show();
                 return true;
+            }
+        };
+    }
+
+    private View.OnClickListener createNewLetterButtonListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.w("NewLetterButton", view.toString());
+                Navigation.findNavController(view).navigate(R.id.letterEditorFragment);
             }
         };
     }

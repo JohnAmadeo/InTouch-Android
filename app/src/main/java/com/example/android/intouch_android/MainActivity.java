@@ -1,17 +1,20 @@
 package com.example.android.intouch_android;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.util.Log;
+import androidx.navigation.Navigation;
 
 
 public class MainActivity
         extends AppCompatActivity
         implements SentLettersFragment.OnListFragmentInteractionListener,
+            LetterEditorFragment.OnFragmentInteractionListener,
             BottomNavigationView.OnNavigationItemSelectedListener {
 
     private TextView mTextMessage;
@@ -26,8 +29,13 @@ public class MainActivity
 
     }
 
+    // TODO: Android sets up this boilerplate but why do our fragments need to talk to the activity?
     public void onListFragmentInteraction(Letter item) {
         System.out.println(item.toString());
+    }
+
+    public void onFragmentInteraction(Uri uri) {
+        System.out.println(uri.toString());
     }
 
     @Override
@@ -44,5 +52,10 @@ public class MainActivity
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        return Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp();
     }
 }
