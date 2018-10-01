@@ -6,10 +6,12 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.util.Log;
 
-public class SentLettersActivity
+
+public class MainActivity
         extends AppCompatActivity
-        implements LettersFragment.OnListFragmentInteractionListener,
+        implements SentLettersFragment.OnListFragmentInteractionListener,
             BottomNavigationView.OnNavigationItemSelectedListener {
 
     private TextView mTextMessage;
@@ -17,10 +19,11 @@ public class SentLettersActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sent_letters);
+        setContentView(R.layout.activity_main);
 
-        BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(this);
+        BottomNavigationView bottomNavigationView= findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
     }
 
     public void onListFragmentInteraction(Letter item) {

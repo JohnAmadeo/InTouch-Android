@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_letters_list"
-    android:name="com.example.android.intouch_android.LettersFragment"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_width="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    android:paddingBottom="80dp"
-    android:clipToPadding="false"
-    tools:context=".LettersFragment"
-    tools:listitem="@layout/fragment_letters_list_item" />
+    >
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_letters_list"
+        android:name="com.example.android.intouch_android.SentLettersFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="80dp"
+        android:clipToPadding="false"
+        tools:context=".SentLettersFragment"
+        tools:listitem="@layout/fragment_letters_list_item" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/new_letter_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@android:drawable/ic_menu_edit"
+        android:layout_margin="16dp" />
+</FrameLayout>
+
 
 <!--app:layoutManager="LinearLayoutManager"-->

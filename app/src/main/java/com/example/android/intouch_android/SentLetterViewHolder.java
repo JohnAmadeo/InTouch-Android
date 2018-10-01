@@ -7,7 +7,7 @@ import android.widget.TextView;
 /**
  * Specifies the logic for individual list components
  */
-public class LetterViewHolder extends RecyclerView.ViewHolder {
+public class SentLetterViewHolder extends RecyclerView.ViewHolder {
     public final View mView;
     public final TextView mRecipientView;
     public final TextView mSubjectView;
@@ -15,7 +15,7 @@ public class LetterViewHolder extends RecyclerView.ViewHolder {
     public final TextView mTimeSentView;
     public Letter mItem;
 
-    public LetterViewHolder(View view) {
+    public SentLetterViewHolder(View view) {
         super(view);
         mView = view;
         mRecipientView = view.findViewById(R.id.recipient);

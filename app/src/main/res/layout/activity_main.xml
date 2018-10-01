@@ -6,15 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SentLettersActivity">
+        <!--app:navGraph="@navigation/nav_graph"-->
+        <!--app:defaultNavHost="true"/>-->
     <fragment
-        android:name="com.example.android.intouch_android.LettersFragment"
-        android:id="@+id/letters_fragment"
+        android:name="com.example.android.intouch_android.SentLettersFragment"
+        android:id="@+id/sent_letters_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="56dp"
         />
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
+        android:id="@+id/bottom_navigation"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginEnd="0dp"
@@ -25,5 +27,4 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/navigation" />
-
 </android.support.constraint.ConstraintLayout>

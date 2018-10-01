@@ -5,9 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.util.Log;
 
-import com.example.android.intouch_android.LettersFragment.OnListFragmentInteractionListener;
+import com.example.android.intouch_android.SentLettersFragment.OnListFragmentInteractionListener;
 
 import java.util.List;
 
@@ -16,9 +15,7 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class LettersAdapter extends RecyclerView.Adapter<LetterViewHolder> {
-
-//    private List<Letter> mLetters;
+public class SentLettersAdapter extends RecyclerView.Adapter<SentLetterViewHolder> {
     private final OnListFragmentInteractionListener mListener;
     private final SortedList<Letter> mSortedLetters = new SortedList<>(
             Letter.class,
@@ -61,19 +58,19 @@ public class LettersAdapter extends RecyclerView.Adapter<LetterViewHolder> {
             }
     );
 
-    public LettersAdapter(OnListFragmentInteractionListener listener) {
+    public SentLettersAdapter(OnListFragmentInteractionListener listener) {
         mListener = listener;
     }
 
     @Override
-    public LetterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SentLetterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_letters_list_item, parent, false);
-        return new LetterViewHolder(view);
+        return new SentLetterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final LetterViewHolder holder, int position) {
+    public void onBindViewHolder(final SentLetterViewHolder holder, int position) {
         holder.mItem = mSortedLetters.get(position);
         holder.mRecipientView.setText(holder.mItem.getRecipient());
         if (!holder.mItem.getSubject().isEmpty()) {
@@ -102,7 +99,6 @@ public class LettersAdapter extends RecyclerView.Adapter<LetterViewHolder> {
     public void setLetters(List<Letter> letters) {
         // Initial load
         if (mSortedLetters.size() == 0) {
-            Log.w("Adapter", "Initializing letters!");
             mSortedLetters.addAll(letters);
         }
         // Change list of letters based on search query results

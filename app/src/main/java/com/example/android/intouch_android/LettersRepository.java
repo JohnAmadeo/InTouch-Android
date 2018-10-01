@@ -37,7 +37,6 @@ public class LettersRepository {
             // TODO: Override onFailure and implement API error handling
             @Override
             public void onFailure(Call<List<Letter>> call, Throwable t) {
-                Log.w("API", t.getMessage());
             }
         });
 
