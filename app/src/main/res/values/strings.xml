@@ -5,5 +5,8 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_inmate_search_bar">To</string>
+    <string name="title_letter_editor_subject">Subject</string>
     <string name="hello_blank_fragment">Hello!</string>
+    <string name="send_letter_title">Send Letter</string>
 </resources>

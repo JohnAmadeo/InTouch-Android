@@ -6,14 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <!--<fragment-->
-        <!--android:name="com.example.android.intouch_android.SentLettersFragment"-->
-        <!--android:id="@+id/sent_letters_fragment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_marginBottom="56dp"-->
-        <!--/>-->
-
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"

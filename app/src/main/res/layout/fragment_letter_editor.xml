@@ -1,15 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_letter_editor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LetterEditorFragment">
+    android:orientation="vertical"
+    tools:context=".LetterEditorFragment"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/title_inmate_search_bar"
+            android:textSize="18sp"
+            android:gravity="center"
+            />
+        <SearchView
+            android:id="@+id/inmate_search_bar"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:queryHint="Search for inmate"
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+            android:iconifiedByDefault="false"
+            android:searchIcon="@null"
+
+            android:queryBackground="@android:color/transparent"
+            app:queryBackground="@android:color/transparent"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        >
+        <EditText
+            android:id="@+id/subject_input"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:hint="Subject"
+            android:gravity="center_vertical|start"
+            android:inputType="text"
+            android:selectAllOnFocus="false"
+            android:singleLine="false"
+            android:background="@null"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <EditText
+        android:id="@+id/text_editor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
-</FrameLayout>
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:gravity="top|start"
+        android:hint="Write letter"
+        android:inputType="textMultiLine"
+        android:selectAllOnFocus="false"
+        android:singleLine="false"
+        android:lines="10"/>
+</LinearLayout>
