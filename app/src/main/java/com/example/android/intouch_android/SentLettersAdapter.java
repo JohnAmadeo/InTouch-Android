@@ -79,7 +79,7 @@ public class SentLettersAdapter extends RecyclerView.Adapter<SentLetterViewHolde
             holder.mSubjectView.setVisibility(View.GONE);
         }
         holder.mTextView.setText(holder.mItem.getText());
-        holder.mTimeSentView.setText(holder.mItem.getTimeSent());
+        holder.mTimeSentView.setText(holder.mItem.getTimeSentString());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

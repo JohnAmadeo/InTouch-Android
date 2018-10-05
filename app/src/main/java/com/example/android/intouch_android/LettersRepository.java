@@ -4,6 +4,9 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +23,15 @@ public class LettersRepository {
     public LettersRepository() {
         mLetters = new MutableLiveData<>();
         mLetters.setValue(new ArrayList<Letter>());
+
         mWebservice = new Retrofit.Builder()
                 .baseUrl("https://my-json-server.typicode.com")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(
+                        GsonConverterFactory.create(new GsonBuilder()
+                            .setDateFormat(Letter.dateFormat)
+                            .create()
+                        )
+                )
                 .build()
                 .create(Webservice.class);
     }
