@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.android.intouch_android.api.ApiClient;
 import com.example.android.intouch_android.api.Webservice;
 import com.example.android.intouch_android.database.LocalDatabase;
 import com.example.android.intouch_android.model.Letter;
@@ -32,17 +33,7 @@ public class LettersRepository {
     /* ************************************************************ */
 
     public LettersRepository(Context context) {
-        mWebservice = new Retrofit.Builder()
-                .baseUrl("https://my-json-server.typicode.com")
-                .addConverterFactory(
-                        GsonConverterFactory.create(new GsonBuilder()
-                            .setDateFormat(Letter.dateFormat)
-                            .create()
-                        )
-                )
-                .build()
-                .create(Webservice.class);
-
+        mWebservice = ApiClient.getInstance();
         mCache = LocalDatabase.getInstance(context);
 
         mLetters = new MutableLiveData<>();
@@ -56,21 +47,13 @@ public class LettersRepository {
 
     public void refreshLetters() {
         // Cache
-        mCache.letterDao().getLetters().observeForever(cacheLetters -> mergeLetters(cacheLetters));
+//        mCache.letterDao().getLetters().observeForever(cacheLetters -> mergeLetters(cacheLetters));
 
-        // Remote
-        mWebservice.getLetters().enqueue(new Callback<List<Letter>>() {
-            @Override
-            public void onResponse(Call<List<Letter>> call, Response<List<Letter>> response) {
-                Log.w("Repo success", response.toString());
-                List<Letter> serverLetters = response.body();
-                mergeLetters(serverLetters);
-                // TODO: If there is a new entry, update cache
-            }
-
-            @Override
-            public void onFailure(Call<List<Letter>> call, Throwable t) {
-                Log.w("Repo failure", t.toString());
+        mWebservice.getLetters().observeForever(response -> {
+            if (response != null && response.isSuccessful()) {
+                mLetters.setValue(response.body);
+            } else {
+                Log.w("LettersRepository", response.errorMessage);
             }
         });
     }
@@ -79,19 +62,19 @@ public class LettersRepository {
     /*                      Private Functions                       */
     /* ************************************************************ */
 
-    private void mergeLetters(List<Letter> incomingLetters) {
-        List<Letter> currentLetters = mLetters.getValue();
-        Set<String> currentLetterIDs = new HashSet<>();
-        for (Letter letter:currentLetters) {
-            currentLetterIDs.add(letter.getId());
-        }
-
-        for (Letter letter:incomingLetters) {
-            if (!currentLetterIDs.contains(letter.getId())) {
-                currentLetters.add(letter);
-            }
-        }
-
-        mLetters.postValue(currentLetters);
-    }
+//    private void mergeLetters(List<Letter> incomingLetters) {
+//        List<Letter> currentLetters = mLetters.getValue();
+//        Set<String> currentLetterIDs = new HashSet<>();
+//        for (Letter letter:currentLetters) {
+//            currentLetterIDs.add(letter.getId());
+//        }
+//
+//        for (Letter letter:incomingLetters) {
+//            if (!currentLetterIDs.contains(letter.getId())) {
+//                currentLetters.add(letter);
+//            }
+//        }
+//
+//        mLetters.postValue(currentLetters);
+//    }
 }
