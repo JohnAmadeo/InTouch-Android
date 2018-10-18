@@ -1,13 +1,11 @@
-package com.example.android.intouch_android;
+package com.example.android.intouch_android.ui.sentletters;
 
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -23,6 +21,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.util.Log;
+
+import com.example.android.intouch_android.R;
+import com.example.android.intouch_android.model.Letter;
+import com.example.android.intouch_android.utils.ViewUtils;
+import com.example.android.intouch_android.viewmodel.LettersViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,9 +107,18 @@ public class SentLettersFragment extends Fragment {
         /* Setup observers */
         mLettersViewModel =
                 ViewModelProviders.of(this).get(LettersViewModel.class);
-        mLettersViewModel.getLetters().observe(this, createLettersObserver());
+        mLettersViewModel.getLettersStream().observe(
+                this,
+                letters -> {
+                    Log.w("LD", "setLetters(letters)");
+                    getRecyclerViewAdapter().setLetters(letters);
+                }
+        );
+        mLettersViewModel.refreshLetters();
 
-        mNewLetterButton.setOnClickListener(createNewLetterButtonListener());
+        mNewLetterButton.setOnClickListener(
+                view -> Navigation.findNavController(view).navigate(R.id.letterEditorFragment)
+        );
 
         return mParentView;
     }
@@ -122,7 +134,9 @@ public class SentLettersFragment extends Fragment {
         setupSearchView(menu);
 
         /* Setup observers */
-        mSearchView.setOnQueryTextListener(createQueryListener(mLettersViewModel.getLetters()));
+        mSearchView.setOnQueryTextListener(
+                createQueryListener(mLettersViewModel.getLettersStream())
+        );
         mSearchMenuItem.setOnActionExpandListener(createSearchMenuItemListener());
     }
 
@@ -182,22 +196,13 @@ public class SentLettersFragment extends Fragment {
     /* ************************************************************ */
     /*                        Observers/Listeners                   */
     /* ************************************************************ */
-
-    private Observer<List<Letter>> createLettersObserver() {
-        return new Observer<List<Letter>>() {
-            @Override
-            public void onChanged(@Nullable List<Letter> letters) {
-                getRecyclerViewAdapter().setLetters(letters);
-            }
-        };
-    }
-
     private SearchView.OnQueryTextListener createQueryListener(
             final LiveData<List<Letter>> letters
     ) {
         return new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String searchQuery) {
+                Log.w("LD", "setLetters(filter...)" + searchQuery);
                 getRecyclerViewAdapter().setLetters(filter(letters.getValue(), searchQuery));
                 mRecyclerView.scrollToPosition(0);
 
@@ -224,15 +229,6 @@ public class SentLettersFragment extends Fragment {
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 mNewLetterButton.show();
                 return true;
-            }
-        };
-    }
-
-    private View.OnClickListener createNewLetterButtonListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.letterEditorFragment);
             }
         };
     }

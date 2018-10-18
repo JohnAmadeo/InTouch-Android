@@ -1,7 +1,9 @@
-package com.example.android.intouch_android;
+package com.example.android.intouch_android.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +11,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Entity(tableName = "letters")
 public class Letter {
+    @PrimaryKey
     @NonNull
     @SerializedName("id")
     private String id;
@@ -23,9 +27,11 @@ public class Letter {
     @SerializedName("text")
     private String text;
 
+    @ColumnInfo(name = "time_sent")
     @SerializedName("timeSent")
     private Date timeSent;
 
+    @ColumnInfo(name = "is_draft")
     @SerializedName("isDraft")
     private boolean isDraft;
 
@@ -59,6 +65,10 @@ public class Letter {
 
     public Date getTimeSent() { return this.timeSent; }
     public String getTimeSentString() { return dateToString(this.timeSent); }
+    public static String dateToString(Date date) {
+        DateFormat df = new SimpleDateFormat(dateFormat);
+        return df.format(date);
+    }
 
     public boolean isDraft() { return this.isDraft; }
 
@@ -79,8 +89,5 @@ public class Letter {
                 getTimeSentString().contains(searchQuery);
     }
 
-    private String dateToString(Date date) {
-        DateFormat df = new SimpleDateFormat(dateFormat);
-        return df.format(date);
-    }
+
 }

@@ -1,8 +1,11 @@
-package com.example.android.intouch_android;
+package com.example.android.intouch_android.ui.sentletters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.android.intouch_android.R;
+import com.example.android.intouch_android.model.Letter;
 
 /**
  * Specifies the logic for individual list components

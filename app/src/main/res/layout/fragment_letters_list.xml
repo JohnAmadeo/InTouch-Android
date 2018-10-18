@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:paddingBottom="80dp"
         android:clipToPadding="false"
-        tools:context=".SentLettersFragment"
+        tools:context=".ui.sentletters.SentLettersFragment"
         tools:listitem="@layout/fragment_letters_list_item" />
 
     <android.support.design.widget.FloatingActionButton

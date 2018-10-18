@@ -5,16 +5,20 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
-import androidx.navigation.Navigation;
 
+import com.example.android.intouch_android.ui.lettereditor.LetterEditorFragment;
+import com.example.android.intouch_android.R;
+import com.example.android.intouch_android.ui.sentletters.SentLettersFragment;
+import com.example.android.intouch_android.model.Letter;
+
+import androidx.navigation.Navigation;
 
 public class MainActivity
         extends AppCompatActivity
         implements SentLettersFragment.OnListFragmentInteractionListener,
-            LetterEditorFragment.OnFragmentInteractionListener,
+        LetterEditorFragment.OnFragmentInteractionListener,
             BottomNavigationView.OnNavigationItemSelectedListener {
 
     private TextView mTextMessage;

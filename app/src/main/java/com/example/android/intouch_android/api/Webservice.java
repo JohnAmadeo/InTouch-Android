@@ -1,4 +1,6 @@
-package com.example.android.intouch_android;
+package com.example.android.intouch_android.api;
+
+import com.example.android.intouch_android.model.Letter;
 
 import retrofit2.http.GET;
 import retrofit2.Call;
