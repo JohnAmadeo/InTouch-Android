@@ -22,8 +22,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.util.Log;
 
+import com.example.android.intouch_android.AppExecutors;
 import com.example.android.intouch_android.R;
+import com.example.android.intouch_android.database.LocalDatabase;
 import com.example.android.intouch_android.model.Letter;
+import com.example.android.intouch_android.repository.LettersRepository;
 import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.viewmodel.LettersViewModel;
 
@@ -33,6 +36,7 @@ import java.util.List;
 import androidx.navigation.Navigation;
 
 public class SentLettersFragment extends Fragment {
+    private final String LOG_TAG = this.getClass().getSimpleName();
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int[] HIDDEN_MENU_ITEMS = { R.id.send_letter };
 
@@ -107,18 +111,27 @@ public class SentLettersFragment extends Fragment {
         /* Setup observers */
         mLettersViewModel =
                 ViewModelProviders.of(this).get(LettersViewModel.class);
-        mLettersViewModel.getLettersStream().observe(
-                this,
-                letters -> {
-                    Log.w("LD", "setLetters(letters)");
-                    getRecyclerViewAdapter().setLetters(letters);
-                }
-        );
-        mLettersViewModel.refreshLetters();
 
-        mNewLetterButton.setOnClickListener(
-                view -> Navigation.findNavController(view).navigate(R.id.letterEditorFragment)
-        );
+        mLettersViewModel.getDisplayedLetters().observe(this, letters -> {
+                Log.d(LOG_TAG, "DisplayedLetters=" + String.valueOf(letters.size()));
+                getRecyclerViewAdapter().setLetters(letters);
+        });
+
+        mNewLetterButton.setOnClickListener(view -> {
+            boolean isDraft = false;
+            Log.d(LOG_TAG, "On click button");
+            AppExecutors.getInstance().diskIO().execute(() ->
+                mLettersViewModel
+                    .getRepo_DANGEROUS()
+                    .getDatabase_DANGEROUS()
+                    .letterDao()
+                    .deleteAllLetters_DANGEROUS()
+            );
+        });
+
+//        mNewLetterButton.setOnClickListener(
+//                view -> Navigation.findNavController(view).navigate(R.id.letterEditorFragment)
+//        );
 
         return mParentView;
     }
@@ -134,9 +147,7 @@ public class SentLettersFragment extends Fragment {
         setupSearchView(menu);
 
         /* Setup observers */
-        mSearchView.setOnQueryTextListener(
-                createQueryListener(mLettersViewModel.getLettersStream())
-        );
+        mSearchView.setOnQueryTextListener(createQueryListener());
         mSearchMenuItem.setOnActionExpandListener(createSearchMenuItemListener());
     }
 
@@ -196,16 +207,12 @@ public class SentLettersFragment extends Fragment {
     /* ************************************************************ */
     /*                        Observers/Listeners                   */
     /* ************************************************************ */
-    private SearchView.OnQueryTextListener createQueryListener(
-            final LiveData<List<Letter>> letters
-    ) {
+    private SearchView.OnQueryTextListener createQueryListener() {
         return new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String searchQuery) {
-                Log.w("LD", "setLetters(filter...)" + searchQuery);
-                getRecyclerViewAdapter().setLetters(filter(letters.getValue(), searchQuery));
+                mLettersViewModel.setQuery(searchQuery);
                 mRecyclerView.scrollToPosition(0);
-
                 return true;
             }
 
@@ -245,16 +252,6 @@ public class SentLettersFragment extends Fragment {
                 recyclerView.getContext(),
                 layoutManager.getOrientation()
         );
-    }
-
-    private List<Letter> filter(List<Letter> letters, String searchQuery) {
-        List<Letter> filteredLetters = new ArrayList<>();
-        for (Letter letter:letters) {
-            if (letter.contains(searchQuery)) {
-                filteredLetters.add(letter);
-            }
-        }
-        return filteredLetters;
     }
 
     private SentLettersAdapter getRecyclerViewAdapter() {

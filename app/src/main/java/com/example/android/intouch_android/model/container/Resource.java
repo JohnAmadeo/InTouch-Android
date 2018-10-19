@@ -3,6 +3,8 @@ package com.example.android.intouch_android.model.container;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.List;
+
 /**
  * A generic class that holds a value with its loading status.
  * @param <T>

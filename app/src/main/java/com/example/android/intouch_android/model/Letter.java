@@ -18,6 +18,7 @@ public class Letter {
     @SerializedName("id")
     private String id;
 
+
     @SerializedName("recipient")
     private String recipient;
 
@@ -73,12 +74,22 @@ public class Letter {
     public boolean isDraft() { return this.isDraft; }
 
     public boolean equals(Letter letter) {
-        return getId().equals(letter.getId()) &&
-                getRecipient().equals(letter.getRecipient()) &&
-                getSubject().equals(letter.getSubject()) &&
-                getText().equals(letter.getText()) &&
-                getTimeSent().equals(letter.getTimeSent()) &&
-                isDraft() == letter.isDraft();
+        if (this.isDraft() != letter.isDraft) {
+            return false;
+        }
+        // if the two letters are not drafts, then we only need to compare their IDs since the
+        // content of letters cannot be edited
+        else if (!this.isDraft()) {
+            return this.getId() == letter.getId();
+        }
+        else {
+            return getId().equals(letter.getId()) &&
+                    getRecipient().equals(letter.getRecipient()) &&
+                    getSubject().equals(letter.getSubject()) &&
+                    getText().equals(letter.getText()) &&
+                    getTimeSent().equals(letter.getTimeSent()) &&
+                    isDraft() == letter.isDraft();
+        }
     }
 
     public boolean contains(String searchQuery) {

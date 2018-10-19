@@ -8,14 +8,14 @@ import android.util.Log;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ApiClient {
+public class WebserviceProvider {
     private static final Object LOCK = new Object();
     private static Webservice sInstance;
 
     public static Webservice getInstance() {
         if (sInstance == null) {
             synchronized (LOCK) {
-                Log.d("ApiClient", "Creating new API client instance");
+                Log.d("WebserviceProvider", "Creating new API client instance");
                 sInstance = new Retrofit.Builder()
                         .baseUrl("https://my-json-server.typicode.com")
                         .addConverterFactory(
@@ -29,7 +29,7 @@ public class ApiClient {
                         .create(Webservice.class);
             }
         }
-        Log.d("ApiClient", "Getting the API client instance");
+        Log.d("WebserviceProvider", "Getting the API client instance");
         return sInstance;
     }
 }
