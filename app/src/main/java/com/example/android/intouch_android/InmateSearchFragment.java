@@ -48,6 +48,7 @@ public class InmateSearchFragment extends Fragment {
     /*                           Streams                            */
     /* ************************************************************ */
 
+    private InmateSearchViewModel mInmateSearchViewModel;
     private OnFragmentInteractionListener mListener;
 
     public InmateSearchFragment() { }
@@ -81,6 +82,11 @@ public class InmateSearchFragment extends Fragment {
 
         ViewUtils.dismissKeyboard(getActivity());
 
+        /* Setup observers */
+        mInmateSearchViewModel =
+                ViewModelProviders.of(this).get(InmateSearchViewModel.class);
+
+        mInmateSearchViewModel.getDebouncedQuery_TEST().observe(this, query -> Log.d(LOG_TAG, query));
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_inmate_search, container, false);
@@ -155,6 +161,8 @@ public class InmateSearchFragment extends Fragment {
         return new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String searchQuery) {
+                mInmateSearchViewModel.setQuery(searchQuery);
+//                mRecyclerView.scrollToPosition(0);
                 return true;
             }
 
