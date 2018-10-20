@@ -6,15 +6,22 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.utils.ViewUtils;
+
+import java.util.Arrays;
+import java.util.List;
+
+import androidx.navigation.Navigation;
 
 
 /**
@@ -26,10 +33,12 @@ import com.example.android.intouch_android.utils.ViewUtils;
  * create an instance of this fragment.
  */
 public class LetterEditorFragment extends Fragment {
-    private static int[] HIDDEN_MENU_ITEMS = { R.id.letter_search };
+    private final String LOG_TAG = this.getClass().getSimpleName();
+    private static List<Integer> HIDDEN_MENU_ITEMS = Arrays.asList(R.id.menu_search);
     private OnFragmentInteractionListener mListener;
 
     private View mEditorView;
+    private SearchView mInmateSearchView;
 
     public LetterEditorFragment() {
         // Required empty public constructor
@@ -48,7 +57,7 @@ public class LetterEditorFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setupActionBar();
+        setupActionBarInfo();
 
         // Allow fragment access to add menu items
         setHasOptionsMenu(true);
@@ -59,6 +68,20 @@ public class LetterEditorFragment extends Fragment {
                 container,
                 false
         );
+
+        mInmateSearchView = (SearchView) mEditorView.findViewById(R.id.inmate_search_bar);
+        Log.d(LOG_TAG, mInmateSearchView.toString());
+
+        mInmateSearchView.setOnQueryTextFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) {
+                // TODO: Save as draft??? Or at least grab all letter info and pass it as a bundle
+                // TODO: Pass actual ID to bundle after modelling the data flow
+                Navigation.findNavController(view).navigate(
+                        LetterEditorFragmentDirections.searchAction("-1")
+                );
+            }
+        });
+
         return mEditorView;
     }
 
@@ -96,7 +119,7 @@ public class LetterEditorFragment extends Fragment {
     /*                            View Helpers                      */
     /* ************************************************************ */
 
-    private void setupActionBar() {
+    private void setupActionBarInfo() {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("Write Letter");

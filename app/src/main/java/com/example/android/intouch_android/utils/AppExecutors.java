@@ -1,4 +1,4 @@
-package com.example.android.intouch_android;
+package com.example.android.intouch_android.utils;
 
 import android.os.Handler;
 import android.os.Looper;

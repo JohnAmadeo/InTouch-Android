@@ -4,16 +4,10 @@ import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
-import com.example.android.intouch_android.AppExecutors;
-import com.example.android.intouch_android.model.Letter;
-import com.example.android.intouch_android.utils.ModelUtils;
+import com.example.android.intouch_android.utils.AppExecutors;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A generic class that can provide a resource backed by both the sqlite database and the network.
@@ -31,8 +25,6 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
 
     @MainThread
     public NetworkBoundResource(AppExecutors appExecutors) {
-        Log.d(LOG_TAG, "Init");
-
         this.appExecutors = appExecutors;
 
         result.setValue(Resource.loading(null));
@@ -44,9 +36,6 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
         LiveData<ResultType> dbResult = loadFromDb();
         result.addSource(dbResult, dbData -> {
             result.removeSource(dbResult);
-
-            List<Letter> letters = (List<Letter>) dbData;
-            Log.d(LOG_TAG, "Pre-Cache Fetch=" + toIds(letters));
 
             if (shouldFetchFromNetwork(dbData)) {
                 callApiAndSetValue(dbData);
@@ -93,10 +82,6 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
 
                 result.addSource(dbResult, dbData -> {
                     result.removeSource(dbResult);
-                    if (dbData != null) {
-                        List<Letter> letters = (List<Letter>) dbData;
-                        Log.d(LOG_TAG, "Post-Cache Fetch=" + toIds(letters));
-                    }
                     setValue(Resource.success(dbData));
                 });
             });
@@ -105,17 +90,19 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
 
     @MainThread
     private void setValue(Resource<ResultType> newValue) {
-        if (!ModelUtils.equals(result.getValue(), newValue)) {
+        if (!nullSafeEquals(result.getValue(), newValue)) {
             result.setValue(newValue);
         }
     }
 
-    private List<String> toIds(List<Letter> letters) {
-        List<String> ids = new ArrayList<>();
-        for (Letter letter:letters) {
-            ids.add(letter.getId());
+    public boolean nullSafeEquals(Object o1, Object o2) {
+        if (o1 == null) {
+            return o2 == null;
         }
-        return ids;
+        if (o2 == null) {
+            return false;
+        }
+        return o1.equals(o2);
     }
 
     /* ************************************************************ */

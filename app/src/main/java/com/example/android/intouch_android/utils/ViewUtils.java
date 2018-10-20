@@ -2,12 +2,21 @@ package com.example.android.intouch_android.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.example.android.intouch_android.R;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
 public class ViewUtils {
+    private static final String LOG_TAG = "ViewUtils";
+    private static List<Integer> MENU_ITEMS = Arrays.asList(R.id.send_letter, R.id.menu_search);
 
     /*
      * @return true if keyboard was successfully hidden; false otherwise
@@ -26,16 +35,22 @@ public class ViewUtils {
     /*
      * @return true if all items successfully hidden; false otherwise
      */
-    public static boolean setupActionBarMenuItems(Menu menu, int[] hiddenMenuItems) {
-        for (int itemId:hiddenMenuItems) {
+    public static boolean setupActionBarMenuItems(Menu menu, List<Integer> hiddenMenuItems) {
+        Log.d(LOG_TAG, "setupActionBarMenuItems called");
+        for (Integer itemId:MENU_ITEMS) {
             MenuItem menuItem = menu.findItem(itemId);
-            if (menuItem != null) {
+            Log.d(LOG_TAG, menuItem.getTitle().toString());
+            if (menuItem == null) {
+                return false;
+            }
+            else if (hiddenMenuItems.contains(itemId)) {
                 menuItem.setVisible(false);
             }
             else {
-                return false;
+                menuItem.setVisible(true);
             }
         }
+
         return true;
     }
 }

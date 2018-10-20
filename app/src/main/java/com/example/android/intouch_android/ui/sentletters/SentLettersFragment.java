@@ -2,7 +2,6 @@ package com.example.android.intouch_android.ui.sentletters;
 
 import android.app.SearchManager;
 import android.app.SearchableInfo;
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -22,15 +21,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.util.Log;
 
-import com.example.android.intouch_android.AppExecutors;
 import com.example.android.intouch_android.R;
-import com.example.android.intouch_android.database.LocalDatabase;
 import com.example.android.intouch_android.model.Letter;
-import com.example.android.intouch_android.repository.LettersRepository;
 import com.example.android.intouch_android.utils.ViewUtils;
-import com.example.android.intouch_android.viewmodel.LettersViewModel;
+import com.example.android.intouch_android.viewmodel.SentLettersViewModel;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import androidx.navigation.Navigation;
@@ -38,7 +34,7 @@ import androidx.navigation.Navigation;
 public class SentLettersFragment extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private int[] HIDDEN_MENU_ITEMS = { R.id.send_letter };
+    private List<Integer> HIDDEN_MENU_ITEMS = Arrays.asList(R.id.send_letter);
 
     /* ************************************************************ */
     /*                        UI Components                         */
@@ -52,7 +48,7 @@ public class SentLettersFragment extends Fragment {
     /* ************************************************************ */
     /*                           Streams                            */
     /* ************************************************************ */
-    private LettersViewModel mLettersViewModel;
+    private SentLettersViewModel mSentLettersViewModel;
 
     // TODO: Get rid of this variable
     private OnListFragmentInteractionListener mListener;
@@ -109,29 +105,17 @@ public class SentLettersFragment extends Fragment {
         setupRecyclerView();
 
         /* Setup observers */
-        mLettersViewModel =
-                ViewModelProviders.of(this).get(LettersViewModel.class);
+        mSentLettersViewModel =
+                ViewModelProviders.of(this).get(SentLettersViewModel.class);
 
-        mLettersViewModel.getDisplayedLetters().observe(this, letters -> {
+        mSentLettersViewModel.getDisplayedLetters().observe(this, letters -> {
                 Log.d(LOG_TAG, "DisplayedLetters=" + String.valueOf(letters.size()));
                 getRecyclerViewAdapter().setLetters(letters);
         });
 
-        mNewLetterButton.setOnClickListener(view -> {
-            boolean isDraft = false;
-            Log.d(LOG_TAG, "On click button");
-            AppExecutors.getInstance().diskIO().execute(() ->
-                mLettersViewModel
-                    .getRepo_DANGEROUS()
-                    .getDatabase_DANGEROUS()
-                    .letterDao()
-                    .deleteAllLetters_DANGEROUS()
-            );
-        });
-
-//        mNewLetterButton.setOnClickListener(
-//                view -> Navigation.findNavController(view).navigate(R.id.letterEditorFragment)
-//        );
+        mNewLetterButton.setOnClickListener(
+                view -> Navigation.findNavController(view).navigate(R.id.letterEditorFragment)
+        );
 
         return mParentView;
     }
@@ -191,9 +175,11 @@ public class SentLettersFragment extends Fragment {
     }
 
     private void setupSearchView(Menu menu) {
-        mSearchMenuItem = menu.findItem(R.id.letter_search);
+        mSearchMenuItem = menu.findItem(R.id.menu_search);
 
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
+
+        mSearchView.setQueryHint(getString(R.string.letter_search_hint));
 
         // Get configuration options in res/xml/searchable.xml as an object
         SearchManager searchManager =
@@ -211,7 +197,7 @@ public class SentLettersFragment extends Fragment {
         return new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String searchQuery) {
-                mLettersViewModel.setQuery(searchQuery);
+                mSentLettersViewModel.setQuery(searchQuery);
                 mRecyclerView.scrollToPosition(0);
                 return true;
             }

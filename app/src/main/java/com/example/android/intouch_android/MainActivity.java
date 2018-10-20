@@ -19,6 +19,7 @@ public class MainActivity
         extends AppCompatActivity
         implements SentLettersFragment.OnListFragmentInteractionListener,
         LetterEditorFragment.OnFragmentInteractionListener,
+        InmateSearchFragment.OnFragmentInteractionListener,
             BottomNavigationView.OnNavigationItemSelectedListener {
 
     private TextView mTextMessage;
@@ -37,7 +38,6 @@ public class MainActivity
     public void onListFragmentInteraction(Letter item) {
         System.out.println(item.toString());
     }
-
     public void onFragmentInteraction(Uri uri) {
         System.out.println(uri.toString());
     }

@@ -7,17 +7,15 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.example.android.intouch_android.model.container.Resource;
 import com.example.android.intouch_android.repository.LettersRepository;
 import com.example.android.intouch_android.model.Letter;
-import com.example.android.intouch_android.utils.ModelUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LettersViewModel extends AndroidViewModel {
+public class SentLettersViewModel extends AndroidViewModel {
 
     private LettersRepository mLettersRepository;
 
@@ -27,7 +25,7 @@ public class LettersViewModel extends AndroidViewModel {
     private LiveData<Resource<List<Letter>>> mLetters;
     private MediatorLiveData<List<Letter>> mDisplayedLetters = new MediatorLiveData<>();
 
-    public LettersViewModel(@NonNull Application application) {
+    public SentLettersViewModel(@NonNull Application application) {
         super(application);
         mLettersRepository = new LettersRepository(application.getApplicationContext());
 
