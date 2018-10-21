@@ -7,9 +7,15 @@ import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.android.intouch_android.model.Correspondence;
+import com.example.android.intouch_android.model.Inmate;
 import com.example.android.intouch_android.model.Letter;
 
-@Database(entities = {Letter.class}, version = 1, exportSchema = false)
+@Database(
+        entities = {Letter.class, Inmate.class, Correspondence.class},
+        version = 2,
+        exportSchema = false
+)
 @TypeConverters(DateConverter.class)
 public abstract class LocalDatabase extends RoomDatabase {
     private static final String LOG_TAG = LocalDatabase.class.getSimpleName();
@@ -26,7 +32,9 @@ public abstract class LocalDatabase extends RoomDatabase {
                         context.getApplicationContext(),
                         LocalDatabase.class,
                         LocalDatabase.DATABASE_NAME
-                ).build();
+                )
+                        .fallbackToDestructiveMigration()
+                        .build();
             }
         }
         Log.d(LOG_TAG, "Getting the database instance");
@@ -34,4 +42,5 @@ public abstract class LocalDatabase extends RoomDatabase {
     }
 
     public abstract LetterDao letterDao();
+    public abstract InmateDao inmateDao();
 }

@@ -14,6 +14,7 @@ import com.example.android.intouch_android.model.Letter;
 import com.example.android.intouch_android.model.container.ApiResponse;
 import com.example.android.intouch_android.model.container.NetworkBoundResource;
 import com.example.android.intouch_android.model.container.Resource;
+import com.example.android.intouch_android.utils.AppState;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class LettersRepository {
     private final Webservice mWebservice;
     private final LocalDatabase mDB;
     private final AppExecutors mExecutors;
+    private final AppState mAppState;
 
 //    private MutableLiveData<List<Letter>> mLetters;
 
@@ -33,6 +35,7 @@ public class LettersRepository {
         mWebservice = WebserviceProvider.getInstance();
         mDB = LocalDatabase.getInstance(context);
         mExecutors = AppExecutors.getInstance();
+        mAppState = AppState.getInstance();
     }
 
     public LiveData<Resource<List<Letter>>> getLetters() {
@@ -46,7 +49,7 @@ public class LettersRepository {
             @NonNull
             @Override
             protected LiveData<ApiResponse<List<Letter>>> loadFromApi() {
-                return mWebservice.getLetters();
+                return mWebservice.getLetters(mAppState.getUsername());
             }
 
             @Override

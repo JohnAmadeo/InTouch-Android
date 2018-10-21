@@ -60,7 +60,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
             result.removeSource(apiResult);
 
             if (response != null && response.isSuccessful()) {
-                cacheAndSetValue(response);
+                mergeAndSetValue(processApiResult(response), dbData);
             } else {
                 onFetchFailed();
                 setValue(Resource.error(response.errorMessage, dbData));
@@ -73,9 +73,9 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
      * using the updated data from the local database. This approach allows us to delegate
      * our strategy for merging/reconciling network and local data using the database.
      */
-    private void cacheAndSetValue(ApiResponse<RequestType> response) {
+    private void cacheAndSetValue(RequestType response) {
         appExecutors.diskIO().execute(() -> {
-            saveApiResult(processApiResult(response));
+            saveApiResult(response);
 
             appExecutors.mainThread().execute(() -> {
                 LiveData<ResultType> dbResult = loadFromDb();
@@ -89,7 +89,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     }
 
     @MainThread
-    private void setValue(Resource<ResultType> newValue) {
+    protected void setValue(Resource<ResultType> newValue) {
         if (!nullSafeEquals(result.getValue(), newValue)) {
             result.setValue(newValue);
         }
@@ -119,13 +119,18 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     @MainThread
     protected abstract LiveData<ApiResponse<RequestType>> loadFromApi();
 
+    @NonNull
+    protected void mergeAndSetValue(RequestType response, ResultType dbData) {
+        cacheAndSetValue(response);
+    }
+
     @WorkerThread
     protected RequestType processApiResult(ApiResponse<RequestType> response) {
         return response.body;
     }
 
     @WorkerThread
-    protected abstract void saveApiResult(@NonNull RequestType item);
+    protected void saveApiResult(@NonNull RequestType item) { }
 
     @MainThread
     protected abstract boolean shouldFetchFromNetwork(@Nullable ResultType data);
