@@ -18,7 +18,6 @@ public class Letter {
     @SerializedName("id")
     private String id;
 
-
     @SerializedName("recipient")
     private String recipient;
 
