@@ -1,26 +1,24 @@
 package com.example.android.intouch_android.repository;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.android.intouch_android.model.Correspondence;
 import com.example.android.intouch_android.model.Inmate;
-import com.example.android.intouch_android.model.InmateWithSearchMetadata;
+import com.example.android.intouch_android.model.Inmate;
 import com.example.android.intouch_android.utils.AppExecutors;
 import com.example.android.intouch_android.api.WebserviceProvider;
 import com.example.android.intouch_android.api.Webservice;
 import com.example.android.intouch_android.database.LocalDatabase;
 import com.example.android.intouch_android.model.container.ApiResponse;
-import com.example.android.intouch_android.model.container.NetworkBoundResource;
 import com.example.android.intouch_android.model.container.Resource;
 import com.example.android.intouch_android.utils.AppState;
 import com.example.android.intouch_android.utils.Transforms;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,61 +41,38 @@ public class InmatesRepository {
         mAppState = AppState.getInstance();
     }
 
-    public LiveData<Resource<List<InmateWithSearchMetadata>>> getInmates(String searchQuery) {
-        return new NetworkBoundResource<
-                List<InmateWithSearchMetadata>,
-                List<Inmate>
-            >(mExecutors) {
-            @NonNull
-            @Override
-            protected LiveData<List<InmateWithSearchMetadata>> loadFromDb() {
-                return Transformations.map(
-                        mDB.inmateDao().getCorrespondences(mAppState.getUsername()),
-                        inmates -> mapOnSearchMetadata(inmates, true)
-                );
+    /*
+     * Fetch inmates with names matching the search query from the API, filter out inmates who
+     * are already top past correspondences (since they already appear in the "recent" list in
+     * the UI) and return the inmates.
+     */
+    public LiveData<Resource<List<Inmate>>> getInmatesByName(String searchQuery) {
+        // If no search query, show a list of all inmates that the user has sent a letter to
+        if (searchQuery.equals("")) {
+            return getPastInmateCorrespondents();
+        }
+
+        MediatorLiveData<Resource<List<Inmate>>> result = new MediatorLiveData<>();
+        result.setValue(Resource.loading(null));
+
+        HashMap<String, String> queryParameters = new HashMap<String, String>();
+        queryParameters.put("q", searchQuery);
+
+        LiveData<ApiResponse<List<Inmate>>> apiInmates =
+                mWebservice.getInmatesByName(mAppState.getUsername(), queryParameters);
+        result.addSource(apiInmates, response -> {
+            result.removeSource(apiInmates);
+
+            if (response != null && response.isSuccessful()) {
+                List<Inmate> apiInmatesWithMetadata = response.body;
+
+                result.setValue(Resource.success(apiInmatesWithMetadata));
+            } else {
+                result.setValue(Resource.error(response.errorMessage, null));
             }
+        });
 
-            @NonNull
-            @Override
-            protected LiveData<ApiResponse<List<Inmate>>> loadFromApi() {
-                HashMap queryParameters = new HashMap<String, String>();
-                queryParameters.put("search", searchQuery);
-                return mWebservice.getInmatesByName(mAppState.getUsername(), queryParameters);
-            }
-
-            @NonNull
-            @Override
-            protected void mergeAndSetValue(
-                    List<Inmate> apiInmates,
-                    List<InmateWithSearchMetadata> dbInmateCorrespondencesWithMetadata
-            ) {
-                List<Inmate> dbInmateCorrespondences = Transforms.map(
-                        dbInmateCorrespondencesWithMetadata,
-                        inmateWithMetadata -> inmateWithMetadata.getInmate()
-                );
-
-                List<InmateWithSearchMetadata> apiInmatesWithMetadata = mapOnSearchMetadata(
-                        Transforms.filter(apiInmates,
-                                inmate -> !dbInmateCorrespondences.contains(inmate)
-                        ),
-                        false
-                );
-
-                setValue(Resource.success(
-                        Transforms.merge(
-                                apiInmatesWithMetadata,
-                                dbInmateCorrespondencesWithMetadata
-                        )
-                ));
-            }
-
-            @Override
-            protected boolean shouldFetchFromNetwork(@Nullable List<InmateWithSearchMetadata> __) {
-                // TODO: Check if the internet connection is down
-                return true;
-            }
-
-        }.asLiveData();
+        return result;
     }
 
     /* ************************************************************ */
@@ -109,20 +84,34 @@ public class InmatesRepository {
             boolean isDraft = false;
             mDB.beginTransaction();
             try {
-                for(Integer i = 100 ; i < 103; i++) {
-                    mDB.inmateDao().insertInmate_TEST(
-                            new Inmate(
-                                    i.toString(),
-                                    "John",
-                                    i.toString(),
-                                    "AAAA" + i.toString(),
-                                    new Date(),
-                                    "CT Prison 1"
-                            )
-                    );
-                }
+//                for(Integer i = 100 ; i < 104; i++) {
+//                    mDB.inmateDao().insertInmate_TEST(
+//                            new Inmate(
+//                                    i.toString(),
+//                                    "John",
+//                                    i.toString(),
+//                                    "AAAA" + i.toString(),
+//                                    new Date(),
+//                                    "CT Prison 1"
+//                            )
+//                    );
+//                }
+                mDB.inmateDao().insertInmate_TEST(
+                        new Inmate(
+                                "99",
+                                "Johannes Hutama Cahya Trisna Triawan Putra",
+                                "Kusuma",
+                                "AAAAA99",
+                                new Date(),
+                                "CT Prison Long Longer Longest"
+                        )
+                );
                 mDB.setTransactionSuccessful();
-            } finally {
+            }
+            catch(Exception e) {
+                Log.d(LOG_TAG, e.toString());
+            }
+            finally {
                 Log.d(LOG_TAG, "Inserted inmates");
                 mDB.endTransaction();
             }
@@ -133,14 +122,25 @@ public class InmatesRepository {
         mExecutors.diskIO().execute(() -> {
             mDB.beginTransaction();
             try {
-                for(Integer i = 100 ; i < 103; i++) {
-                    mDB.inmateDao().insertCorrespondence_TEST(new Correspondence(
-                        i.toString(),
+//                for(Integer i = 100 ; i < 104; i++) {
+//                    Correspondence cor = new Correspondence(
+//                            i.toString(),
+//                            mAppState.getUsername()
+//                    );
+//                    cor.setOccurrences(i - 99);
+//                    mDB.inmateDao().insertCorrespondence_TEST(cor);
+//                }
+                Correspondence cor = new Correspondence(
+                        "99",
                         mAppState.getUsername()
-                    ));
-                }
+                );
+                cor.setOccurrences(5);
                 mDB.setTransactionSuccessful();
-            } finally {
+            }
+            catch(Exception e) {
+                Log.d(LOG_TAG, e.toString());
+            }
+            finally {
                 Log.d(LOG_TAG, "Inserted correspondences");
                 mDB.endTransaction();
             }
@@ -166,18 +166,11 @@ public class InmatesRepository {
     /* ************************************************************ */
     /*                      Private Functions                       */
     /* ************************************************************ */
-    private List<InmateWithSearchMetadata> mapOnSearchMetadata(
-            List<Inmate> inmates,
-            boolean isPastCorrespondent
-    ) {
-        List<InmateWithSearchMetadata> inmatesWithSearchMetadata = new ArrayList<>();
-        for (Inmate inmate:inmates) {
-            inmatesWithSearchMetadata.add(new InmateWithSearchMetadata(
-                            inmate,
-                            isPastCorrespondent
-                    )
-            );
-        }
-        return inmatesWithSearchMetadata;
+
+    private LiveData<Resource<List<Inmate>>> getPastInmateCorrespondents() {
+        return Transformations.map(
+                mDB.inmateDao().getPastInmateCorrespondents(mAppState.getUsername()),
+                inmates -> Resource.success(inmates)
+        );
     }
 }

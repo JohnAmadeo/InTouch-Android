@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface LetterDao {
 
-    @Query("SELECT * FROM letters WHERE NOT(is_draft) ORDER BY time_sent DESC ")
+    @Query("SELECT * FROM letters WHERE NOT(isDraft) ORDER BY timeSent DESC ")
     LiveData<List<Letter>> getLetters();
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

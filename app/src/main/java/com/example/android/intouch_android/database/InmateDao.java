@@ -9,17 +9,17 @@ import android.arch.persistence.room.Query;
 
 import com.example.android.intouch_android.model.Correspondence;
 import com.example.android.intouch_android.model.Inmate;
-import com.example.android.intouch_android.model.Letter;
 
 import java.util.List;
 
 @Dao
 public interface InmateDao {
-    // TODO Modify when auth system is in place to take in the username
-    @Query("SELECT * FROM inmates WHERE id IN " +
-            "(SELECT inmateId FROM correspondences WHERE username = :username)"
+    @Query("SELECT inmates.* FROM " +
+            "inmates JOIN " +
+            "(SELECT * FROM correspondences WHERE username = :username) AS correspondences " +
+            "ORDER BY correspondences.occurrences DESC "
     )
-    LiveData<List<Inmate>> getCorrespondences(String username);
+    LiveData<List<Inmate>> getPastInmateCorrespondents(String username);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertInmate_TEST(Inmate inmate);

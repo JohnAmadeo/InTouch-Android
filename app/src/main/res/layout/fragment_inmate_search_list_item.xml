@@ -1,13 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    >
 
     <TextView
-        android:layout_width="70dp"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/text_margin"
+        android:id="@+id/inmate_name"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_toLeftOf="@+id/inmate_facility"
+        android:layout_toStartOf="@+id/inmate_facility"
+
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+
+        android:layout_marginStart="@dimen/text_margin"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginBottom="@dimen/text_margin"
+
+        android:ellipsize="end"
+        android:singleLine="true"
+
         android:textAppearance="?attr/textAppearanceListItem" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/inmate_facility"
+
+        android:maxWidth="160dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:gravity="right"
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+
+        android:layout_marginStart="@dimen/text_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginEnd="@dimen/text_margin"
+        android:layout_marginRight="@dimen/text_margin"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:visibility="visible"
+
+        />
+</RelativeLayout>

@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/inmateSearchFragment"
-        android:name="com.example.android.intouch_android.InmateSearchFragment"
+        android:name="com.example.android.intouch_android.ui.inmatesearch.InmateSearchFragment"
         android:label="fragment_inmate_search"
         tools:layout="@layout/fragment_inmate_search" >
         <argument

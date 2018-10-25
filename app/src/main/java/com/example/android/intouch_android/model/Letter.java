@@ -27,11 +27,9 @@ public class Letter {
     @SerializedName("text")
     private String text;
 
-    @ColumnInfo(name = "time_sent")
     @SerializedName("timeSent")
     private Date timeSent;
 
-    @ColumnInfo(name = "is_draft")
     @SerializedName("isDraft")
     private boolean isDraft;
 

@@ -1,14 +1,15 @@
-package com.example.android.intouch_android;
+package com.example.android.intouch_android.ui.inmatesearch;
 
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +19,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.android.intouch_android.R;
+import com.example.android.intouch_android.model.Letter;
 import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.viewmodel.InmateSearchViewModel;
-import com.example.android.intouch_android.viewmodel.SentLettersViewModel;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +31,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link InmateSearchFragment.OnFragmentInteractionListener} interface
+ * {@link InmateSearchFragment.OnListFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link InmateSearchFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -41,15 +43,18 @@ public class InmateSearchFragment extends Fragment {
     /* ************************************************************ */
     /*                        UI Components                         */
     /* ************************************************************ */
+    private View mParentView;
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
+
+    private RecyclerView mRecyclerView;
 
     /* ************************************************************ */
     /*                           Streams                            */
     /* ************************************************************ */
 
     private InmateSearchViewModel mInmateSearchViewModel;
-    private OnFragmentInteractionListener mListener;
+    private OnListFragmentInteractionListener mListener;
 
     public InmateSearchFragment() { }
     public static InmateSearchFragment newInstance(String param1, String param2) {
@@ -61,8 +66,8 @@ public class InmateSearchFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnListFragmentInteractionListener) {
+            mListener = (OnListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -75,26 +80,46 @@ public class InmateSearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(LOG_TAG, InmateSearchFragmentArgs.fromBundle(getArguments()).getLetterId());
         setupActionBarInfo();
 
         setHasOptionsMenu(true);
 
+        getActivity().findViewById(R.id.bottom_navigation).setVisibility(View.GONE);
+
+        mParentView = inflater.inflate(
+                R.layout.fragment_inmate_search,
+                container,
+                false
+        );
+
+        setupRecyclerView();
+
+        // TODO: Need to dismiss keyboard appearing from clicking on SearchView in previous Activity
+        // Can we get improve this? Fairly cryptic hack
         ViewUtils.dismissKeyboard(getActivity());
 
         /* Setup observers */
         mInmateSearchViewModel =
                 ViewModelProviders.of(this).get(InmateSearchViewModel.class);
 
-        mInmateSearchViewModel.getDebouncedQuery_TEST().observe(this, query -> Log.d(LOG_TAG, query));
+//        mInmateSearchViewModel.deleteCorrespondences_TEST();
+//        mInmateSearchViewModel.createCorrespondences_TEST();
+//        mInmateSearchViewModel.getDebouncedQuery_TEST().observe(this, query -> Log.d(LOG_TAG, query));
 
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_inmate_search, container, false);
+        mInmateSearchViewModel.getInmates().observe(this, inmates -> {
+            Log.d(LOG_TAG, inmates.status.toString());
+
+            if (inmates.data != null) {
+                Log.d(LOG_TAG, "Data=" + inmates.data.toString());
+                getRecyclerViewAdapter().setInmates(inmates.data);
+            }
+        });
+
+        return mParentView;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.d(LOG_TAG, "onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.options_menu, menu);
 
@@ -103,25 +128,16 @@ public class InmateSearchFragment extends Fragment {
         /* Setup views */
         setupSearchView(menu);
 
-//        /* Setup observers */
+        /* Setup observers */
         mSearchView.setOnQueryTextListener(createQueryListener());
-//        mSearchMenuItem.setOnActionExpandListener(createSearchMenuItemListener());
         mSearchView.setQuery("TEST", false);
     }
 
     @Override
-    public boolean onOptionsItemSelected (MenuItem item) {
-        Log.d(LOG_TAG, "onOptionsItemSelected");
-        return false;
-    }
-
-    @Override
     public void onPrepareOptionsMenu (Menu menu) {
-        Log.d(LOG_TAG, "onPrepareOptionsMenu");
         // Auto-focus on search bar on loading the fragment
         mSearchMenuItem.expandActionView();
     }
-
 
     @Override
     public void onDetach() {
@@ -141,6 +157,25 @@ public class InmateSearchFragment extends Fragment {
         }
     }
 
+    private void setupRecyclerView() {
+        mRecyclerView = mParentView.findViewById(R.id.inmates_list);
+        Context context = mRecyclerView.getContext();
+        InmateSearchAdapter recyclerViewAdapter = new InmateSearchAdapter(mListener);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(recyclerViewAdapter);
+
+        // add a line in between each list item
+        mRecyclerView.addItemDecoration(
+                ViewUtils.createListDivider(
+                        mRecyclerView,
+                        (LinearLayoutManager) mRecyclerView.getLayoutManager()
+                )
+        );
+    }
+
     private void setupSearchView(Menu menu) {
         mSearchMenuItem = menu.findItem(R.id.menu_search);
 
@@ -156,6 +191,10 @@ public class InmateSearchFragment extends Fragment {
 
         mSearchView.setSearchableInfo(searchableInfo);
     }
+
+    /* ************************************************************ */
+    /*                             Listeners                        */
+    /* ************************************************************ */
 
     private SearchView.OnQueryTextListener createQueryListener() {
         return new SearchView.OnQueryTextListener() {
@@ -174,10 +213,16 @@ public class InmateSearchFragment extends Fragment {
         };
     }
 
+    /* ************************************************************ */
+    /*                              Helpers                         */
+    /* ************************************************************ */
 
     /* See "http://developer.android.com/training/basics/fragments/communicating.html" */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    public interface OnListFragmentInteractionListener {
+        void onListFragmentInteraction(Letter item);
+    }
+
+    public InmateSearchAdapter getRecyclerViewAdapter() {
+        return (InmateSearchAdapter) mRecyclerView.getAdapter();
     }
 }

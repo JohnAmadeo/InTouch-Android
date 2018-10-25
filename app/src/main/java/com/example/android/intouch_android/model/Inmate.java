@@ -16,16 +16,16 @@ public class Inmate {
     @SerializedName("id")
     private String id;
 
-    @SerializedName("first_name")
+    @SerializedName("firstName")
     private String firstName;
 
-    @SerializedName("last_name")
+    @SerializedName("lastName")
     private String lastName;
 
-    @SerializedName("inmate_number")
+    @SerializedName("inmateNumber")
     private String inmateNumber;
 
-    @SerializedName("date_of_birth")
+    @SerializedName("dateOfBirth")
     private Date dateOfBirth;
 
     @SerializedName("facility")
@@ -47,6 +47,17 @@ public class Inmate {
         this.inmateNumber = inmateNumber;
         this.dateOfBirth = dateOfBirth;
         this.facility = facility;
+    }
+
+    @Override
+    public String toString() {
+        return "Inmate(" +
+                "id=" + this.getId() +
+                " name=" + this.getName() +
+                " inmateNumber=" + this.getInmateNumber() +
+                " dob=" + this.getDateOfBirth() +
+                " facility=" + this.getFacility() +
+                ")";
     }
 
     @NonNull

@@ -11,4 +11,9 @@ public class InmateWithSearchMetadata {
 
     public boolean isPastCorrespondent() { return this.isPastCorrespondent; }
     public Inmate getInmate() { return this.inmate; }
+
+    @Override
+    public String toString() {
+        return inmate.toString();
+    }
 }

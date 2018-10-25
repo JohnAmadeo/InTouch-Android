@@ -8,8 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.android.intouch_android.ui.inmatesearch.InmateSearchFragment;
 import com.example.android.intouch_android.ui.lettereditor.LetterEditorFragment;
-import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.ui.sentletters.SentLettersFragment;
 import com.example.android.intouch_android.model.Letter;
 
@@ -19,7 +19,7 @@ public class MainActivity
         extends AppCompatActivity
         implements SentLettersFragment.OnListFragmentInteractionListener,
         LetterEditorFragment.OnFragmentInteractionListener,
-        InmateSearchFragment.OnFragmentInteractionListener,
+        InmateSearchFragment.OnListFragmentInteractionListener,
             BottomNavigationView.OnNavigationItemSelectedListener {
 
     private TextView mTextMessage;

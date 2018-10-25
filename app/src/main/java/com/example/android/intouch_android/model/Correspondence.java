@@ -27,14 +27,24 @@ public class Correspondence {
     @SerializedName("username")
     private String username;
 
+    @NonNull
+    @SerializedName("occurrences")
+    private Integer occurrences;
+
     public Correspondence(String inmateId, String username) {
         this.inmateId = inmateId;
         this.username = username;
+        this.occurrences = 1;
     }
 
     @NonNull
-    public String getInmateId() { return inmateId; }
+    public String getInmateId() { return this.inmateId; }
 
     @NonNull
-    public String getUsername() { return username; }
+    public String getUsername() { return this.username; }
+
+    @NonNull
+    public Integer getOccurrences() { return this.occurrences; }
+
+    public void setOccurrences(Integer occurrences) { this.occurrences = occurrences; }
 }
