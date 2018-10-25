@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.Letter;
+import com.example.android.intouch_android.utils.BackPressListener;
 import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.viewmodel.InmateSearchViewModel;
 
@@ -36,7 +38,8 @@ import java.util.List;
  * Use the {@link InmateSearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InmateSearchFragment extends Fragment {
+public class InmateSearchFragment
+        extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private List<Integer> HIDDEN_MENU_ITEMS = Arrays.asList(R.id.send_letter);
 
@@ -104,13 +107,11 @@ public class InmateSearchFragment extends Fragment {
 
 //        mInmateSearchViewModel.deleteCorrespondences_TEST();
 //        mInmateSearchViewModel.createCorrespondences_TEST();
-//        mInmateSearchViewModel.getDebouncedQuery_TEST().observe(this, query -> Log.d(LOG_TAG, query));
+//        mInmateSearchViewModel.getDebouncedQuery_TEST().observe(this,
+//                query -> Log.d(LOG_TAG, query));
 
         mInmateSearchViewModel.getInmates().observe(this, inmates -> {
-            Log.d(LOG_TAG, inmates.status.toString());
-
             if (inmates.data != null) {
-                Log.d(LOG_TAG, "Data=" + inmates.data.toString());
                 getRecyclerViewAdapter().setInmates(inmates.data);
             }
         });
@@ -130,13 +131,6 @@ public class InmateSearchFragment extends Fragment {
 
         /* Setup observers */
         mSearchView.setOnQueryTextListener(createQueryListener());
-        mSearchView.setQuery("TEST", false);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu (Menu menu) {
-        // Auto-focus on search bar on loading the fragment
-        mSearchMenuItem.expandActionView();
     }
 
     @Override
@@ -145,6 +139,12 @@ public class InmateSearchFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onPrepareOptionsMenu (Menu menu) {
+        // Auto-focus on search bar on loading the fragment
+        mSearchMenuItem.expandActionView();
+        mSearchMenuItem.setOnActionExpandListener(createSearchCollapseListener());
+    }
     /* ************************************************************ */
     /*                            View Helpers                      */
     /* ************************************************************ */
@@ -153,7 +153,6 @@ public class InmateSearchFragment extends Fragment {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("");
-            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -200,6 +199,7 @@ public class InmateSearchFragment extends Fragment {
         return new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String searchQuery) {
+                Log.d(LOG_TAG, searchQuery);
                 mInmateSearchViewModel.setQuery(searchQuery);
 //                mRecyclerView.scrollToPosition(0);
                 return true;
@@ -210,6 +210,19 @@ public class InmateSearchFragment extends Fragment {
                 ViewUtils.dismissKeyboard(getActivity());
                 return true;
             }
+        };
+    }
+
+    private MenuItem.OnActionExpandListener createSearchCollapseListener() {
+        return new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                getFragmentManager().popBackStack();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) { return true; }
         };
     }
 
