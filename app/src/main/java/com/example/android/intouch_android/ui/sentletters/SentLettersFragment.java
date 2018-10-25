@@ -167,7 +167,7 @@ public class SentLettersFragment extends Fragment {
 
         // add a line in between each list item
         mRecyclerView.addItemDecoration(
-                createListDivider(
+                ViewUtils.createListDivider(
                         mRecyclerView,
                         (LinearLayoutManager) mRecyclerView.getLayoutManager()
                 )
@@ -227,18 +227,9 @@ public class SentLettersFragment extends Fragment {
     }
 
     /* ************************************************************ */
-    /*                     Helpers                */
+    /*                              Helpers                         */
     /* ************************************************************ */
 
-    private DividerItemDecoration createListDivider(
-            RecyclerView recyclerView,
-            LinearLayoutManager layoutManager
-    ) {
-        return new DividerItemDecoration(
-                recyclerView.getContext(),
-                layoutManager.getOrientation()
-        );
-    }
 
     private SentLettersAdapter getRecyclerViewAdapter() {
         return (SentLettersAdapter) mRecyclerView.getAdapter();

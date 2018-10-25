@@ -2,6 +2,9 @@ package com.example.android.intouch_android.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,6 +12,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.android.intouch_android.R;
+import com.example.android.intouch_android.ui.sentletters.SentLettersAdapter;
+import com.example.android.intouch_android.ui.sentletters.SentLettersFragment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,10 +41,8 @@ public class ViewUtils {
      * @return true if all items successfully hidden; false otherwise
      */
     public static boolean setupActionBarMenuItems(Menu menu, List<Integer> hiddenMenuItems) {
-        Log.d(LOG_TAG, "setupActionBarMenuItems called");
         for (Integer itemId:MENU_ITEMS) {
             MenuItem menuItem = menu.findItem(itemId);
-            Log.d(LOG_TAG, menuItem.getTitle().toString());
             if (menuItem == null) {
                 return false;
             }
@@ -52,5 +55,15 @@ public class ViewUtils {
         }
 
         return true;
+    }
+
+    public static DividerItemDecoration createListDivider(
+            RecyclerView recyclerView,
+            LinearLayoutManager layoutManager
+    ) {
+        return new DividerItemDecoration(
+                recyclerView.getContext(),
+                layoutManager.getOrientation()
+        );
     }
 }
