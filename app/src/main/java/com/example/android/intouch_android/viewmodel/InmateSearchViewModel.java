@@ -25,7 +25,7 @@ public class InmateSearchViewModel extends AndroidViewModel {
     public InmateSearchViewModel(@NonNull Application application) {
         super(application);
         mInmatesRepository = new InmatesRepository(application.getApplicationContext());
-        mDebouncedSearchQuery = Transforms.debounce(mSearchQuery, 1000);
+        mDebouncedSearchQuery = Transforms.debounce(mSearchQuery, 800);
 
         mInmates = Transformations.switchMap(mDebouncedSearchQuery,
                 searchQuery -> mInmatesRepository.getInmatesByName(searchQuery)
