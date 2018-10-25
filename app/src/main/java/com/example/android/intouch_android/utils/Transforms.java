@@ -3,6 +3,8 @@ package com.example.android.intouch_android.utils;
 import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Transformations;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 
@@ -27,6 +29,14 @@ public class Transforms {
         debouncedSource.addSource(source, __ -> debouncer.call("key"));
 
         return debouncedSource;
+    }
+
+    public static <X> LiveData<X> startWith(LiveData<X> source, X initialValue) {
+        MediatorLiveData<X> result = new MediatorLiveData<>();
+        result.addSource(source, data -> result.setValue(data));
+        result.setValue(initialValue);
+
+        return result;
     }
 
     public static <X> List<X> filter(List<X> items, Function<X, Boolean> filter) {
