@@ -24,7 +24,7 @@ import com.example.android.intouch_android.model.Inmate;
 import com.example.android.intouch_android.model.Inmate$$Parcelable;
 import com.example.android.intouch_android.model.Letter;
 import com.example.android.intouch_android.utils.OnListItemClickListener;
-import com.example.android.intouch_android.utils.ViewUtils;
+import com.example.android.intouch_android.utils.Utils;
 import com.example.android.intouch_android.viewmodel.InmateSearchViewModel;
 
 import org.parceler.Parcels;
@@ -47,6 +47,10 @@ public class InmateSearchFragment
         extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private List<Integer> HIDDEN_MENU_ITEMS = Arrays.asList(R.id.send_letter);
+
+    /* ************************************************************ */
+    /*                           State                              */
+    /* ************************************************************ */
     private String mLetterId;
 
     /* ************************************************************ */
@@ -91,7 +95,7 @@ public class InmateSearchFragment
                              Bundle savedInstanceState) {
         setupActionBarInfo();
         setHasOptionsMenu(true);
-        ViewUtils.hideBottomNavigation(getActivity());
+        Utils.hideBottomNavigation(getActivity());
         setupStateFromBundleArgs();
 
         mParentView = inflater.inflate(R.layout.fragment_inmate_search, container,false);
@@ -99,7 +103,7 @@ public class InmateSearchFragment
 
         // TODO: Need to dismiss keyboard appearing from clicking on SearchView in previous Activity.
         // TODO: Can improve by changing UI element in LetterEditorFragment to a non-SearchView/EditView UI
-        ViewUtils.dismissKeyboard(getActivity());
+        Utils.dismissKeyboard(getActivity());
 
         /* Setup observers */
         mInmateSearchViewModel =
@@ -119,7 +123,7 @@ public class InmateSearchFragment
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.options_menu, menu);
 
-        ViewUtils.setupActionBarMenuItems(menu, HIDDEN_MENU_ITEMS);
+        Utils.setupActionBarMenuItems(menu, HIDDEN_MENU_ITEMS);
 
         /* Setup views */
         setupSearchView(menu);
@@ -140,7 +144,7 @@ public class InmateSearchFragment
         mSearchMenuItem.setOnActionExpandListener(createSearchCollapseListener());
     }
     /* ************************************************************ */
-    /*                            View Helpers                      */
+    /*                            Setup Helpers                     */
     /* ************************************************************ */
 
     private void setupActionBarInfo() {
@@ -164,7 +168,7 @@ public class InmateSearchFragment
 
         // add a line in between each list item
         mRecyclerView.addItemDecoration(
-                ViewUtils.createListDivider(
+                Utils.createListDivider(
                         mRecyclerView,
                         (LinearLayoutManager) mRecyclerView.getLayoutManager()
                 )
@@ -203,7 +207,7 @@ public class InmateSearchFragment
 
             @Override
             public boolean onQueryTextSubmit(String searchQuery) {
-                ViewUtils.dismissKeyboard(getActivity());
+                Utils.dismissKeyboard(getActivity());
                 return true;
             }
         };

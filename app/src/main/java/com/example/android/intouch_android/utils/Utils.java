@@ -2,6 +2,7 @@ package com.example.android.intouch_android.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,8 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class ViewUtils {
-    private static final String LOG_TAG = "ViewUtils";
+public class Utils {
+    private static final String LOG_TAG = "Utils";
     private static List<Integer> MENU_ITEMS = Arrays.asList(R.id.send_letter, R.id.menu_search);
 
     /*
@@ -70,4 +71,6 @@ public class ViewUtils {
     public static void hideBottomNavigation(Activity activity) {
         activity.findViewById(R.id.bottom_navigation).setVisibility(View.GONE);
     }
+
+
 }

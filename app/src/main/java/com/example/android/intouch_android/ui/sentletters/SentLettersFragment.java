@@ -9,7 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -23,7 +22,7 @@ import android.util.Log;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.Letter;
-import com.example.android.intouch_android.utils.ViewUtils;
+import com.example.android.intouch_android.utils.Utils;
 import com.example.android.intouch_android.viewmodel.SentLettersViewModel;
 
 import java.util.Arrays;
@@ -89,18 +88,11 @@ public class SentLettersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Set action bar details
         setupActionBarInfo();
-
-        // Allow fragment access to add menu items
         setHasOptionsMenu(true);
 
         /* Setup views */
-        mParentView = inflater.inflate(
-                R.layout.fragment_letters_list,
-                container,
-                false
-        );
+        mParentView = inflater.inflate(R.layout.fragment_letters_list, container, false);
         mNewLetterButton = mParentView.findViewById(R.id.new_letter_fab);
         setupRecyclerView();
 
@@ -125,12 +117,11 @@ public class SentLettersFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.options_menu, menu);
 
-        ViewUtils.setupActionBarMenuItems(menu, HIDDEN_MENU_ITEMS);
+        Utils.setupActionBarMenuItems(menu, HIDDEN_MENU_ITEMS);
 
         /* Setup views */
         setupSearchView(menu);
 
-        /* Setup observers */
         mSearchView.setOnQueryTextListener(createQueryListener());
         mSearchMenuItem.setOnActionExpandListener(createSearchMenuItemListener());
     }
@@ -143,7 +134,7 @@ public class SentLettersFragment extends Fragment {
     }
 
     /* ************************************************************ */
-    /*                            View Helpers                      */
+    /*                            Setup Helpers                     */
     /* ************************************************************ */
 
     private void setupActionBarInfo() {
@@ -167,7 +158,7 @@ public class SentLettersFragment extends Fragment {
 
         // add a line in between each list item
         mRecyclerView.addItemDecoration(
-                ViewUtils.createListDivider(
+                Utils.createListDivider(
                         mRecyclerView,
                         (LinearLayoutManager) mRecyclerView.getLayoutManager()
                 )
@@ -191,7 +182,7 @@ public class SentLettersFragment extends Fragment {
     }
 
     /* ************************************************************ */
-    /*                        Observers/Listeners                   */
+    /*                            Listeners                         */
     /* ************************************************************ */
     private SearchView.OnQueryTextListener createQueryListener() {
         return new SearchView.OnQueryTextListener() {
@@ -204,7 +195,7 @@ public class SentLettersFragment extends Fragment {
 
             @Override
             public boolean onQueryTextSubmit(String searchQuery) {
-                ViewUtils.dismissKeyboard(getActivity());
+                Utils.dismissKeyboard(getActivity());
                 return true;
             }
         };
