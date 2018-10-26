@@ -22,19 +22,16 @@
             android:textSize="18sp"
             android:gravity="center"
             />
-        <SearchView
+        <TextView
             android:id="@+id/inmate_search_bar"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:queryHint="Search for inmate"
-
-            android:iconifiedByDefault="false"
-            android:searchIcon="@null"
-
-            android:queryBackground="@android:color/transparent"
-            app:queryBackground="@android:color/transparent"
-            />
+            android:text="@string/inmate_search_hint"
+            android:textSize="18sp"
+            android:textColor="@android:color/darker_gray"
+            android:gravity="center_vertical"
+            android:paddingLeft="8dp"/>
     </LinearLayout>
 
     <View

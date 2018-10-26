@@ -52,7 +52,7 @@ public class LetterEditorFragment extends Fragment {
     /*                        UI Components                         */
     /* ************************************************************ */
     private View mEditorView;
-    private SearchView mInmateSearchView;
+    private TextView mInmateNameView;
 
     public LetterEditorFragment() { }
 
@@ -72,24 +72,17 @@ public class LetterEditorFragment extends Fragment {
         Utils.hideBottomNavigation(getActivity());
         setupStateFromBundleArgs();
 
-        // Inflate the layout for this fragment
-        mEditorView = inflater.inflate(
-                R.layout.fragment_letter_editor,
-                container,
-                false
-        );
+        mEditorView = inflater.inflate(R.layout.fragment_letter_editor, container,false);
 
-        mInmateSearchView = (SearchView) mEditorView.findViewById(R.id.inmate_search_bar);
-        Log.d(LOG_TAG, mInmateSearchView.toString());
+        mInmateNameView = (TextView) mEditorView.findViewById(R.id.inmate_search_bar);
+        Log.d(LOG_TAG, mInmateNameView.toString());
 
-        mInmateSearchView.setOnQueryTextFocusChangeListener((view, hasFocus) -> {
-            if (hasFocus) {
-                // TODO: Save as draft??? Or at least grab all letter info and pass it as a bundle
-                // TODO: Pass actual ID to bundle after modelling the data flow
-                Navigation.findNavController(view).navigate(
-                        LetterEditorFragmentDirections.searchAction("-1")
-                );
-            }
+        mInmateNameView.setOnClickListener(view -> {
+            // TODO: Save as draft??? Or at least grab all letter info and pass it as a bundle
+            // TODO: Pass actual ID to bundle after modelling the data flow
+            Navigation.findNavController(view).navigate(
+                    LetterEditorFragmentDirections.searchAction("-1")
+            );
         });
 
         return mEditorView;
