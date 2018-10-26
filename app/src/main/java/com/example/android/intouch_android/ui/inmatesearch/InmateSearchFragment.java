@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,13 +20,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.intouch_android.R;
+import com.example.android.intouch_android.model.Inmate;
+import com.example.android.intouch_android.model.Inmate$$Parcelable;
 import com.example.android.intouch_android.model.Letter;
-import com.example.android.intouch_android.utils.BackPressListener;
+import com.example.android.intouch_android.utils.OnListItemClickListener;
 import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.viewmodel.InmateSearchViewModel;
 
+import org.parceler.Parcels;
+
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.navigation.Navigation;
 
 
 /**
@@ -42,6 +47,7 @@ public class InmateSearchFragment
         extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private List<Integer> HIDDEN_MENU_ITEMS = Arrays.asList(R.id.send_letter);
+    private String mLetterId;
 
     /* ************************************************************ */
     /*                        UI Components                         */
@@ -84,34 +90,23 @@ public class InmateSearchFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setupActionBarInfo();
-
         setHasOptionsMenu(true);
+        ViewUtils.hideBottomNavigation(getActivity());
+        setupStateFromBundleArgs();
 
-        getActivity().findViewById(R.id.bottom_navigation).setVisibility(View.GONE);
-
-        mParentView = inflater.inflate(
-                R.layout.fragment_inmate_search,
-                container,
-                false
-        );
-
+        mParentView = inflater.inflate(R.layout.fragment_inmate_search, container,false);
         setupRecyclerView();
 
-        // TODO: Need to dismiss keyboard appearing from clicking on SearchView in previous Activity
-        // Can we get improve this? Fairly cryptic hack
+        // TODO: Need to dismiss keyboard appearing from clicking on SearchView in previous Activity.
+        // TODO: Can improve by changing UI element in LetterEditorFragment to a non-SearchView/EditView UI
         ViewUtils.dismissKeyboard(getActivity());
 
         /* Setup observers */
         mInmateSearchViewModel =
                 ViewModelProviders.of(this).get(InmateSearchViewModel.class);
 
-//        mInmateSearchViewModel.deleteCorrespondences_TEST();
-//        mInmateSearchViewModel.createCorrespondences_TEST();
-//        mInmateSearchViewModel.getDebouncedQuery_TEST().observe(this,
-//                query -> Log.d(LOG_TAG, query));
-
         mInmateSearchViewModel.getInmates().observe(this, inmates -> {
-            if (inmates.data != null) {
+            if (inmates != null && inmates.data != null) {
                 getRecyclerViewAdapter().setInmates(inmates.data);
             }
         });
@@ -128,8 +123,6 @@ public class InmateSearchFragment
 
         /* Setup views */
         setupSearchView(menu);
-
-        /* Setup observers */
         mSearchView.setOnQueryTextListener(createQueryListener());
     }
 
@@ -143,6 +136,7 @@ public class InmateSearchFragment
     public void onPrepareOptionsMenu (Menu menu) {
         // Auto-focus on search bar on loading the fragment
         mSearchMenuItem.expandActionView();
+        // Go back to letter editor on hitting up button
         mSearchMenuItem.setOnActionExpandListener(createSearchCollapseListener());
     }
     /* ************************************************************ */
@@ -159,7 +153,9 @@ public class InmateSearchFragment
     private void setupRecyclerView() {
         mRecyclerView = mParentView.findViewById(R.id.inmates_list);
         Context context = mRecyclerView.getContext();
-        InmateSearchAdapter recyclerViewAdapter = new InmateSearchAdapter(mListener);
+        InmateSearchAdapter recyclerViewAdapter = new InmateSearchAdapter(
+                createInmateOnClickListener()
+        );
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
 
@@ -226,6 +222,17 @@ public class InmateSearchFragment
         };
     }
 
+    private OnListItemClickListener<Inmate> createInmateOnClickListener() {
+        return inmate -> {
+            Navigation.findNavController(mParentView).navigate(
+                    InmateSearchFragmentDirections.selectInmateAction(
+                            (Inmate$$Parcelable) Parcels.wrap(inmate),
+                            mLetterId
+                    )
+            );
+        };
+    }
+
     /* ************************************************************ */
     /*                              Helpers                         */
     /* ************************************************************ */
@@ -235,7 +242,15 @@ public class InmateSearchFragment
         void onListFragmentInteraction(Letter item);
     }
 
-    public InmateSearchAdapter getRecyclerViewAdapter() {
+    private InmateSearchAdapter getRecyclerViewAdapter() {
         return (InmateSearchAdapter) mRecyclerView.getAdapter();
+    }
+
+    private void setupStateFromBundleArgs() {
+        Bundle argsBundle = getArguments();
+        if (argsBundle != null) {
+            InmateSearchFragmentArgs args = InmateSearchFragmentArgs.fromBundle(getArguments());
+            mLetterId = args.getLetterId();
+        }
     }
 }

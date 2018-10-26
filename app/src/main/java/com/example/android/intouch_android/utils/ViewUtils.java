@@ -66,4 +66,8 @@ public class ViewUtils {
                 layoutManager.getOrientation()
         );
     }
+
+    public static void hideBottomNavigation(Activity activity) {
+        activity.findViewById(R.id.bottom_navigation).setVisibility(View.GONE);
+    }
 }

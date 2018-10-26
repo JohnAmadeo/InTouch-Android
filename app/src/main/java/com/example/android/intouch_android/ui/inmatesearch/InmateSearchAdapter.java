@@ -1,5 +1,6 @@
 package com.example.android.intouch_android.ui.inmatesearch;
 
+import android.arch.core.util.Function;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import com.example.android.intouch_android.model.Inmate;
 import com.example.android.intouch_android.model.Inmate;
 import com.example.android.intouch_android.ui.inmatesearch.InmateSearchFragment.OnListFragmentInteractionListener;
 import com.example.android.intouch_android.model.Letter;
+import com.example.android.intouch_android.utils.OnListItemClickListener;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  */
 public class InmateSearchAdapter extends RecyclerView.Adapter<InmateSearchViewHolder> {
-    private final OnListFragmentInteractionListener mListener;
+    private final OnListItemClickListener<Inmate> mOnClickListener;
     private final SortedList<Inmate> mSortedInmates = new SortedList<>(
             Inmate.class,
             new SortedList.Callback<Inmate>() {
@@ -61,8 +63,8 @@ public class InmateSearchAdapter extends RecyclerView.Adapter<InmateSearchViewHo
             }
     );
 
-    public InmateSearchAdapter(OnListFragmentInteractionListener listener) {
-        mListener = listener;
+    public InmateSearchAdapter(OnListItemClickListener<Inmate> onClickListener) {
+        mOnClickListener = onClickListener;
     }
 
     @Override
@@ -74,9 +76,7 @@ public class InmateSearchAdapter extends RecyclerView.Adapter<InmateSearchViewHo
 
     @Override
     public void onBindViewHolder(final InmateSearchViewHolder holder, int position) {
-        holder.mItem = mSortedInmates.get(position);
-        holder.mNameView.setText(holder.mItem.getName());
-        holder.mFacilityView.setText(holder.mItem.getFacility());
+        holder.bind(mSortedInmates.get(position), mOnClickListener);
     }
 
     @Override

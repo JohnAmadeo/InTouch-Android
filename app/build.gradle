@@ -34,6 +34,9 @@ dependencies {
     // GSON (JSON library)
     implementation 'com.google.code.gson:gson:2.8.5'
 
+    implementation 'org.parceler:parceler-api:1.1.11'
+    annotationProcessor 'org.parceler:parceler:1.1.11'
+
     def nav_version = "1.0.0-alpha06"
 
     implementation "android.arch.navigation:navigation-fragment:$nav_version"

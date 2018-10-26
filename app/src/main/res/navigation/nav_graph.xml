@@ -22,6 +22,12 @@
         <action
             android:id="@+id/searchAction"
             app:destination="@id/inmateSearchFragment" />
+        <argument
+            android:name="InmateRecipient"
+            app:argType="com.example.android.intouch_android.model.Inmate$$Parcelable" />
+        <argument
+            android:name="LetterId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/inmateSearchFragment"
@@ -31,5 +37,8 @@
         <argument
             android:name="LetterId"
             app:argType="string" />
+        <action
+            android:id="@+id/selectInmateAction"
+            app:destination="@id/letterEditorFragment" />
     </fragment>
 </navigation>

@@ -3,36 +3,60 @@ package com.example.android.intouch_android.model;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
+
 import java.util.Date;
 
+@Parcel
 @Entity(tableName = "inmates")
 public class Inmate {
+    /*
+     * Class variables are not given "private" access modifier since Parceler gives build complaints
+     * due to private variables being much slower to work with. If no access modifier is given,
+     * then the visibility of class variables is as such:
+     *
+     *             │ Class │ Package │ Subclass │ Subclass │ World
+     *             │       │         │(same pkg)│(diff pkg)│
+     * ────────────┼───────┼─────────┼──────────┼──────────┼────────
+     * public      │   +   │    +    │    +     │     +    │   +
+     * ────────────┼───────┼─────────┼──────────┼──────────┼────────
+     * protected   │   +   │    +    │    +     │     +    │
+     * ────────────┼───────┼─────────┼──────────┼──────────┼────────
+     * no modifier │   +   │    +    │    +     │          │
+     * ────────────┼───────┼─────────┼──────────┼──────────┼────────
+     * private     │   +   │         │          │          │
+     *
+     */
+
     @PrimaryKey
     @NonNull
     @SerializedName("id")
-    private String id;
+    String id;
 
     @SerializedName("firstName")
-    private String firstName;
+    String firstName;
 
     @SerializedName("lastName")
-    private String lastName;
+    String lastName;
 
     @SerializedName("inmateNumber")
-    private String inmateNumber;
+    String inmateNumber;
 
     @SerializedName("dateOfBirth")
-    private Date dateOfBirth;
+    Date dateOfBirth;
 
     @SerializedName("facility")
-    private String facility;
+    String facility;
 
     public static final String dateFormat = "MM/dd/yy";
 
+    @ParcelConstructor
     public Inmate(
             String id,
             String firstName,
