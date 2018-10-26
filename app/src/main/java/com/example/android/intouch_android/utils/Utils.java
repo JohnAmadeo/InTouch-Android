@@ -72,5 +72,12 @@ public class Utils {
         activity.findViewById(R.id.bottom_navigation).setVisibility(View.GONE);
     }
 
-
+    public static boolean containsArgs(Bundle bundle, String ...arguments) {
+        for (String arg:arguments) {
+            if (!bundle.containsKey(arg)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -191,6 +191,14 @@ public class InmateSearchFragment
         mSearchView.setSearchableInfo(searchableInfo);
     }
 
+    private void setupStateFromBundleArgs() {
+        Bundle argsBundle = getArguments();
+        if (Utils.containsArgs(argsBundle, "LetterId")) {
+            InmateSearchFragmentArgs args = InmateSearchFragmentArgs.fromBundle(argsBundle);
+            mLetterId = args.getLetterId();
+        }
+    }
+
     /* ************************************************************ */
     /*                             Listeners                        */
     /* ************************************************************ */
@@ -248,13 +256,5 @@ public class InmateSearchFragment
 
     private InmateSearchAdapter getRecyclerViewAdapter() {
         return (InmateSearchAdapter) mRecyclerView.getAdapter();
-    }
-
-    private void setupStateFromBundleArgs() {
-        Bundle argsBundle = getArguments();
-        if (argsBundle != null) {
-            InmateSearchFragmentArgs args = InmateSearchFragmentArgs.fromBundle(getArguments());
-            mLetterId = args.getLetterId();
-        }
     }
 }

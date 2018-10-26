@@ -13,10 +13,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.example.android.intouch_android.R;
-import com.example.android.intouch_android.utils.ViewUtils;
+import com.example.android.intouch_android.model.Inmate;
+import com.example.android.intouch_android.model.Inmate$$Parcelable;
+import com.example.android.intouch_android.model.Letter;
+import com.example.android.intouch_android.utils.Utils;
+
+import org.parceler.Parcels;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,12 +42,19 @@ public class LetterEditorFragment extends Fragment {
     private static List<Integer> HIDDEN_MENU_ITEMS = Arrays.asList(R.id.menu_search);
     private OnFragmentInteractionListener mListener;
 
+    /* ************************************************************ */
+    /*                             State                            */
+    /* ************************************************************ */
+    private Inmate mInmate;
+    private Letter mLetter;
+
+    /* ************************************************************ */
+    /*                        UI Components                         */
+    /* ************************************************************ */
     private View mEditorView;
     private SearchView mInmateSearchView;
 
-    public LetterEditorFragment() {
-        // Required empty public constructor
-    }
+    public LetterEditorFragment() { }
 
     public static LetterEditorFragment newInstance(String param1, String param2) {
         LetterEditorFragment fragment = new LetterEditorFragment();
@@ -50,17 +62,15 @@ public class LetterEditorFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setupActionBarInfo();
-
-        // Allow fragment access to add menu items
         setHasOptionsMenu(true);
+        Utils.hideBottomNavigation(getActivity());
+        setupStateFromBundleArgs();
 
         // Inflate the layout for this fragment
         mEditorView = inflater.inflate(
@@ -90,7 +100,7 @@ public class LetterEditorFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.options_menu, menu);
 
-        ViewUtils.setupActionBarMenuItems(menu, HIDDEN_MENU_ITEMS);
+        Utils.setupActionBarMenuItems(menu, HIDDEN_MENU_ITEMS);
 
         MenuItem sendLetterButton = menu.findItem(R.id.send_letter);
         sendLetterButton.setOnMenuItemClickListener(createSendLetterButtonListener());
@@ -99,7 +109,7 @@ public class LetterEditorFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        ViewUtils.dismissKeyboard(getActivity());
+        Utils.dismissKeyboard(getActivity());
         mListener = null;
 
     }
@@ -116,7 +126,7 @@ public class LetterEditorFragment extends Fragment {
     }
 
     /* ************************************************************ */
-    /*                            View Helpers                      */
+    /*                            Setup Helpers                     */
     /* ************************************************************ */
 
     private void setupActionBarInfo() {
@@ -127,10 +137,22 @@ public class LetterEditorFragment extends Fragment {
         }
     }
 
+    private void setupStateFromBundleArgs() {
+        Bundle argsBundle = getArguments();
+        // From InmateSearchFragment
+        if (Utils.containsArgs(argsBundle, "LetterId", "InmateRecipient")) {
+            LetterEditorFragmentArgs args = LetterEditorFragmentArgs.fromBundle(argsBundle);
+
+            Inmate$$Parcelable x = args.getInmateRecipient();
+            mInmate = Parcels.unwrap(args.getInmateRecipient());
+        }
+    }
+
     /* ************************************************************ */
     /*                        Observers/Listeners                   */
     /* ************************************************************ */
 
+    // TODO: Replace with lambda function
     private MenuItem.OnMenuItemClickListener createSendLetterButtonListener() {
         return new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -153,3 +175,4 @@ public class LetterEditorFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 }
+
