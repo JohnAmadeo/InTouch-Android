@@ -54,7 +54,14 @@ public class Letter {
 
     @Override
     public String toString() {
-        return this.text;
+        return "Letter(" +
+                "id=" + this.getId() + "\n" +
+                "recipient=" + this.getRecipient() + "\n" +
+                "subject=" + this.getSubject() + "\n" +
+                "text=" + this.getText() + "\n" +
+                "timeSent=" + this.getTimeSentString() + "\n" +
+                "isDraft=" + this.isDraft + "\n" +
+                ")";
     }
 
     public String getId() { return this.id; }
