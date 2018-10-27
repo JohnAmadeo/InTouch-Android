@@ -1,11 +1,13 @@
 package com.example.android.intouch_android.repository;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.android.intouch_android.model.container.Status;
 import com.example.android.intouch_android.utils.AppExecutors;
 import com.example.android.intouch_android.api.WebserviceProvider;
 import com.example.android.intouch_android.api.Webservice;
@@ -24,8 +26,6 @@ public class LettersRepository {
     private final LocalDatabase mDB;
     private final AppExecutors mExecutors;
     private final AppState mAppState;
-
-//    private MutableLiveData<List<Letter>> mLetters;
 
     /* ************************************************************ */
     /*                      Public Functions                        */
@@ -72,6 +72,27 @@ public class LettersRepository {
 
         }.asLiveData();
     }
+
+    public LiveData<Resource<List<Letter>>> getDrafts() {
+        MediatorLiveData<Resource<List<Letter>>> result = new MediatorLiveData<>();
+        result.setValue(Resource.loading(null));
+
+        LiveData<List<Letter>> dbResult = mDB.letterDao().getDrafts();
+        result.addSource(dbResult, drafts -> {
+            result.removeSource(dbResult);
+            result.setValue(Resource.success(drafts));
+        });
+
+        return result;
+    }
+    
+    public void createDraft(Letter draft) {
+        mExecutors.diskIO().execute(() -> mDB.letterDao().insertLetter(draft));
+    }
+
+    /* ************************************************************ */
+    /*                       Test Functions                         */
+    /* ************************************************************ */
 
     public void createLetter_TEST() {
         mExecutors.diskIO().execute(() -> {
