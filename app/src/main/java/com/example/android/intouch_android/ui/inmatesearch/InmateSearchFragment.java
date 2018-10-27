@@ -95,7 +95,7 @@ public class InmateSearchFragment
                              Bundle savedInstanceState) {
         setupActionBarInfo();
         setHasOptionsMenu(true);
-        Utils.hideBottomNavigation(getActivity());
+        Utils.setBottomNavigationVisible(getActivity(), false);
         setupStateFromBundleArgs();
 
         mParentView = inflater.inflate(R.layout.fragment_inmate_search, container,false);

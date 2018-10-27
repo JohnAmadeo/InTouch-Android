@@ -68,8 +68,9 @@ public class Utils {
         );
     }
 
-    public static void hideBottomNavigation(Activity activity) {
-        activity.findViewById(R.id.bottom_navigation).setVisibility(View.GONE);
+    public static void setBottomNavigationVisible(Activity activity, boolean isVisible) {
+        activity.findViewById(R.id.bottom_navigation)
+                .setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     public static boolean containsArgs(Bundle bundle, String ...arguments) {

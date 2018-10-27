@@ -90,6 +90,7 @@ public class SentLettersFragment extends Fragment {
 
         setupActionBarInfo();
         setHasOptionsMenu(true);
+        Utils.setBottomNavigationVisible(getActivity(), true);
 
         /* Setup views */
         mParentView = inflater.inflate(R.layout.fragment_letters_list, container, false);

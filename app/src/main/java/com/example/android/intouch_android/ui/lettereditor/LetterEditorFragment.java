@@ -69,8 +69,8 @@ public class LetterEditorFragment extends Fragment {
                              Bundle savedInstanceState) {
         setupActionBarInfo();
         setHasOptionsMenu(true);
-        Utils.hideBottomNavigation(getActivity());
         setupStateFromBundleArgs();
+        Utils.setBottomNavigationVisible(getActivity(), false);
 
         mEditorView = inflater.inflate(R.layout.fragment_letter_editor, container,false);
 
