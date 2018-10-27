@@ -52,6 +52,21 @@ public class Letter {
         this.isDraft = isDraft;
     }
 
+    @Ignore
+    public Letter(
+            String id,
+            String recipient,
+            String subject,
+            String text
+    ) {
+        this.id = id;
+        this.recipient = recipient;
+        this.subject = subject;
+        this.text = text;
+        this.timeSent = null;
+        this.isDraft = true;
+    }
+
     @Override
     public String toString() {
         return "Letter(" +

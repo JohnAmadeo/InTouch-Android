@@ -32,6 +32,7 @@ import org.parceler.Parcels;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 
@@ -52,6 +53,8 @@ public class InmateSearchFragment
     /*                           State                              */
     /* ************************************************************ */
     private String mLetterId;
+    private InmateSearchViewModel mInmateSearchViewModel;
+    private OnListFragmentInteractionListener mListener;
 
     /* ************************************************************ */
     /*                        UI Components                         */
@@ -62,12 +65,6 @@ public class InmateSearchFragment
 
     private RecyclerView mRecyclerView;
 
-    /* ************************************************************ */
-    /*                           Streams                            */
-    /* ************************************************************ */
-
-    private InmateSearchViewModel mInmateSearchViewModel;
-    private OnListFragmentInteractionListener mListener;
 
     public InmateSearchFragment() { }
     public static InmateSearchFragment newInstance(String param1, String param2) {
@@ -236,11 +233,15 @@ public class InmateSearchFragment
 
     private OnListItemClickListener<Inmate> createInmateOnClickListener() {
         return inmate -> {
+            mSearchMenuItem.collapseActionView();
             Navigation.findNavController(mParentView).navigate(
                     InmateSearchFragmentDirections.selectInmateAction(
                             (Inmate$$Parcelable) Parcels.wrap(inmate),
                             mLetterId
-                    )
+                    ),
+                    new NavOptions.Builder()
+                            .setPopUpTo(R.id.letterEditorFragment, false)
+                            .build()
             );
         };
     }

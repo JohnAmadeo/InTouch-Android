@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,14 +21,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.Letter;
+import com.example.android.intouch_android.ui.lettereditor.LetterEditorFragmentArgs;
 import com.example.android.intouch_android.utils.Utils;
 import com.example.android.intouch_android.viewmodel.SentLettersViewModel;
 
+import org.parceler.Parcels;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import androidx.navigation.Navigation;
 
@@ -87,7 +94,6 @@ public class SentLettersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         setupActionBarInfo();
         setHasOptionsMenu(true);
         Utils.setBottomNavigationVisible(getActivity(), true);
@@ -102,13 +108,15 @@ public class SentLettersFragment extends Fragment {
                 ViewModelProviders.of(this).get(SentLettersViewModel.class);
 
         mSentLettersViewModel.getDisplayedLetters().observe(this, letters -> {
-                Log.d(LOG_TAG, "DisplayedLetters=" + String.valueOf(letters.size()));
-                getRecyclerViewAdapter().setLetters(letters);
+            Log.d(LOG_TAG, letters.toString());
+            getRecyclerViewAdapter().setLetters(letters);
         });
 
         mNewLetterButton.setOnClickListener(
                 view -> Navigation.findNavController(view).navigate(R.id.letterEditorFragment)
         );
+
+        setupFromBundleArgs();
 
         return mParentView;
     }
@@ -180,6 +188,19 @@ public class SentLettersFragment extends Fragment {
                 searchManager.getSearchableInfo(getActivity().getComponentName());
 
         mSearchView.setSearchableInfo(searchableInfo);
+    }
+
+    private void setupFromBundleArgs() {
+        Bundle argsBundle = getArguments();
+        if (Utils.containsArgs(argsBundle, "DraftSaved")) {
+            SentLettersFragmentArgs args = SentLettersFragmentArgs.fromBundle(argsBundle);
+
+            if (args.getDraftSaved()) {
+                Toast toast = Toast.makeText(getContext(), "Saved as draft!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.BOTTOM, 0, 200);
+                toast.show();
+            }
+        }
     }
 
     /* ************************************************************ */

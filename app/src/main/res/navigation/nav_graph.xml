@@ -3,16 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/lettersFragment">
+    app:startDestination="@id/sentLettersFragment">
 
     <fragment
-        android:id="@+id/lettersFragment"
+        android:id="@+id/sentLettersFragment"
         android:name="com.example.android.intouch_android.ui.sentletters.SentLettersFragment"
         android:label="fragment_letters_list"
         tools:layout="@layout/fragment_letters_list" >
         <action
             android:id="@+id/action_lettersFragment_to_letterEditorFragment"
             app:destination="@id/letterEditorFragment" />
+        <argument
+            android:name="DraftSaved"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/letterEditorFragment"
@@ -28,6 +31,10 @@
         <argument
             android:name="LetterId"
             app:argType="string" />
+        <action
+            android:id="@+id/exitEditorAction"
+            app:destination="@id/sentLettersFragment"
+            app:popUpTo="@+id/sentLettersFragment" />
     </fragment>
     <fragment
         android:id="@+id/inmateSearchFragment"
