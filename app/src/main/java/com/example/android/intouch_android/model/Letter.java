@@ -2,6 +2,7 @@ package com.example.android.intouch_android.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -64,6 +65,10 @@ public class Letter {
     public Date getTimeSent() { return this.timeSent; }
     public String getTimeSentString() { return dateToString(this.timeSent); }
     public static String dateToString(Date date) {
+        if (date == null) {
+            return null;
+        }
+
         DateFormat df = new SimpleDateFormat(dateFormat);
         return df.format(date);
     }

@@ -13,6 +13,9 @@ import java.util.Locale;
 public class DateConverter {
     @TypeConverter
     public static Date toDate(String dateString) {
+        if (dateString == null) {
+            return null;
+        }
         DateFormat df = new SimpleDateFormat(Letter.dateFormat, Locale.ENGLISH);
         try {
             return df.parse(dateString);
@@ -24,6 +27,6 @@ public class DateConverter {
 
     @TypeConverter
     public static String toString(Date date) {
-        return Letter.dateToString(date);
+        return date == null ? null : Letter.dateToString(date);
     }
 }
