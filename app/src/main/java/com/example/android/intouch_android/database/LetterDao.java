@@ -20,7 +20,7 @@ public interface LetterDao {
     @Query("SELECT * FROM letters WHERE isDraft ORDER BY timeSent DESC ")
     LiveData<List<Letter>> getDrafts();
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertLetter(Letter letter);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

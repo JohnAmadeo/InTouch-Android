@@ -134,7 +134,7 @@ public class LetterEditorFragment extends Fragment {
         if (item.getItemId() == android.R.id.home) {
             boolean draftSaved = false;
             if (shouldSaveAsDraft()) {
-                mLetterEditorViewModel.createDraft(getLetterFromUI());
+                mLetterEditorViewModel.saveDraft(getLetterFromUI());
                 draftSaved = true;
             }
 

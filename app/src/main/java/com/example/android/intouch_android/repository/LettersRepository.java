@@ -85,8 +85,8 @@ public class LettersRepository {
 
         return result;
     }
-    
-    public void createDraft(Letter draft) {
+
+    public void saveDraft(Letter draft) {
         mExecutors.diskIO().execute(() -> mDB.letterDao().insertLetter(draft));
     }
 

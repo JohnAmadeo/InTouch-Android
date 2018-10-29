@@ -15,7 +15,7 @@ public class LetterEditorViewModel extends AndroidViewModel {
         mLettersRepository = new LettersRepository(application.getApplicationContext());
     }
 
-    public void createDraft(Letter draft) {
-        mLettersRepository.createDraft(draft);
+    public void saveDraft(Letter draft) {
+        mLettersRepository.saveDraft(draft);
     }
 }
