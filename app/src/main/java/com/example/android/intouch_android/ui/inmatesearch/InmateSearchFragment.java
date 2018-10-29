@@ -98,10 +98,6 @@ public class InmateSearchFragment
         mParentView = inflater.inflate(R.layout.fragment_inmate_search, container,false);
         setupRecyclerView();
 
-        // TODO: Need to dismiss keyboard appearing from clicking on SearchView in previous Activity.
-        // TODO: Can improve by changing UI element in LetterEditorFragment to a non-SearchView/EditView UI
-        Utils.dismissKeyboard(getActivity());
-
         /* Setup observers */
         mInmateSearchViewModel =
                 ViewModelProviders.of(this).get(InmateSearchViewModel.class);
