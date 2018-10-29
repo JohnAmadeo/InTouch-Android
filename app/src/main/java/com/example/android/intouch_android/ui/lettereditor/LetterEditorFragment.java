@@ -89,23 +89,33 @@ public class LetterEditorFragment extends Fragment {
         setHasOptionsMenu(true);
         Utils.setBottomNavigationVisible(getActivity(), false);
 
+        /* -------------------------------------------------------------------------------------- */
         mEditorView = inflater.inflate(R.layout.fragment_letter_editor, container,false);
         mInmateNameView = mEditorView.findViewById(R.id.inmate_search_bar);
         mSubjectInput = mEditorView.findViewById(R.id.subject_input);
         mTextEditor = mEditorView.findViewById(R.id.text_editor);
 
+        mLetterEditorViewModel =
+                ViewModelProviders.of(this).get(LetterEditorViewModel.class);
+        /* -------------------------------------------------------------------------------------- */
+
+        setupFromBundleArgs();
+
         mInmateNameView.setOnClickListener(view -> {
-            // TODO: Save as draft??? Or at least grab all letter info and pass it as a bundle
-            // TODO: Pass actual ID to bundle after modelling the data flow
+            Letter draft = getLetterFromUI();
+            mLetterEditorViewModel.saveDraft(draft);
             Navigation.findNavController(view).navigate(
-                    LetterEditorFragmentDirections.searchAction("-1")
+                    LetterEditorFragmentDirections.searchAction(mLetterId)
             );
         });
 
-        mLetterEditorViewModel =
-                ViewModelProviders.of(this).get(LetterEditorViewModel.class);
-
-        setupFromBundleArgs();
+        mLetterEditorViewModel.getDraft().observe(this, resource -> {
+            if (resource != null && resource.data != null) {
+                Letter draft = resource.data;
+                mSubjectInput.setText(draft.getSubject());
+                mTextEditor.setText(draft.getText());
+            }
+        });
 
         return mEditorView;
     }
@@ -164,6 +174,7 @@ public class LetterEditorFragment extends Fragment {
             mInmateNameView.setTextColor(Color.BLACK);
 
             mLetterId = args.getLetterId();
+            mLetterEditorViewModel.setLoadRequest(mLetterId);
         }
         // New letter
         else {

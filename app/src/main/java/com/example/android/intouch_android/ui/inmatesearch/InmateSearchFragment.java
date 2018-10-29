@@ -106,9 +106,10 @@ public class InmateSearchFragment
         mInmateSearchViewModel =
                 ViewModelProviders.of(this).get(InmateSearchViewModel.class);
 
-        mInmateSearchViewModel.getInmates().observe(this, inmates -> {
-            if (inmates != null && inmates.data != null) {
-                getRecyclerViewAdapter().setInmates(inmates.data);
+        mInmateSearchViewModel.getInmates().observe(this, resource -> {
+            if (resource != null && resource.data != null) {
+                List<Inmate> inmates = resource.data;
+                getRecyclerViewAdapter().setInmates(inmates);
             }
         });
 
