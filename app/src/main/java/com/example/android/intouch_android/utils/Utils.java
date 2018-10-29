@@ -3,6 +3,8 @@ package com.example.android.intouch_android.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,7 +43,7 @@ public class Utils {
     /*
      * @return true if all items successfully hidden; false otherwise
      */
-    public static boolean setupActionBarMenuItems(Menu menu, List<Integer> hiddenMenuItems) {
+    public static boolean setupMenuItems(Menu menu, List<Integer> hiddenMenuItems) {
         for (Integer itemId:MENU_ITEMS) {
             MenuItem menuItem = menu.findItem(itemId);
             if (menuItem == null) {
@@ -56,6 +58,18 @@ public class Utils {
         }
 
         return true;
+    }
+
+    public static void setupActionBarOptions(
+            Activity activity,
+            String title,
+            boolean enableUpButton
+    ) {
+        ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(title);
+            actionBar.setDisplayHomeAsUpEnabled(enableUpButton);
+        }
     }
 
     public static DividerItemDecoration createListDivider(

@@ -4,7 +4,6 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -25,15 +24,11 @@ import android.widget.Toast;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.Letter;
-import com.example.android.intouch_android.ui.lettereditor.LetterEditorFragmentArgs;
 import com.example.android.intouch_android.utils.Utils;
 import com.example.android.intouch_android.viewmodel.SentLettersViewModel;
 
-import org.parceler.Parcels;
-
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import androidx.navigation.Navigation;
 
@@ -94,7 +89,7 @@ public class SentLettersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setupActionBarInfo();
+        Utils.setupActionBarOptions(getActivity(), "InTouch", false);
         setHasOptionsMenu(true);
         Utils.setBottomNavigationVisible(getActivity(), true);
 
@@ -126,7 +121,7 @@ public class SentLettersFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.options_menu, menu);
 
-        Utils.setupActionBarMenuItems(menu, HIDDEN_MENU_ITEMS);
+        Utils.setupMenuItems(menu, HIDDEN_MENU_ITEMS);
 
         /* Setup views */
         setupSearchView(menu);
@@ -145,15 +140,6 @@ public class SentLettersFragment extends Fragment {
     /* ************************************************************ */
     /*                            Setup Helpers                     */
     /* ************************************************************ */
-
-    private void setupActionBarInfo() {
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle("InTouch");
-            actionBar.setDisplayHomeAsUpEnabled(false);
-        }
-    }
-
     private void setupRecyclerView() {
         mRecyclerView = mParentView.findViewById(R.id.fragment_letters_list);
         Context context = mRecyclerView.getContext();

@@ -85,7 +85,7 @@ public class LetterEditorFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setupActionBarInfo();
+        Utils.setupActionBarOptions(getActivity(), "Write Letter", true);
         setHasOptionsMenu(true);
         Utils.setBottomNavigationVisible(getActivity(), false);
 
@@ -115,7 +115,7 @@ public class LetterEditorFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.options_menu, menu);
 
-        Utils.setupActionBarMenuItems(menu, HIDDEN_MENU_ITEMS);
+        Utils.setupMenuItems(menu, HIDDEN_MENU_ITEMS);
 
         MenuItem sendLetterButton = menu.findItem(R.id.send_letter);
         sendLetterButton.setOnMenuItemClickListener(createSendLetterButtonListener());
@@ -153,15 +153,6 @@ public class LetterEditorFragment extends Fragment {
     /* ************************************************************ */
     /*                            Setup Helpers                     */
     /* ************************************************************ */
-
-    private void setupActionBarInfo() {
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle("Write Letter");
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
     private void setupFromBundleArgs() {
         Bundle argsBundle = getArguments();
         // Load pre-existing letter

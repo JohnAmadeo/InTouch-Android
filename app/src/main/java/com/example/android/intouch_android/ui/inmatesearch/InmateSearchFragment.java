@@ -90,7 +90,7 @@ public class InmateSearchFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setupActionBarInfo();
+        Utils.setupActionBarOptions(getActivity(), "", false);
         setHasOptionsMenu(true);
         Utils.setBottomNavigationVisible(getActivity(), false);
         setupStateFromBundleArgs();
@@ -120,7 +120,7 @@ public class InmateSearchFragment
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.options_menu, menu);
 
-        Utils.setupActionBarMenuItems(menu, HIDDEN_MENU_ITEMS);
+        Utils.setupMenuItems(menu, HIDDEN_MENU_ITEMS);
 
         /* Setup views */
         setupSearchView(menu);
@@ -143,14 +143,6 @@ public class InmateSearchFragment
     /* ************************************************************ */
     /*                            Setup Helpers                     */
     /* ************************************************************ */
-
-    private void setupActionBarInfo() {
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle("");
-        }
-    }
-
     private void setupRecyclerView() {
         mRecyclerView = mParentView.findViewById(R.id.inmates_list);
         Context context = mRecyclerView.getContext();
