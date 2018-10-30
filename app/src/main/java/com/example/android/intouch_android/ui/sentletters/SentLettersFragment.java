@@ -51,34 +51,12 @@ public class SentLettersFragment extends Fragment {
     /* ************************************************************ */
     private SentLettersViewModel mSentLettersViewModel;
 
-    // TODO: Get rid of this variable
-    private OnListFragmentInteractionListener mListener;
-
     /* ************************************************************ */
     /*                      Public Functions                        */
     /* ************************************************************ */
 
     /* Mandatory empty constructor for the fragment manager to instantiate the fragment */
     public SentLettersFragment() {
-    }
-
-    public static SentLettersFragment newInstance(int columnCount) {
-        SentLettersFragment fragment = new SentLettersFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
     }
 
     @Override
@@ -134,7 +112,6 @@ public class SentLettersFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         getActivity().invalidateOptionsMenu();
-        mListener = null;
     }
 
     /* ************************************************************ */
@@ -143,7 +120,7 @@ public class SentLettersFragment extends Fragment {
     private void setupRecyclerView() {
         mRecyclerView = mParentView.findViewById(R.id.fragment_letters_list);
         Context context = mRecyclerView.getContext();
-        SentLettersAdapter recyclerViewAdapter = new SentLettersAdapter(mListener);
+        SentLettersAdapter recyclerViewAdapter = new SentLettersAdapter();
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
 
         // set layout of RecyclerView to a list of vertically scrolling items
@@ -232,10 +209,5 @@ public class SentLettersFragment extends Fragment {
 
     private SentLettersAdapter getRecyclerViewAdapter() {
         return (SentLettersAdapter) mRecyclerView.getAdapter();
-    }
-
-    /* See "http://developer.android.com/training/basics/fragments/communicating.html" */
-    public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Letter item);
     }
 }

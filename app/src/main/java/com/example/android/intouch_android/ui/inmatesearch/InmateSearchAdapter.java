@@ -10,16 +10,11 @@ import android.view.ViewGroup;
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.Inmate;
 import com.example.android.intouch_android.model.Inmate;
-import com.example.android.intouch_android.ui.inmatesearch.InmateSearchFragment.OnListFragmentInteractionListener;
 import com.example.android.intouch_android.model.Letter;
 import com.example.android.intouch_android.utils.OnListItemClickListener;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link Letter} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- */
 public class InmateSearchAdapter extends RecyclerView.Adapter<InmateSearchViewHolder> {
     private final OnListItemClickListener<Inmate> mOnClickListener;
     private final SortedList<Inmate> mSortedInmates = new SortedList<>(

@@ -4,11 +4,8 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -22,13 +19,9 @@ import android.view.ViewGroup;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.Inmate;
-import com.example.android.intouch_android.model.Inmate$$Parcelable;
-import com.example.android.intouch_android.model.Letter;
 import com.example.android.intouch_android.utils.OnListItemClickListener;
 import com.example.android.intouch_android.utils.Utils;
 import com.example.android.intouch_android.viewmodel.InmateSearchViewModel;
-
-import org.parceler.Parcels;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,15 +29,6 @@ import java.util.List;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link InmateSearchFragment.OnListFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link InmateSearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class InmateSearchFragment
         extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
@@ -54,9 +38,7 @@ public class InmateSearchFragment
     /*                           State                              */
     /* ************************************************************ */
     private String mLetterId;
-    private Inmate mInmate = null;
     private InmateSearchViewModel mInmateSearchViewModel;
-    private OnListFragmentInteractionListener mListener;
 
     /* ************************************************************ */
     /*                        UI Components                         */
@@ -67,24 +49,7 @@ public class InmateSearchFragment
 
     private RecyclerView mRecyclerView;
 
-
     public InmateSearchFragment() { }
-    public static InmateSearchFragment newInstance(String param1, String param2) {
-        InmateSearchFragment fragment = new InmateSearchFragment();
-        fragment.setArguments(new Bundle());
-        return fragment;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
@@ -129,7 +94,6 @@ public class InmateSearchFragment
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -248,11 +212,6 @@ public class InmateSearchFragment
     /* ************************************************************ */
     /*                              Helpers                         */
     /* ************************************************************ */
-
-    /* See "http://developer.android.com/training/basics/fragments/communicating.html" */
-    public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Letter item);
-    }
 
     private InmateSearchAdapter getRecyclerViewAdapter() {
         return (InmateSearchAdapter) mRecyclerView.getAdapter();

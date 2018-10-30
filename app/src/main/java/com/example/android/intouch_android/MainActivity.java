@@ -18,9 +18,7 @@ import androidx.navigation.Navigation;
 
 public class MainActivity
         extends AppCompatActivity
-        implements SentLettersFragment.OnListFragmentInteractionListener,
-        InmateSearchFragment.OnListFragmentInteractionListener,
-            BottomNavigationView.OnNavigationItemSelectedListener {
+        implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private final String LOG_TAG = this.getClass().getSimpleName();
     private TextView mTextMessage;

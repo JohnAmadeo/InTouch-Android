@@ -7,18 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.intouch_android.R;
-import com.example.android.intouch_android.ui.sentletters.SentLettersFragment.OnListFragmentInteractionListener;
 import com.example.android.intouch_android.model.Letter;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link Letter} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class SentLettersAdapter extends RecyclerView.Adapter<SentLetterViewHolder> {
-    private final OnListFragmentInteractionListener mListener;
     private final SortedList<Letter> mSortedLetters = new SortedList<>(
             Letter.class,
             new SortedList.Callback<Letter>() {
@@ -60,8 +53,7 @@ public class SentLettersAdapter extends RecyclerView.Adapter<SentLetterViewHolde
             }
     );
 
-    public SentLettersAdapter(OnListFragmentInteractionListener listener) {
-        mListener = listener;
+    public SentLettersAdapter() {
     }
 
     @Override
@@ -82,17 +74,6 @@ public class SentLettersAdapter extends RecyclerView.Adapter<SentLetterViewHolde
         }
         holder.mTextView.setText(holder.mItem.getText());
         holder.mTimeSentView.setText(holder.mItem.getTimeSentString());
-
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
-            }
-        });
     }
 
     @Override
