@@ -57,6 +57,7 @@ public class InmateSearchFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Utils.setActionBarVisible(getActivity(), true);
         Utils.setupActionBarOptions(getActivity(), "", false);
         setHasOptionsMenu(true);
         Utils.setBottomNavigationVisible(getActivity(), false);

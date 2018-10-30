@@ -87,6 +87,15 @@ public class Utils {
                 .setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
+    public static void setActionBarVisible(Activity activity, boolean isVisible) {
+        ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
+        if (isVisible) {
+            actionBar.show();
+        } else {
+            actionBar.hide();
+        }
+    }
+
     public static boolean containsArgs(Bundle bundle, String ...arguments) {
         for (String arg:arguments) {
             if (!bundle.containsKey(arg)) {

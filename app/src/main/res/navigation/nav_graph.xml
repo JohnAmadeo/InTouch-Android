@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/sentLettersFragment">
+    app:startDestination="@id/authenticationFragment">
 
     <fragment
         android:id="@+id/sentLettersFragment"
@@ -44,5 +44,14 @@
         <action
             android:id="@+id/selectInmateAction"
             app:destination="@id/letterEditorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/authenticationFragment"
+        android:name="com.example.android.intouch_android.ui.launch.LaunchFragment"
+        android:label="fragment_authentication"
+        tools:layout="@layout/fragment_launch" >
+        <action
+            android:id="@+id/action_authenticationFragment_to_sentLettersFragment"
+            app:destination="@id/sentLettersFragment" />
     </fragment>
 </navigation>

@@ -67,6 +67,7 @@ public class SentLettersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Utils.setActionBarVisible(getActivity(), true);
         Utils.setupActionBarOptions(getActivity(), "InTouch", false);
         setHasOptionsMenu(true);
         Utils.setBottomNavigationVisible(getActivity(), true);
