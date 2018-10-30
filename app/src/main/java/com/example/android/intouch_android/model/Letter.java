@@ -22,6 +22,9 @@ public class Letter {
     @SerializedName("recipient")
     private String recipient;
 
+    @SerializedName("recipientId")
+    private String recipientId;
+
     @SerializedName("subject")
     private String subject;
 
@@ -39,6 +42,7 @@ public class Letter {
     public Letter(
             String id,
             String recipient,
+            String recipientId,
             String subject,
             String text,
             Date timeSent,
@@ -46,6 +50,7 @@ public class Letter {
     ) {
         this.id = id;
         this.recipient = recipient;
+        this.recipientId = recipientId;
         this.subject = subject;
         this.text = text;
         this.timeSent = timeSent;
@@ -72,6 +77,7 @@ public class Letter {
         return "Letter(" +
                 "id=" + this.getId() + "\n" +
                 "recipient=" + this.getRecipient() + "\n" +
+                "recipientId=" + this.getRecipientId() + "\n" +
                 "subject=" + this.getSubject() + "\n" +
                 "text=" + this.getText() + "\n" +
                 "timeSent=" + this.getTimeSentString() + "\n" +
@@ -81,6 +87,7 @@ public class Letter {
 
     public String getId() { return this.id; }
     public String getRecipient() { return this.recipient; }
+    public String getRecipientId() { return this.recipientId; }
     public String getSubject() { return this.subject; }
     public String getText() { return this.text; }
 
@@ -109,6 +116,7 @@ public class Letter {
         else {
             return getId().equals(letter.getId()) &&
                     getRecipient().equals(letter.getRecipient()) &&
+                    getRecipientId().equals(letter.getRecipientId()) &&
                     getSubject().equals(letter.getSubject()) &&
                     getText().equals(letter.getText()) &&
                     getTimeSent().equals(letter.getTimeSent()) &&
@@ -119,10 +127,9 @@ public class Letter {
     public boolean contains(String searchQuery) {
         searchQuery = searchQuery.toLowerCase();
         return getRecipient().toLowerCase().contains(searchQuery) ||
+                getRecipientId().toLowerCase().contains(searchQuery) ||
                 getSubject().toLowerCase().contains(searchQuery) ||
                 getText().toLowerCase().contains(searchQuery) ||
                 getTimeSentString().contains(searchQuery);
     }
-
-
 }

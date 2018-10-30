@@ -13,7 +13,7 @@ import com.example.android.intouch_android.model.Letter;
 
 @Database(
         entities = {Letter.class, Inmate.class, Correspondence.class},
-        version = 4,
+        version = 5,
         exportSchema = false
 )
 @TypeConverters(DateConverter.class)
