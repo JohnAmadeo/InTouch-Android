@@ -30,19 +30,9 @@ import java.util.List;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LetterEditorFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link LetterEditorFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class LetterEditorFragment extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private static List<Integer> HIDDEN_MENU_ITEMS = Arrays.asList(R.id.menu_search);
-    private OnFragmentInteractionListener mListener;
 
     // View Model
     private LetterEditorViewModel mViewModel;
@@ -53,22 +43,6 @@ public class LetterEditorFragment extends Fragment {
     private EditText mTextEditor;
 
     public LetterEditorFragment() { }
-
-    public static LetterEditorFragment newInstance(String param1, String param2) {
-        LetterEditorFragment fragment = new LetterEditorFragment();
-        return fragment;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
@@ -136,7 +110,6 @@ public class LetterEditorFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         Utils.dismissKeyboard(getActivity());
-        mListener = null;
     }
 
     @Override
@@ -215,15 +188,6 @@ public class LetterEditorFragment extends Fragment {
         return draft.getText().length() > 0 ||
                 draft.getSubject().length() > 0 ||
                 draft.getRecipientId() != null;
-    }
-
-
-    /**
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 }
 

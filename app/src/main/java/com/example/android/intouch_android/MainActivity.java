@@ -19,7 +19,6 @@ import androidx.navigation.Navigation;
 public class MainActivity
         extends AppCompatActivity
         implements SentLettersFragment.OnListFragmentInteractionListener,
-        LetterEditorFragment.OnFragmentInteractionListener,
         InmateSearchFragment.OnListFragmentInteractionListener,
             BottomNavigationView.OnNavigationItemSelectedListener {
 
