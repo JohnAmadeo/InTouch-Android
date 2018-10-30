@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -53,6 +54,7 @@ public class InmateSearchFragment
     /*                           State                              */
     /* ************************************************************ */
     private String mLetterId;
+    private Inmate mInmate = null;
     private InmateSearchViewModel mInmateSearchViewModel;
     private OnListFragmentInteractionListener mListener;
 
@@ -195,7 +197,7 @@ public class InmateSearchFragment
             public boolean onQueryTextChange(String searchQuery) {
                 Log.d(LOG_TAG, searchQuery);
                 mInmateSearchViewModel.setQuery(searchQuery);
-//                mRecyclerView.scrollToPosition(0);
+                mRecyclerView.scrollToPosition(0);
                 return true;
             }
 
@@ -211,7 +213,12 @@ public class InmateSearchFragment
         return new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                getFragmentManager().popBackStack();
+                Navigation.findNavController(mParentView).navigate(
+                        InmateSearchFragmentDirections.selectInmateAction(mLetterId),
+                        new NavOptions.Builder()
+                                .setPopUpTo(R.id.letterEditorFragment, false)
+                                .build()
+                );
                 return true;
             }
 
@@ -222,16 +229,19 @@ public class InmateSearchFragment
 
     private OnListItemClickListener<Inmate> createInmateOnClickListener() {
         return inmate -> {
-            mSearchMenuItem.collapseActionView();
-            Navigation.findNavController(mParentView).navigate(
-                    InmateSearchFragmentDirections.selectInmateAction(
-                            (Inmate$$Parcelable) Parcels.wrap(inmate),
-                            mLetterId
-                    ),
-                    new NavOptions.Builder()
-                            .setPopUpTo(R.id.letterEditorFragment, false)
-                            .build()
+            mInmateSearchViewModel.updateDraftRecipient(
+                    mLetterId,
+                    inmate.getId(),
+                    inmate.getName()
             );
+
+            // NOTE: VERY UGLY!
+            // Since we need to a) collapse the action view to prevent it from appearing on the
+            // fragment we want to transition to, and b) we have an event listener attached
+            // on the action view to handle the case where the user wants to navigate back w/o
+            // picking an inmate, we have to delegate navigation to the collapse listener. Otherwise
+            // we will try to navigate back 2x and throw and error
+            mSearchMenuItem.collapseActionView();
         };
     }
 

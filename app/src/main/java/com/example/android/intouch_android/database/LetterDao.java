@@ -23,6 +23,13 @@ public interface LetterDao {
     @Query("SELECT * FROM letters WHERE isDraft AND id = :letterId")
     LiveData<Letter> getDraft(String letterId);
 
+    @Query("" +
+            "UPDATE letters " +
+            "SET recipientId = :recipientId, recipient = :recipient " +
+            "WHERE id = :letterId"
+    )
+    void updateDraftRecipient(String letterId, String recipientId, String recipient);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertLetter(Letter letter);
 

@@ -26,9 +26,6 @@
             android:id="@+id/searchAction"
             app:destination="@id/inmateSearchFragment" />
         <argument
-            android:name="InmateRecipient"
-            app:argType="com.example.android.intouch_android.model.Inmate$$Parcelable" />
-        <argument
             android:name="LetterId"
             app:argType="string" />
         <action

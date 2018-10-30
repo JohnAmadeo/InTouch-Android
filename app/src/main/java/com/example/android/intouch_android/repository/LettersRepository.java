@@ -103,6 +103,12 @@ public class LettersRepository {
         mExecutors.diskIO().execute(() -> mDB.letterDao().insertLetter(draft));
     }
 
+    public void updateDraftRecipient(String letterId, String recipientId, String recipient) {
+        mExecutors.diskIO().execute(() -> {
+            mDB.letterDao().updateDraftRecipient(letterId, recipientId, recipient);
+        });
+    }
+
     /* ************************************************************ */
     /*                       Test Functions                         */
     /* ************************************************************ */
