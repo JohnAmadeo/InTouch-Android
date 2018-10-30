@@ -6,8 +6,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,16 +19,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.android.intouch_android.R;
-import com.example.android.intouch_android.model.Inmate;
 import com.example.android.intouch_android.model.Letter;
 import com.example.android.intouch_android.utils.Utils;
+import com.example.android.intouch_android.utils.VoidFunction;
 import com.example.android.intouch_android.viewmodel.LetterEditorViewModel;
-
-import org.parceler.Parcels;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
@@ -46,16 +44,9 @@ public class LetterEditorFragment extends Fragment {
     private static List<Integer> HIDDEN_MENU_ITEMS = Arrays.asList(R.id.menu_search);
     private OnFragmentInteractionListener mListener;
 
-    /* ************************************************************ */
-    /*                             State                            */
-    /* ************************************************************ */
-    private Inmate mInmate;
-    private String mLetterId;
-    private LetterEditorViewModel mLetterEditorViewModel;
-
-    /* ************************************************************ */
-    /*                        UI Components                         */
-    /* ************************************************************ */
+    // View Model
+    private LetterEditorViewModel mViewModel;
+    // UI
     private View mEditorView;
     private TextView mInmateNameView;
     private EditText mSubjectInput;
@@ -95,27 +86,37 @@ public class LetterEditorFragment extends Fragment {
         mSubjectInput = mEditorView.findViewById(R.id.subject_input);
         mTextEditor = mEditorView.findViewById(R.id.text_editor);
 
-        mLetterEditorViewModel =
-                ViewModelProviders.of(this).get(LetterEditorViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(LetterEditorViewModel.class);
         /* -------------------------------------------------------------------------------------- */
 
         setupFromBundleArgs();
 
         mInmateNameView.setOnClickListener(view -> {
-            Letter draft = getLetterFromUI();
-            mLetterEditorViewModel.saveDraft(draft);
+            mViewModel.saveDraft(mViewModel.getDraft().getValue());
             Navigation.findNavController(view).navigate(
-                    LetterEditorFragmentDirections.searchAction(mLetterId)
+                    LetterEditorFragmentDirections.searchAction(
+                            mViewModel.getDraft().getValue().getId()
+                    )
             );
         });
 
-        mLetterEditorViewModel.getDraft().observe(this, resource -> {
-            if (resource != null && resource.data != null) {
-                Letter draft = resource.data;
+        mViewModel.getDraft().observe(this, draft -> Log.d(LOG_TAG, draft == null ? "null" : draft.toString()));
+
+        mViewModel.getInitialDraft().observe(this, draft -> {
+            if (draft != null) {
+                mInmateNameView.setText(draft.getRecipient());
+                mInmateNameView.setTextColor(Color.BLACK);
                 mSubjectInput.setText(draft.getSubject());
                 mTextEditor.setText(draft.getText());
             }
         });
+
+        mSubjectInput.addTextChangedListener(
+                createOnTextChangeListener(mViewModel::setDraftSubject)
+        );
+        mTextEditor.addTextChangedListener(
+                createOnTextChangeListener(mViewModel::setDraftText)
+        );
 
         return mEditorView;
     }
@@ -143,8 +144,9 @@ public class LetterEditorFragment extends Fragment {
         // Back button on action bar selected
         if (item.getItemId() == android.R.id.home) {
             boolean draftSaved = false;
-            if (shouldSaveAsDraft()) {
-                mLetterEditorViewModel.saveDraft(getLetterFromUI());
+            Letter draft = mViewModel.getDraft().getValue();
+            if (shouldSaveAsDraft(draft)) {
+                mViewModel.saveDraft(draft);
                 draftSaved = true;
             }
 
@@ -159,28 +161,19 @@ public class LetterEditorFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
     /* ************************************************************ */
     /*                            Setup Helpers                     */
     /* ************************************************************ */
     private void setupFromBundleArgs() {
         Bundle argsBundle = getArguments();
+        String letterId = null;
         // Load pre-existing letter
-        if (Utils.containsArgs(argsBundle, "LetterId", "InmateRecipient")) {
+        if (Utils.containsArgs(argsBundle, "LetterId")) {
             LetterEditorFragmentArgs args = LetterEditorFragmentArgs.fromBundle(argsBundle);
-
-            mInmate = Parcels.unwrap(args.getInmateRecipient());
-            mInmateNameView.setText(mInmate.getName());
-            mInmateNameView.setTextColor(Color.BLACK);
-
-            mLetterId = args.getLetterId();
-            mLetterEditorViewModel.setLoadRequest(mLetterId);
+            letterId = args.getLetterId();
         }
-        // New letter
-        else {
-            mInmate = null;
-            mLetterId = UUID.randomUUID().toString();
-        }
+
+        mViewModel.setLoadRequest(letterId);
     }
 
     /* ************************************************************ */
@@ -199,27 +192,31 @@ public class LetterEditorFragment extends Fragment {
         };
     }
 
+    private TextWatcher createOnTextChangeListener(VoidFunction<String> onChangeListener) {
+        return new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                onChangeListener.apply(s.toString());
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) { }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        };
+    }
     /* ************************************************************ */
     /*                           Helpers                            */
     /* ************************************************************ */
 
-    private Letter getLetterFromUI() {
-        String recipient = "";
-        if (mInmate != null) {
-            recipient = mInmate.getName();
-        }
-        String subject = mSubjectInput.getText().toString();
-        String text = mTextEditor.getText().toString();
-
-        // creates unsent draft
-        return new Letter(mLetterId, recipient, subject, text);
+    private boolean shouldSaveAsDraft(Letter draft) {
+        return draft.getText().length() > 0 ||
+                draft.getSubject().length() > 0 ||
+                draft.getRecipientId() != null;
     }
 
-    private boolean shouldSaveAsDraft() {
-        return mTextEditor.getText().length() > 0 ||
-                mSubjectInput.getText().length() > 0 ||
-                mInmate != null;
-    }
 
     /**
      * "http://developer.android.com/training/basics/fragments/communicating.html"

@@ -8,6 +8,9 @@ import android.arch.lifecycle.Transformations;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 
+import com.example.android.intouch_android.model.Letter;
+import com.example.android.intouch_android.model.container.Resource;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +36,7 @@ public class Transforms {
 
     public static <X> LiveData<X> startWith(LiveData<X> source, X initialValue) {
         MediatorLiveData<X> result = new MediatorLiveData<>();
-        result.addSource(source, data -> result.setValue(data));
+        result.addSource(source, result::setValue);
         result.setValue(initialValue);
 
         return result;
@@ -70,5 +73,9 @@ public class Transforms {
         }
 
         return mergedList;
+    }
+
+    public static <X> LiveData<X> stripResource(LiveData<Resource<X>> source) {
+        return Transformations.map(source, resource -> resource.data);
     }
 }

@@ -11,6 +11,7 @@ import com.google.gson.annotations.SerializedName;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 @Entity(tableName = "letters")
 public class Letter {
@@ -38,6 +39,18 @@ public class Letter {
     private boolean isDraft;
 
     public static final String dateFormat = "MM/dd/yy";
+
+    public static Letter createEmptyLetter() {
+        return new Letter(
+                UUID.randomUUID().toString(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                true
+        );
+    }
 
     public Letter(
             String id,
@@ -74,7 +87,7 @@ public class Letter {
 
     @Override
     public String toString() {
-        return "Letter(" +
+        return "Letter(" + "\n" +
                 "id=" + this.getId() + "\n" +
                 "recipient=" + this.getRecipient() + "\n" +
                 "recipientId=" + this.getRecipientId() + "\n" +
@@ -101,6 +114,9 @@ public class Letter {
         DateFormat df = new SimpleDateFormat(dateFormat);
         return df.format(date);
     }
+
+    public void setSubject(String subject) { this.subject = subject; }
+    public void setText(String text) { this.text = text; }
 
     public boolean isDraft() { return this.isDraft; }
 
