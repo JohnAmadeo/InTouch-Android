@@ -21,6 +21,15 @@ public class User {
     @SerializedName("accessToken")
     private String accessToken;
 
+    public static User createTemporaryUser() {
+        String id = UUID.randomUUID().toString();
+        return new User(
+                id + "-user",
+                id + "@intouch.com",
+                null
+        );
+    }
+
     public User(String username, String email, String accessToken) {
         this.username = username;
         this.email = email;
@@ -30,4 +39,6 @@ public class User {
     public String getUsername() { return this.username; }
     public String getEmail() { return this.email; }
     public String getAccessToken() { return this.accessToken; }
+
+    public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
 }

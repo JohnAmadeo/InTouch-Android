@@ -63,6 +63,12 @@ public class LaunchFragment extends Fragment {
         /* Setup observers */
         mLaunchViewModel = ViewModelProviders.of(this).get(LaunchViewModel.class);
 
+        mGetStartedButton.setOnClickListener(view -> {
+            Log.d(LOG_TAG, "Get started");
+            mLaunchViewModel.saveUser(User.createTemporaryUser());
+            Navigation.findNavController(mParentView).navigate(R.id.sentLettersFragment);
+        });
+
         mLogInSignUpButton.setOnClickListener(view -> {
             Log.d(LOG_TAG, "Log in / Sign up");
             AuthUtils.login(mParentActivity, createLoginSignUpAuthCallback());
