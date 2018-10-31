@@ -2,22 +2,19 @@ package com.example.android.intouch_android.repository;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.android.intouch_android.api.Webservice;
 import com.example.android.intouch_android.model.Correspondence;
-import com.example.android.intouch_android.model.Inmate;
 import com.example.android.intouch_android.model.Inmate;
 import com.example.android.intouch_android.utils.AppExecutors;
 import com.example.android.intouch_android.api.WebserviceProvider;
-import com.example.android.intouch_android.api.Webservice;
 import com.example.android.intouch_android.database.LocalDatabase;
 import com.example.android.intouch_android.model.container.ApiResponse;
 import com.example.android.intouch_android.model.container.Resource;
 import com.example.android.intouch_android.utils.AppState;
-import com.example.android.intouch_android.utils.Transforms;
 
 import java.util.Date;
 import java.util.HashMap;
