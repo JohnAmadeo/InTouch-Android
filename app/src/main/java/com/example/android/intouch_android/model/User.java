@@ -18,17 +18,13 @@ public class User {
     @SerializedName("email")
     private String email;
 
-    User(String username, String email) {
+    @SerializedName("accessToken")
+    private String accessToken;
+
+    User(String username, String email, String accessToken) {
         this.username = username;
         this.email = email;
-    }
-
-    public static User createTemporaryUser() {
-        String id = UUID.randomUUID().toString();
-        return new User(
-                id + "-user",
-                id + "@intouch.com"
-        );
+        this.accessToken = accessToken;
     }
 
     public String getUsername() { return this.username; }
