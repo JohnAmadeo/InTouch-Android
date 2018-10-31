@@ -10,4 +10,6 @@
     <string name="title_letter_editor_subject">Subject</string>
     <string name="hello_blank_fragment">Hello!</string>
     <string name="send_letter_title">Send Letter</string>
+    <string name="com_auth0_client_id">zcUNx8lPAQ6v8UIpx920VGoU5g2je5yz</string>
+    <string name="com_auth0_domain">intouch-android.auth0.com</string>
 </resources>
