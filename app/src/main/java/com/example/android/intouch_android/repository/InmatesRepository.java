@@ -59,7 +59,7 @@ public class InmatesRepository {
         queryParameters.put("q", searchQuery);
 
         LiveData<ApiResponse<List<Inmate>>> apiInmates =
-                mWebservice.getInmatesByName(mAppState.getUsername(), queryParameters);
+                mWebservice.getInmatesByName(queryParameters);
         result.addSource(apiInmates, response -> {
             result.removeSource(apiInmates);
 

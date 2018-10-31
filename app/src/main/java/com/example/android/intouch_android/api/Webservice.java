@@ -14,13 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface Webservice {
-    // TODO: Remove mock API once backend API is implemented
-    @GET("/{username}/intouch-fake-server/letters")
-    LiveData<ApiResponse<List<Letter>>> getLetters(@Path("username") String username);
+    //TODO: Route should take the username as a query param to filter out letters
+    @GET("/johnamadeo/intouch-fake-server/letters")
+    LiveData<ApiResponse<List<Letter>>> getLetters();
 
-    @GET("/{username}/intouch-fake-server/inmates")
+    @GET("/johnamadeo/intouch-fake-server/inmates")
     LiveData<ApiResponse<List<Inmate>>> getInmatesByName(
-            @Path("username") String username,
             @QueryMap Map<String, String> options
     );
 }

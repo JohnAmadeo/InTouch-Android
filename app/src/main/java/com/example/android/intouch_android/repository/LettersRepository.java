@@ -49,7 +49,7 @@ public class LettersRepository {
             @NonNull
             @Override
             protected LiveData<ApiResponse<List<Letter>>> loadFromApi() {
-                return mWebservice.getLetters(mAppState.getUsername());
+                return mWebservice.getLetters();
             }
 
             @Override
