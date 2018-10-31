@@ -47,9 +47,10 @@ public class SentLettersViewModel extends AndroidViewModel {
         );
     }
 
-    public LiveData<List<Letter>> getDisplayedLetters() {
-        return mDisplayedLetters;
+    public LiveData<Resource<List<Letter>>> getLetters() {
+        return mLetters;
     }
+    public LiveData<List<Letter>> getDisplayedLetters() { return mDisplayedLetters; }
 
     public void setRefreshRequest() { mRefreshRequest.setValue(true); }
     public void setQuery(String searchQuery) { mSearchQuery.setValue(searchQuery); }
@@ -84,4 +85,8 @@ public class SentLettersViewModel extends AndroidViewModel {
 
     public void createLetter_TEST() { mLettersRepository.createLetter_TEST(); }
     public LettersRepository getRepo_DANGEROUS() { return mLettersRepository; }
+    public void deleteAllLetters_DANGEROUS() { mLettersRepository.deleteAllLetters_DANGEROUS(); }
+    public LiveData<Resource<List<Letter>>> getDrafts_TEST() {
+        return mLettersRepository.getDrafts();
+    }
 }

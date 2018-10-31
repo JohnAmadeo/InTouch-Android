@@ -38,4 +38,7 @@ public interface LetterDao {
 
     @Query("DELETE FROM letters")
     void deleteAllLetters_DANGEROUS();
+
+    @Query("DELETE FROM letters WHERE id = :id")
+    void delete_DANGEROUS(String id);
 }

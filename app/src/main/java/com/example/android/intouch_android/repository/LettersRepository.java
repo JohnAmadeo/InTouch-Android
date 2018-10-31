@@ -7,9 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.example.android.intouch_android.model.container.Status;
-import com.example.android.intouch_android.utils.AppExecutors;
 import com.example.android.intouch_android.api.WebserviceProvider;
+import com.example.android.intouch_android.utils.AppExecutors;
 import com.example.android.intouch_android.api.Webservice;
 import com.example.android.intouch_android.database.LocalDatabase;
 import com.example.android.intouch_android.model.Letter;
@@ -135,6 +134,12 @@ public class LettersRepository {
 //                Log.d("LettersRepository", "Inserted letter ");
 //                mDB.endTransaction();
 //            }
+        });
+    }
+
+    public void deleteAllLetters_DANGEROUS() {
+        mExecutors.diskIO().execute(() -> {
+            mDB.letterDao().deleteAllLetters_DANGEROUS();
         });
     }
 
