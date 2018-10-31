@@ -6,8 +6,7 @@ public class AppState {
     public static final Object LOCK = new Object();
     private static AppState sInstance;
 
-    // TODO: Remove hardcoded username
-    private User user;
+    private static User user = null;
 
     public static AppState getInstance() {
         if (sInstance == null) {
@@ -18,9 +17,13 @@ public class AppState {
         return sInstance;
     }
 
-    public void setUser(User user) { this.user = user; }
-    public User getUser() {
-        return this.user;
+    public User getUser() { return user; }
+    public String getUsername() {
+        if (user == null) {
+            return null;
+        }
+        return user.getUsername();
     }
-    public String getUsername() { return this.user.getUsername(); }
+
+    public void setUser(User loggedInUser) { user = loggedInUser; }
 }

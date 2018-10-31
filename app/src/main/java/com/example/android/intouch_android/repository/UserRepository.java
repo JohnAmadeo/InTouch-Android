@@ -36,4 +36,6 @@ public class UserRepository {
             }
         });
     }
+
+    public User getUser() { return mAppState.getUser(); }
 }

@@ -13,7 +13,6 @@ import com.example.android.intouch_android.utils.AppState;
 
 public class LaunchViewModel extends AndroidViewModel {
     private UserRepository mUserRepository;
-    private MutableLiveData<Boolean> mIsLoggingIn = new MutableLiveData<>();
 
     public LaunchViewModel(@NonNull Application application) {
         super(application);
@@ -23,7 +22,5 @@ public class LaunchViewModel extends AndroidViewModel {
     public void saveUser(User user) {
         mUserRepository.saveUser(user);
     }
-
-    public void setIsLoggingIn(Boolean isLoggingIn) { mIsLoggingIn.postValue(isLoggingIn); }
-    public LiveData<Boolean> getIsLoggingIn() { return this.mIsLoggingIn; }
+    public User getUser() { return mUserRepository.getUser(); }
 }
