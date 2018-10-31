@@ -1,11 +1,13 @@
 package com.example.android.intouch_android.utils;
 
+import com.example.android.intouch_android.model.User;
+
 public class AppState {
     public static final Object LOCK = new Object();
     private static AppState sInstance;
 
     // TODO: Remove hardcoded username
-    private String username = "JohnAmadeo";
+    private User user;
 
     public static AppState getInstance() {
         if (sInstance == null) {
@@ -16,9 +18,9 @@ public class AppState {
         return sInstance;
     }
 
-    public String getUsername() {
-        return this.username;
+    public void setUser(User user) { this.user = user; }
+    public User getUser() {
+        return this.user;
     }
-
-    public void setUsername(String username) { this.username = username; }
+    public String getUsername() { return this.user.getUsername(); }
 }

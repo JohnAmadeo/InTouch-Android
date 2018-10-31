@@ -10,9 +10,10 @@ import android.util.Log;
 import com.example.android.intouch_android.model.Correspondence;
 import com.example.android.intouch_android.model.Inmate;
 import com.example.android.intouch_android.model.Letter;
+import com.example.android.intouch_android.model.User;
 
 @Database(
-        entities = {Letter.class, Inmate.class, Correspondence.class},
+        entities = {Letter.class, Inmate.class, Correspondence.class, User.class},
         version = 8,
         exportSchema = false
 )
@@ -43,4 +44,5 @@ public abstract class LocalDatabase extends RoomDatabase {
 
     public abstract LetterDao letterDao();
     public abstract InmateDao inmateDao();
+    public abstract UserDao userDao();
 }

@@ -21,7 +21,7 @@ public class User {
     @SerializedName("accessToken")
     private String accessToken;
 
-    User(String username, String email, String accessToken) {
+    public User(String username, String email, String accessToken) {
         this.username = username;
         this.email = email;
         this.accessToken = accessToken;
@@ -29,4 +29,5 @@ public class User {
 
     public String getUsername() { return this.username; }
     public String getEmail() { return this.email; }
+    public String getAccessToken() { return this.accessToken; }
 }
