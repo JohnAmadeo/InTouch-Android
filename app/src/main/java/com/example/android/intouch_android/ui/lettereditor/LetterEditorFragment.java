@@ -3,6 +3,7 @@ package com.example.android.intouch_android.ui.lettereditor;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -39,6 +41,7 @@ public class LetterEditorFragment extends Fragment {
     private TextView mInmateNameView;
     private EditText mSubjectInput;
     private EditText mTextEditor;
+    private MenuItem mSendLetterButton;
 
     public LetterEditorFragment() { }
 
@@ -73,8 +76,6 @@ public class LetterEditorFragment extends Fragment {
             );
         });
 
-        mViewModel.getDraft().observe(this, draft -> Log.d(LOG_TAG, draft == null ? "null" : draft.toString()));
-
         mViewModel.getInitialDraft().observe(this, draft -> {
             if (draft != null) {
                 mInmateNameView.setText(draft.getRecipient());
@@ -101,8 +102,11 @@ public class LetterEditorFragment extends Fragment {
 
         ViewUtils.setupMenuItems(menu, VISIBLE_MENU_ITEMS);
 
-        MenuItem sendLetterButton = menu.findItem(R.id.send_letter);
-        sendLetterButton.setOnMenuItemClickListener(createSendLetterButtonListener());
+        mSendLetterButton = menu.findItem(R.id.send_letter);
+        mSendLetterButton.setOnMenuItemClickListener(menuItem -> {
+            showSendDialog();
+            return true;
+        });
     }
 
     @Override
@@ -151,19 +155,6 @@ public class LetterEditorFragment extends Fragment {
     /* ************************************************************ */
     /*                        Observers/Listeners                   */
     /* ************************************************************ */
-
-    // TODO: Replace with lambda function
-    private MenuItem.OnMenuItemClickListener createSendLetterButtonListener() {
-        return new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                // TODO: Create new letter, and if first letter sent, reroute to new-user sign up
-                // Navigation.findNavController(mEditorView).navigate(R.id.FILL_IN_ID);
-                return true;
-            }
-        };
-    }
-
     private TextWatcher createOnTextChangeListener(VoidFunction<String> onChangeListener) {
         return new TextWatcher() {
             @Override
@@ -187,6 +178,12 @@ public class LetterEditorFragment extends Fragment {
         return draft.getText().length() > 0 ||
                 draft.getSubject().length() > 0 ||
                 draft.getRecipientId() != null;
+    }
+
+    private void showSendDialog() {
+        SendDialogFragment dialog = new SendDialogFragment();
+        dialog.setOnDialogPositiveClickListener(() -> Log.d(LOG_TAG, "Dialog clicked!"));
+        dialog.show(getActivity().getSupportFragmentManager(), "SendDialogFragment");
     }
 }
 

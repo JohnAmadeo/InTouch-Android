@@ -12,4 +12,7 @@
     <string name="send_letter_title">Send Letter</string>
     <string name="com_auth0_client_id">zcUNx8lPAQ6v8UIpx920VGoU5g2je5yz</string>
     <string name="com_auth0_domain">intouch-android.auth0.com</string>
+    <string name="send_dialog_message">Send letter to inmate?</string>
+    <string name="send_dialog_positive">Send</string>
+    <string name="send_dialog_negative">Cancel</string>
 </resources>
