@@ -53,6 +53,13 @@ public class LaunchFragment extends Fragment {
         /* Setup observers */
         mLaunchViewModel = ViewModelProviders.of(this).get(LaunchViewModel.class);
 
+        mLaunchViewModel.getUser().observe(this, user -> {
+            if (user != null) {
+                mLaunchViewModel.saveUser(user);
+                navigateAwayFromLaunchScreen();
+            }
+        });
+
         mGetStartedButton.setOnClickListener(view -> {
             Log.d(LOG_TAG, "Get started");
             mLaunchViewModel.saveUser(User.createTemporaryUser());

@@ -1,5 +1,7 @@
 package com.example.android.intouch_android.repository;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Transformations;
 import android.content.Context;
 
 import com.example.android.intouch_android.api.Webservice;
@@ -8,6 +10,8 @@ import com.example.android.intouch_android.database.LocalDatabase;
 import com.example.android.intouch_android.model.User;
 import com.example.android.intouch_android.utils.AppExecutors;
 import com.example.android.intouch_android.utils.AppState;
+
+import java.util.List;
 
 public class UserRepository {
     private final String LOG_TAG = this.getClass().getSimpleName();
@@ -37,5 +41,19 @@ public class UserRepository {
         });
     }
 
-    public User getUser() { return mAppState.getUser(); }
+    public User getUserFromAppState() { return mAppState.getUser(); }
+
+    public LiveData<User> getUserFromDB() {
+        return Transformations.map(
+                mDB.userDao().getUsers(),
+                users -> {
+                    if (users.size() != 1) {
+                        return null;
+                    }
+                    else {
+                        return users.get(0);
+                    }
+                }
+        );
+    }
 }
