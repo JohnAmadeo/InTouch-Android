@@ -31,7 +31,7 @@ import androidx.navigation.Navigation;
 public class SentLettersFragment extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private List<Integer> HIDDEN_MENU_ITEMS = Arrays.asList(R.id.send_letter);
+    private List<Integer> VISIBLE_MENU_ITEMS = Arrays.asList(R.id.menu_search);
 
     /* ************************************************************ */
     /*                        UI Components                         */
@@ -95,7 +95,7 @@ public class SentLettersFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.options_menu, menu);
 
-        ViewUtils.setupMenuItems(menu, HIDDEN_MENU_ITEMS);
+        ViewUtils.setupMenuItems(menu, VISIBLE_MENU_ITEMS);
 
         /* Setup views */
         setupSearchView(menu);

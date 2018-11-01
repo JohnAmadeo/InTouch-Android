@@ -30,7 +30,7 @@ import androidx.navigation.Navigation;
 
 public class LetterEditorFragment extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
-    private static List<Integer> HIDDEN_MENU_ITEMS = Arrays.asList(R.id.menu_search);
+    private static List<Integer> VISIBLE_MENU_ITEMS = Arrays.asList(R.id.send_letter);
 
     // View Model
     private LetterEditorViewModel mViewModel;
@@ -99,7 +99,7 @@ public class LetterEditorFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.options_menu, menu);
 
-        ViewUtils.setupMenuItems(menu, HIDDEN_MENU_ITEMS);
+        ViewUtils.setupMenuItems(menu, VISIBLE_MENU_ITEMS);
 
         MenuItem sendLetterButton = menu.findItem(R.id.send_letter);
         sendLetterButton.setOnMenuItemClickListener(createSendLetterButtonListener());

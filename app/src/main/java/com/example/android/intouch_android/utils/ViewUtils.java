@@ -43,17 +43,17 @@ public class ViewUtils {
     /*
      * @return true if all items successfully hidden; false otherwise
      */
-    public static boolean setupMenuItems(Menu menu, List<Integer> hiddenMenuItems) {
+    public static boolean setupMenuItems(Menu menu, List<Integer> visibleMenuItems) {
         for (Integer itemId:MENU_ITEMS) {
             MenuItem menuItem = menu.findItem(itemId);
             if (menuItem == null) {
                 return false;
             }
-            else if (hiddenMenuItems.contains(itemId)) {
-                menuItem.setVisible(false);
+            else if (visibleMenuItems.contains(itemId)) {
+                menuItem.setVisible(true);
             }
             else {
-                menuItem.setVisible(true);
+                menuItem.setVisible(false);
             }
         }
 

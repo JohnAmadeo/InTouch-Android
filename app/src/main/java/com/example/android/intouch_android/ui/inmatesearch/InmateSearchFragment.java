@@ -32,7 +32,7 @@ import androidx.navigation.Navigation;
 public class InmateSearchFragment
         extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
-    private List<Integer> HIDDEN_MENU_ITEMS = Arrays.asList(R.id.send_letter);
+    private List<Integer> VISIBLE_MENU_ITEMS = Arrays.asList(R.id.menu_search);
 
     /* ************************************************************ */
     /*                           State                              */
@@ -85,7 +85,7 @@ public class InmateSearchFragment
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.options_menu, menu);
 
-        ViewUtils.setupMenuItems(menu, HIDDEN_MENU_ITEMS);
+        ViewUtils.setupMenuItems(menu, VISIBLE_MENU_ITEMS);
 
         /* Setup views */
         setupSearchView(menu);
