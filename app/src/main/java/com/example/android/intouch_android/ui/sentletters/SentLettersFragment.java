@@ -1,15 +1,15 @@
 package com.example.android.intouch_android.ui.sentletters;
 
-import android.app.SearchManager;
-import android.app.SearchableInfo;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,7 +61,7 @@ public class SentLettersFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewUtils.setActionBarVisible(getActivity(), true);
         ViewUtils.setupActionBarOptions(getActivity(), "InTouch", false);
@@ -98,7 +98,13 @@ public class SentLettersFragment extends Fragment {
         ViewUtils.setupMenuItems(menu, VISIBLE_MENU_ITEMS);
 
         /* Setup views */
-        setupSearchView(menu);
+        Pair<MenuItem, SearchView> views = ViewUtils.setupSearch(
+                menu,
+                R.string.letter_search_hint,
+                getActivity()
+        );
+        mSearchMenuItem = views.first;
+        mSearchView = views.second;
 
         mSearchView.setOnQueryTextListener(createQueryListener());
         mSearchMenuItem.setOnActionExpandListener(createSearchMenuItemListener());
@@ -131,22 +137,6 @@ public class SentLettersFragment extends Fragment {
                         (LinearLayoutManager) mRecyclerView.getLayoutManager()
                 )
         );
-    }
-
-    private void setupSearchView(Menu menu) {
-        mSearchMenuItem = menu.findItem(R.id.menu_search);
-
-        mSearchView = (SearchView) mSearchMenuItem.getActionView();
-
-        mSearchView.setQueryHint(getString(R.string.letter_search_hint));
-
-        // Get configuration options in res/xml/searchable.xml as an object
-        SearchManager searchManager =
-                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        SearchableInfo searchableInfo =
-                searchManager.getSearchableInfo(getActivity().getComponentName());
-
-        mSearchView.setSearchableInfo(searchableInfo);
     }
 
     private void setupFromBundleArgs() {
@@ -201,7 +191,6 @@ public class SentLettersFragment extends Fragment {
     /* ************************************************************ */
     /*                              Helpers                         */
     /* ************************************************************ */
-
 
     private SentLettersAdapter getRecyclerViewAdapter() {
         return (SentLettersAdapter) mRecyclerView.getAdapter();

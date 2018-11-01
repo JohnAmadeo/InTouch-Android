@@ -1,6 +1,8 @@
 package com.example.android.intouch_android.utils;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -8,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -103,5 +107,29 @@ public class ViewUtils {
         }
 
         return true;
+    }
+
+    public static Pair<MenuItem, SearchView> setupSearch(
+            Menu menu,
+            int hintResId,
+            Activity activity
+    ) {
+        MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
+        Log.d(LOG_TAG, searchMenuItem.toString());
+
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        Log.d(LOG_TAG, searchView.toString());
+
+        searchView.setQueryHint(activity.getString(hintResId));
+
+        // Get configuration options in res/xml/searchable.xml as an object
+        SearchManager searchManager =
+                (SearchManager) activity.getSystemService(Context.SEARCH_SERVICE);
+        SearchableInfo searchableInfo =
+                searchManager.getSearchableInfo(activity.getComponentName());
+
+        searchView.setSearchableInfo(searchableInfo);
+
+        return new Pair<>(searchMenuItem, searchView);
     }
 }
