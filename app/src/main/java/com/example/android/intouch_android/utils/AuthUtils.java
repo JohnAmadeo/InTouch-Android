@@ -23,7 +23,7 @@ public class AuthUtils {
 
         WebAuthProvider.init(account)
                 .withScheme("demo")
-                .withScope("openid profile email")
+                .withScope("openid profile email offline_access")
                 .withAudience("https://intouch-android-backend.herokuapp.com/")
                 .start(activity, authCallback);
     }
@@ -36,7 +36,10 @@ public class AuthUtils {
         return new User(
                 username,
                 email,
-                credentials.getAccessToken()
+                credentials.getAccessToken(),
+                credentials.getIdToken(),
+                credentials.getRefreshToken()
+
         );
     }
 }
