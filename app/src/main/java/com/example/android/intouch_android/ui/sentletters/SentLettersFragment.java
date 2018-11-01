@@ -17,12 +17,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.android.intouch_android.R;
-import com.example.android.intouch_android.model.Letter;
-import com.example.android.intouch_android.utils.Utils;
+import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.viewmodel.SentLettersViewModel;
 
 import java.util.Arrays;
@@ -65,10 +63,10 @@ public class SentLettersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Utils.setActionBarVisible(getActivity(), true);
-        Utils.setupActionBarOptions(getActivity(), "InTouch", false);
+        ViewUtils.setActionBarVisible(getActivity(), true);
+        ViewUtils.setupActionBarOptions(getActivity(), "InTouch", false);
         setHasOptionsMenu(true);
-        Utils.setBottomNavigationVisible(getActivity(), true);
+        ViewUtils.setBottomNavigationVisible(getActivity(), true);
 
         /* Setup views */
         mParentView = inflater.inflate(R.layout.fragment_letters_list, container, false);
@@ -97,7 +95,7 @@ public class SentLettersFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.options_menu, menu);
 
-        Utils.setupMenuItems(menu, HIDDEN_MENU_ITEMS);
+        ViewUtils.setupMenuItems(menu, HIDDEN_MENU_ITEMS);
 
         /* Setup views */
         setupSearchView(menu);
@@ -128,7 +126,7 @@ public class SentLettersFragment extends Fragment {
 
         // add a line in between each list item
         mRecyclerView.addItemDecoration(
-                Utils.createListDivider(
+                ViewUtils.createListDivider(
                         mRecyclerView,
                         (LinearLayoutManager) mRecyclerView.getLayoutManager()
                 )
@@ -153,7 +151,7 @@ public class SentLettersFragment extends Fragment {
 
     private void setupFromBundleArgs() {
         Bundle argsBundle = getArguments();
-        if (Utils.containsArgs(argsBundle, "DraftSaved")) {
+        if (ViewUtils.containsArgs(argsBundle, "DraftSaved")) {
             SentLettersFragmentArgs args = SentLettersFragmentArgs.fromBundle(argsBundle);
 
             if (args.getDraftSaved()) {
@@ -178,7 +176,7 @@ public class SentLettersFragment extends Fragment {
 
             @Override
             public boolean onQueryTextSubmit(String searchQuery) {
-                Utils.dismissKeyboard(getActivity());
+                ViewUtils.dismissKeyboard(getActivity());
                 return true;
             }
         };

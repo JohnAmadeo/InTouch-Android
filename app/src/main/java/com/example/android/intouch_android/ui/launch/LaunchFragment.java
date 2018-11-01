@@ -18,7 +18,7 @@ import com.auth0.android.result.Credentials;
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.User;
 import com.example.android.intouch_android.utils.AuthUtils;
-import com.example.android.intouch_android.utils.Utils;
+import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.viewmodel.LaunchViewModel;
 
 import androidx.navigation.NavOptions;
@@ -43,8 +43,8 @@ public class LaunchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mParentActivity = getActivity();
-        Utils.setActionBarVisible(mParentActivity, false);
-        Utils.setBottomNavigationVisible(mParentActivity, false);
+        ViewUtils.setActionBarVisible(mParentActivity, false);
+        ViewUtils.setBottomNavigationVisible(mParentActivity, false);
 
         mParentView = inflater.inflate(R.layout.fragment_launch, container, false);
         mGetStartedButton = mParentView.findViewById(R.id.get_started);

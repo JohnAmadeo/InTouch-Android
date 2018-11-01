@@ -22,8 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class Utils {
-    private static final String LOG_TAG = "Utils";
+public class ViewUtils {
+    private static final String LOG_TAG = "ViewUtils";
     private static List<Integer> MENU_ITEMS = Arrays.asList(R.id.send_letter, R.id.menu_search);
 
     /*

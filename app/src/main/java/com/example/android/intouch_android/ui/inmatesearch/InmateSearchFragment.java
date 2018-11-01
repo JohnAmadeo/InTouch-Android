@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.Inmate;
 import com.example.android.intouch_android.utils.OnListItemClickListener;
-import com.example.android.intouch_android.utils.Utils;
+import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.viewmodel.InmateSearchViewModel;
 
 import java.util.Arrays;
@@ -57,10 +57,10 @@ public class InmateSearchFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Utils.setActionBarVisible(getActivity(), true);
-        Utils.setupActionBarOptions(getActivity(), "", false);
+        ViewUtils.setActionBarVisible(getActivity(), true);
+        ViewUtils.setupActionBarOptions(getActivity(), "", false);
         setHasOptionsMenu(true);
-        Utils.setBottomNavigationVisible(getActivity(), false);
+        ViewUtils.setBottomNavigationVisible(getActivity(), false);
         setupStateFromBundleArgs();
 
         mParentView = inflater.inflate(R.layout.fragment_inmate_search, container,false);
@@ -85,7 +85,7 @@ public class InmateSearchFragment
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.options_menu, menu);
 
-        Utils.setupMenuItems(menu, HIDDEN_MENU_ITEMS);
+        ViewUtils.setupMenuItems(menu, HIDDEN_MENU_ITEMS);
 
         /* Setup views */
         setupSearchView(menu);
@@ -121,7 +121,7 @@ public class InmateSearchFragment
 
         // add a line in between each list item
         mRecyclerView.addItemDecoration(
-                Utils.createListDivider(
+                ViewUtils.createListDivider(
                         mRecyclerView,
                         (LinearLayoutManager) mRecyclerView.getLayoutManager()
                 )
@@ -146,7 +146,7 @@ public class InmateSearchFragment
 
     private void setupStateFromBundleArgs() {
         Bundle argsBundle = getArguments();
-        if (Utils.containsArgs(argsBundle, "LetterId")) {
+        if (ViewUtils.containsArgs(argsBundle, "LetterId")) {
             InmateSearchFragmentArgs args = InmateSearchFragmentArgs.fromBundle(argsBundle);
             mLetterId = args.getLetterId();
         }
@@ -168,7 +168,7 @@ public class InmateSearchFragment
 
             @Override
             public boolean onQueryTextSubmit(String searchQuery) {
-                Utils.dismissKeyboard(getActivity());
+                ViewUtils.dismissKeyboard(getActivity());
                 return true;
             }
         };

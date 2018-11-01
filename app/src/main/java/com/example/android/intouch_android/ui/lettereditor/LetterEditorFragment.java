@@ -1,9 +1,7 @@
 package com.example.android.intouch_android.ui.lettereditor;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -20,7 +18,7 @@ import android.widget.TextView;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.Letter;
-import com.example.android.intouch_android.utils.Utils;
+import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.utils.VoidFunction;
 import com.example.android.intouch_android.viewmodel.LetterEditorViewModel;
 
@@ -50,10 +48,10 @@ public class LetterEditorFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Utils.setActionBarVisible(getActivity(), true);
-        Utils.setupActionBarOptions(getActivity(), "Write Letter", true);
+        ViewUtils.setActionBarVisible(getActivity(), true);
+        ViewUtils.setupActionBarOptions(getActivity(), "Write Letter", true);
         setHasOptionsMenu(true);
-        Utils.setBottomNavigationVisible(getActivity(), false);
+        ViewUtils.setBottomNavigationVisible(getActivity(), false);
 
         /* -------------------------------------------------------------------------------------- */
         mEditorView = inflater.inflate(R.layout.fragment_letter_editor, container,false);
@@ -101,7 +99,7 @@ public class LetterEditorFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.options_menu, menu);
 
-        Utils.setupMenuItems(menu, HIDDEN_MENU_ITEMS);
+        ViewUtils.setupMenuItems(menu, HIDDEN_MENU_ITEMS);
 
         MenuItem sendLetterButton = menu.findItem(R.id.send_letter);
         sendLetterButton.setOnMenuItemClickListener(createSendLetterButtonListener());
@@ -110,7 +108,7 @@ public class LetterEditorFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Utils.dismissKeyboard(getActivity());
+        ViewUtils.dismissKeyboard(getActivity());
     }
 
     @Override
@@ -142,7 +140,7 @@ public class LetterEditorFragment extends Fragment {
         Bundle argsBundle = getArguments();
         String letterId = null;
         // Load pre-existing letter
-        if (Utils.containsArgs(argsBundle, "LetterId")) {
+        if (ViewUtils.containsArgs(argsBundle, "LetterId")) {
             LetterEditorFragmentArgs args = LetterEditorFragmentArgs.fromBundle(argsBundle);
             letterId = args.getLetterId();
         }
