@@ -26,6 +26,25 @@ public class ViewUtils {
     private static final String LOG_TAG = "ViewUtils";
     private static List<Integer> MENU_ITEMS = Arrays.asList(R.id.send_letter, R.id.menu_search);
 
+    public static boolean containsArgs(Bundle bundle, String ...arguments) {
+        for (String arg:arguments) {
+            if (!bundle.containsKey(arg)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static DividerItemDecoration createListDivider(
+            RecyclerView recyclerView,
+            LinearLayoutManager layoutManager
+    ) {
+        return new DividerItemDecoration(
+                recyclerView.getContext(),
+                layoutManager.getOrientation()
+        );
+    }
+
     /*
      * @return true if keyboard was successfully hidden; false otherwise
      */
@@ -38,6 +57,32 @@ public class ViewUtils {
             view = new View(activity);
         }
         return imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static void setActionBarVisible(Activity activity, boolean isVisible) {
+        ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
+        if (isVisible) {
+            actionBar.show();
+        } else {
+            actionBar.hide();
+        }
+    }
+
+    public static void setBottomNavigationVisible(Activity activity, boolean isVisible) {
+        activity.findViewById(R.id.bottom_navigation)
+                .setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    public static void setupActionBarOptions(
+            Activity activity,
+            String title,
+            boolean enableUpButton
+    ) {
+        ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(title);
+            actionBar.setDisplayHomeAsUpEnabled(enableUpButton);
+        }
     }
 
     /*
@@ -57,51 +102,6 @@ public class ViewUtils {
             }
         }
 
-        return true;
-    }
-
-    public static void setupActionBarOptions(
-            Activity activity,
-            String title,
-            boolean enableUpButton
-    ) {
-        ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(title);
-            actionBar.setDisplayHomeAsUpEnabled(enableUpButton);
-        }
-    }
-
-    public static DividerItemDecoration createListDivider(
-            RecyclerView recyclerView,
-            LinearLayoutManager layoutManager
-    ) {
-        return new DividerItemDecoration(
-                recyclerView.getContext(),
-                layoutManager.getOrientation()
-        );
-    }
-
-    public static void setBottomNavigationVisible(Activity activity, boolean isVisible) {
-        activity.findViewById(R.id.bottom_navigation)
-                .setVisibility(isVisible ? View.VISIBLE : View.GONE);
-    }
-
-    public static void setActionBarVisible(Activity activity, boolean isVisible) {
-        ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
-        if (isVisible) {
-            actionBar.show();
-        } else {
-            actionBar.hide();
-        }
-    }
-
-    public static boolean containsArgs(Bundle bundle, String ...arguments) {
-        for (String arg:arguments) {
-            if (!bundle.containsKey(arg)) {
-                return false;
-            }
-        }
         return true;
     }
 }
