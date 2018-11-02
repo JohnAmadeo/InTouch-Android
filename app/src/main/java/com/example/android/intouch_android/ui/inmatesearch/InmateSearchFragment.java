@@ -150,7 +150,6 @@ public class InmateSearchFragment
         return new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String searchQuery) {
-                Log.d(LOG_TAG, searchQuery);
                 mInmateSearchViewModel.setQuery(searchQuery);
                 mRecyclerView.scrollToPosition(0);
                 return true;
