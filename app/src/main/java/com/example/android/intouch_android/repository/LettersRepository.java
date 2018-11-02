@@ -53,7 +53,6 @@ public class LettersRepository {
 
             @Override
             protected void saveApiResult(@NonNull List<Letter> letters) {
-                Log.d(LOG_TAG, "API=" + letters.size());
                 mDB.beginTransaction();
                 try {
                     mDB.letterDao().insertLetters(letters);

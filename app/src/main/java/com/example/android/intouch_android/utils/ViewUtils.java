@@ -115,11 +115,7 @@ public class ViewUtils {
             Activity activity
     ) {
         MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
-        Log.d(LOG_TAG, searchMenuItem.toString());
-
         SearchView searchView = (SearchView) searchMenuItem.getActionView();
-        Log.d(LOG_TAG, searchView.toString());
-
         searchView.setQueryHint(activity.getString(hintResId));
 
         // Get configuration options in res/xml/searchable.xml as an object
