@@ -3,6 +3,7 @@ package com.example.android.intouch_android.ui.lettereditor;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -49,7 +50,7 @@ public class LetterEditorFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewUtils.setActionBarVisible(getActivity(), true);
         ViewUtils.setupActionBarOptions(getActivity(), "Write Letter", true);
@@ -68,10 +69,10 @@ public class LetterEditorFragment extends Fragment {
         setupFromBundleArgs();
 
         mInmateNameView.setOnClickListener(view -> {
-            mViewModel.saveDraft(mViewModel.getDraft().getValue());
+            mViewModel.saveDraft(mViewModel.getDraft());
             Navigation.findNavController(view).navigate(
                     LetterEditorFragmentDirections.searchAction(
-                            mViewModel.getDraft().getValue().getId()
+                            mViewModel.getDraft().getId()
                     )
             );
         });
@@ -120,7 +121,7 @@ public class LetterEditorFragment extends Fragment {
         // Back button on action bar selected
         if (item.getItemId() == android.R.id.home) {
             boolean draftSaved = false;
-            Letter draft = mViewModel.getDraft().getValue();
+            Letter draft = mViewModel.getDraft();
             if (shouldSaveAsDraft(draft)) {
                 mViewModel.saveDraft(draft);
                 draftSaved = true;
@@ -147,9 +148,9 @@ public class LetterEditorFragment extends Fragment {
         if (ViewUtils.containsArgs(argsBundle, "LetterId")) {
             LetterEditorFragmentArgs args = LetterEditorFragmentArgs.fromBundle(argsBundle);
             letterId = args.getLetterId();
-        }
 
-        mViewModel.setLoadRequest(letterId);
+            mViewModel.setLoadRequest(letterId);
+        }
     }
 
     /* ************************************************************ */
@@ -185,5 +186,5 @@ public class LetterEditorFragment extends Fragment {
         dialog.setOnDialogPositiveClickListener(() -> Log.d(LOG_TAG, "Dialog clicked!"));
         dialog.show(getActivity().getSupportFragmentManager(), "SendDialogFragment");
     }
-}
+ }
 

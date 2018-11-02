@@ -73,7 +73,6 @@ public class LettersRepository {
 
     public LiveData<Resource<Letter>> getDraft(String letterId) {
         MediatorLiveData<Resource<Letter>> result = new MediatorLiveData<>();
-        result.setValue(Resource.loading(null));
 
         LiveData<Letter> dbResult = mDB.letterDao().getDraft(letterId);
         result.addSource(dbResult, draft -> {
