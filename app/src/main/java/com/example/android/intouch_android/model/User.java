@@ -61,4 +61,15 @@ public class User {
     public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
     public void setIdToken(String idToken) { this.idToken = idToken; }
     public void setRefreshToken(String refreshToken) { this.refreshToken = refreshToken; }
+
+    @Override
+    public String toString() {
+        return "\nUser=(\n" +
+                "username=" + getUsername() + "\n" +
+                "email=" + getEmail() + "\n" +
+                "accessToken=" + getAccessToken() + "\n" +
+                "idToken=" + getIdToken() + "\n" +
+                "refreshToken=" + getRefreshToken() + "\n" +
+                ")";
+    }
 }
