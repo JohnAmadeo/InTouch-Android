@@ -28,7 +28,6 @@ public abstract class LocalDatabase extends RoomDatabase {
     public static LocalDatabase getInstance(Context context) {
         if (sInstance == null) {
             synchronized (LOCK) {
-                Log.d(LOG_TAG, "Creating new database instance");
                 sInstance = Room.databaseBuilder(
                         context.getApplicationContext(),
                         LocalDatabase.class,
@@ -38,7 +37,6 @@ public abstract class LocalDatabase extends RoomDatabase {
                         .build();
             }
         }
-        Log.d(LOG_TAG, "Getting the database instance");
         return sInstance;
     }
 

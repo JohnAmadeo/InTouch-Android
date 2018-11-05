@@ -15,7 +15,6 @@ public class WebserviceProvider {
     public static Webservice getInstance() {
         if (sInstance == null) {
             synchronized (LOCK) {
-                Log.d("WebserviceProvider", "Creating new API client instance");
                 sInstance = new Retrofit.Builder()
                         .baseUrl("https://my-json-server.typicode.com")
                         .addConverterFactory(
@@ -29,7 +28,6 @@ public class WebserviceProvider {
                         .create(Webservice.class);
             }
         }
-        Log.d("WebserviceProvider", "Getting the API client instance");
         return sInstance;
     }
 }
