@@ -3,25 +3,45 @@ package com.example.android.intouch_android.repository;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.auth0.android.jwt.JWT;
+import com.example.android.intouch_android.R;
+import com.example.android.intouch_android.api.AuthService;
+import com.example.android.intouch_android.api.AuthServiceProvider;
 import com.example.android.intouch_android.api.Webservice;
 import com.example.android.intouch_android.api.WebserviceProvider;
 import com.example.android.intouch_android.database.LocalDatabase;
 import com.example.android.intouch_android.model.User;
+import com.example.android.intouch_android.model.container.UpdateTokenRequest;
+import com.example.android.intouch_android.model.container.UpdateTokenResponse;
 import com.example.android.intouch_android.utils.AppExecutors;
 import com.example.android.intouch_android.utils.AppState;
 
+import java.util.Date;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.exceptions.Exceptions;
+import io.reactivex.schedulers.Schedulers;
 
 public class UserRepository {
     private final String LOG_TAG = this.getClass().getSimpleName();
+    private final Context mContext;
     private final Webservice mWebservice;
+    private final AuthService mAuthService;
     private final LocalDatabase mDB;
     private final AppExecutors mExecutors;
     private final AppState mAppState;
 
     public UserRepository(Context context) {
+        mContext = context;
         mWebservice = WebserviceProvider.getInstance();
+        mAuthService = AuthServiceProvider.getInstance();
         mDB = LocalDatabase.getInstance(context);
         mExecutors = AppExecutors.getInstance();
         mAppState = AppState.getInstance();
@@ -55,5 +75,53 @@ public class UserRepository {
                     }
                 }
         );
+    }
+
+    public Single<String> getAccessToken() {
+        User user = mAppState.getUser();
+        if (user == null) {
+            throw Exceptions.propagate(new Exception("No user stored in app state"));
+        }
+
+        if (isAccessTokenExpired()) {
+            return getNewAccessToken(user);
+        }
+        else {
+            return Single.just(user.getAccessToken());
+        }
+    }
+
+    private Single<String> getNewAccessToken(@NonNull User user) {
+        UpdateTokenRequest body = new UpdateTokenRequest(
+                "refresh_token",
+                mContext.getString(R.string.com_auth0_client_id),
+                user.getRefreshToken()
+        );
+
+        return mAuthService.getRefreshToken(body)
+                .map(response -> {
+                    if (response.code() == 200 && response.body() != null) {
+                        Log.d(LOG_TAG, response.body().getAccessToken());
+                        return response.body().getAccessToken();
+                    }
+                    else {
+                        Log.d(LOG_TAG, "Failed to get new access token using refresh token");
+                        throw Exceptions.propagate(
+                                new Exception("Failed to get new access token using refresh token")
+                        );
+                    }
+                });
+    }
+
+    private boolean isAccessTokenExpired() {
+        User user = mAppState.getUser();
+        if (user == null) {
+            return true;
+        }
+
+        JWT jwt = new JWT(user.getAccessToken());
+        Date now = new Date();
+
+        return now.after(jwt.getExpiresAt());
     }
 }
