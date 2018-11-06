@@ -115,7 +115,9 @@ public class Letter {
         return df.format(date);
     }
 
+    public void setIsDraft(boolean isDraft) { this.isDraft = isDraft; }
     public void setSubject(String subject) { this.subject = subject; }
+    public void setTimeSent(Date timeSent) { this.timeSent = timeSent; }
     public void setText(String text) { this.text = text; }
 
     public boolean isDraft() { return this.isDraft; }

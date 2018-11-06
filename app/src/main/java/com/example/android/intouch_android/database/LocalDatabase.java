@@ -14,7 +14,7 @@ import com.example.android.intouch_android.model.User;
 
 @Database(
         entities = {Letter.class, Inmate.class, Correspondence.class, User.class},
-        version = 8,
+        version = 9,
         exportSchema = false
 )
 @TypeConverters(DateConverter.class)

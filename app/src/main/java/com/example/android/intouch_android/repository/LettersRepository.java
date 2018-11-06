@@ -19,6 +19,7 @@ import com.example.android.intouch_android.model.container.NetworkBoundResource;
 import com.example.android.intouch_android.model.container.Resource;
 import com.example.android.intouch_android.utils.AppState;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,6 +119,9 @@ public class LettersRepository {
         HashMap<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         headers.put("Authorization", "Bearer " + accessToken);
+
+        draft.setIsDraft(false);
+        draft.setTimeSent(new Date());
 
         Log.d(LOG_TAG, headers.toString());
 
