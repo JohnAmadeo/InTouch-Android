@@ -128,6 +128,7 @@ public class LettersRepository {
         return mWebservice.createLetter(draft, headers)
                 .map(response -> {
                     if (response.code() == HTTPCode.CREATED) {
+                        mExecutors.diskIO().execute(() -> mDB.letterDao().insertLetter(draft));
                         return Status.SUCCESS;
                     }
 
