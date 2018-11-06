@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.android.intouch_android.api.WebserviceProvider;
+import com.example.android.intouch_android.model.container.HTTPCode;
+import com.example.android.intouch_android.model.container.Status;
 import com.example.android.intouch_android.utils.AppExecutors;
 import com.example.android.intouch_android.api.Webservice;
 import com.example.android.intouch_android.database.LocalDatabase;
@@ -17,7 +19,13 @@ import com.example.android.intouch_android.model.container.NetworkBoundResource;
 import com.example.android.intouch_android.model.container.Resource;
 import com.example.android.intouch_android.utils.AppState;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.exceptions.Exceptions;
 
 public class LettersRepository {
     private final String LOG_TAG = this.getClass().getSimpleName();
@@ -104,6 +112,25 @@ public class LettersRepository {
         mExecutors.diskIO().execute(() -> {
             mDB.letterDao().updateDraftRecipient(letterId, recipientId, recipient);
         });
+    }
+
+    public Single<Status> createLetter(Letter draft, String accessToken) {
+        HashMap<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "application/json");
+        headers.put("Authorization", "Bearer " + accessToken);
+
+        Log.d(LOG_TAG, headers.toString());
+
+        return mWebservice.createLetter(draft, headers)
+                .map(response -> {
+                    if (response.code() == HTTPCode.CREATED) {
+                        return Status.SUCCESS;
+                    }
+
+                    throw Exceptions.propagate(new Exception(
+                            "Error Code=" + response.code() + " Failed to create letter"
+                    ));
+                });
     }
 
     /* ************************************************************ */

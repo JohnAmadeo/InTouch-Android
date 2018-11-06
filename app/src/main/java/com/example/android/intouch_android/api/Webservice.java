@@ -6,7 +6,12 @@ import com.example.android.intouch_android.model.Inmate;
 import com.example.android.intouch_android.model.Letter;
 import com.example.android.intouch_android.model.container.ApiResponse;
 
+import io.reactivex.Single;
+import retrofit2.Response;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.HeaderMap;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
@@ -22,4 +27,7 @@ public interface Webservice {
     LiveData<ApiResponse<List<Inmate>>> getInmatesByName(
             @QueryMap Map<String, String> options
     );
+
+    @POST("/johnamadeo/intouch-fake-server/letters")
+    Single<Response<Object>> createLetter(@Body Letter draft, @HeaderMap Map<String, String> headers);
 }

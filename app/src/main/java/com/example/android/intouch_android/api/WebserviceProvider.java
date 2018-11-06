@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import android.util.Log;
 
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WebserviceProvider {
@@ -23,6 +24,7 @@ public class WebserviceProvider {
                                         .create()
                                 )
                         )
+                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                         .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                         .build()
                         .create(Webservice.class);
