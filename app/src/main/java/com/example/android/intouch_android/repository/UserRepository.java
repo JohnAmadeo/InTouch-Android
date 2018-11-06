@@ -14,6 +14,7 @@ import com.example.android.intouch_android.api.Webservice;
 import com.example.android.intouch_android.api.WebserviceProvider;
 import com.example.android.intouch_android.database.LocalDatabase;
 import com.example.android.intouch_android.model.User;
+import com.example.android.intouch_android.model.container.HTTPCode;
 import com.example.android.intouch_android.model.container.UpdateTokenRequest;
 import com.example.android.intouch_android.model.container.UpdateTokenResponse;
 import com.example.android.intouch_android.utils.AppExecutors;
@@ -91,6 +92,10 @@ public class UserRepository {
         }
     }
 
+    /* ************************************************************ */
+    /*                       Private Functions                      */
+    /* ************************************************************ */
+
     private Single<String> getNewAccessToken(@NonNull User user) {
         UpdateTokenRequest body = new UpdateTokenRequest(
                 "refresh_token",
@@ -100,9 +105,10 @@ public class UserRepository {
 
         return mAuthService.getRefreshToken(body)
                 .map(response -> {
-                    if (response.code() == 200 && response.body() != null) {
-                        Log.d(LOG_TAG, response.body().getAccessToken());
-                        return response.body().getAccessToken();
+                    if (response.code() == HTTPCode.OK && response.body() != null) {
+                        String accessToken = response.body().getAccessToken();
+                        setAccessToken(accessToken);
+                        return accessToken;
                     }
                     else {
                         Log.d(LOG_TAG, "Failed to get new access token using refresh token");
@@ -123,5 +129,12 @@ public class UserRepository {
         Date now = new Date();
 
         return now.after(jwt.getExpiresAt());
+    }
+
+    private void setAccessToken(String accessToken) {
+        mAppState.setUserAccessToken(accessToken);
+        mExecutors.diskIO().execute(() -> {
+            mDB.userDao().setAccessToken(accessToken, mAppState.getUsername());
+        });
     }
 }

@@ -18,12 +18,8 @@ public class AppState {
     }
 
     public User getUser() { return user; }
-    public String getUsername() {
-        if (user == null) {
-            return null;
-        }
-        return user.getUsername();
-    }
+    public String getUsername() { return user.getUsername(); }
 
     public void setUser(User loggedInUser) { user = loggedInUser; }
+    public void setUserAccessToken(String accessToken) { user.setAccessToken(accessToken); }
 }

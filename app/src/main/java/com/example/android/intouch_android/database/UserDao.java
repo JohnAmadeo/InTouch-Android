@@ -6,6 +6,7 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.support.annotation.NonNull;
 
 import com.example.android.intouch_android.model.User;
 
@@ -23,4 +24,7 @@ public interface UserDao {
 
     @Query("SELECT * FROM users")
     LiveData<List<User>> getUsers();
+
+    @Query("UPDATE users SET accessToken = :accessToken WHERE username = :username")
+    void setAccessToken(String accessToken, @NonNull String username);
 }
