@@ -14,6 +14,8 @@ import com.example.android.intouch_android.api.Webservice;
 import com.example.android.intouch_android.api.WebserviceProvider;
 import com.example.android.intouch_android.database.LocalDatabase;
 import com.example.android.intouch_android.model.User;
+import com.example.android.intouch_android.model.container.ApiException;
+import com.example.android.intouch_android.model.container.ApiExceptionType;
 import com.example.android.intouch_android.model.container.HTTPCode;
 import com.example.android.intouch_android.model.container.UpdateTokenRequest;
 import com.example.android.intouch_android.model.container.UpdateTokenResponse;
@@ -111,10 +113,10 @@ public class UserRepository {
                         return accessToken;
                     }
                     else {
-                        Log.d(LOG_TAG, "Failed to get new access token using refresh token");
-                        throw Exceptions.propagate(
-                                new Exception("Failed to get new access token using refresh token")
-                        );
+                        throw Exceptions.propagate(new ApiException(
+                                ApiExceptionType.GET_NEW_ACCESS_TOKEN,
+                                "Failed to get new access token using refresh token"
+                        ));
                     }
                 });
     }

@@ -7,7 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.api.WebserviceProvider;
+import com.example.android.intouch_android.model.container.ApiException;
+import com.example.android.intouch_android.model.container.ApiExceptionType;
 import com.example.android.intouch_android.model.container.HTTPCode;
 import com.example.android.intouch_android.model.container.Status;
 import com.example.android.intouch_android.utils.AppExecutors;
@@ -34,14 +37,16 @@ public class LettersRepository {
     private final LocalDatabase mDB;
     private final AppExecutors mExecutors;
     private final AppState mAppState;
+    private final Context mContext;
 
     /* ************************************************************ */
     /*                      Public Functions                        */
     /* ************************************************************ */
 
     public LettersRepository(Context context) {
+        mContext = context;
         mWebservice = WebserviceProvider.getInstance();
-        mDB = LocalDatabase.getInstance(context);
+        mDB = LocalDatabase.getInstance(mContext);
         mExecutors = AppExecutors.getInstance();
         mAppState = AppState.getInstance();
     }
@@ -138,6 +143,10 @@ public class LettersRepository {
                         draft.setTimeSent(null);
                         mExecutors.diskIO().execute(() -> mDB.letterDao().insertLetter(draft));
 
+                        throw Exceptions.propagate(new ApiException(
+                                ApiExceptionType.SEND_LETTER,
+                                "Failed to send letter on backend"
+                        ));
                     }
                 });
     }
