@@ -131,10 +131,14 @@ public class LettersRepository {
                         mExecutors.diskIO().execute(() -> mDB.letterDao().insertLetter(draft));
                         return Status.SUCCESS;
                     }
+                    else {
+                        // Automatically save the letter as a draft if it cannot be saved on the
+                        // backend for some reason (e.g loss of network connectivity)
+                        draft.setIsDraft(true);
+                        draft.setTimeSent(null);
+                        mExecutors.diskIO().execute(() -> mDB.letterDao().insertLetter(draft));
 
-                    throw Exceptions.propagate(new Exception(
-                            "Error Code=" + response.code() + " Failed to create letter"
-                    ));
+                    }
                 });
     }
 
