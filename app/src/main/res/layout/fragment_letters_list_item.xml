@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    >
 
     <LinearLayout
         android:id="@+id/preview"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_toLeftOf="@+id/time_sent"
+        android:layout_toStartOf="@+id/time_sent"
+
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+
         android:padding="@dimen/text_margin"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
         <TextView
             android:id="@+id/recipient"
             android:ellipsize="end"
             android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceListItem" />
+            android:textAppearance="?attr/textAppearanceListItem"
+            />
         <TextView
             android:id="@+id/subject"
             android:ellipsize="end"
@@ -25,7 +34,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:textAppearance="?attr/textAppearanceListItem" />
+            android:textAppearance="?attr/textAppearanceListItem"
+            />
         <TextView
             android:id="@+id/text"
             android:ellipsize="end"
@@ -33,13 +43,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            />
     </LinearLayout>
 
     <TextView
         android:id="@+id/time_sent"
-        android:layout_width="70dp"
-        android:layout_height="match_parent"
+
+        android:maxWidth="70dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:gravity="end"
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+
         android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
-</LinearLayout>
+        android:textAppearance="?attr/textAppearanceListItem"
+        />
+</RelativeLayout>
