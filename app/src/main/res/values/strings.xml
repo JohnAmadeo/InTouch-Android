@@ -15,4 +15,5 @@
     <string name="send_dialog_message">Send letter to inmate?</string>
     <string name="send_dialog_positive">Send</string>
     <string name="send_dialog_negative">Cancel</string>
+    <string name="auth0_connection">Username-Password-Authentication</string>
 </resources>

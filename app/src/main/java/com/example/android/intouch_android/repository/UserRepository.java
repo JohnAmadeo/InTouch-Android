@@ -6,10 +6,17 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.auth0.android.Auth0;
+import com.auth0.android.authentication.AuthenticationAPIClient;
+import com.auth0.android.authentication.AuthenticationException;
+import com.auth0.android.callback.BaseCallback;
 import com.auth0.android.jwt.JWT;
+import com.auth0.android.result.Credentials;
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.api.AuthService;
 import com.example.android.intouch_android.api.AuthServiceProvider;
+import com.example.android.intouch_android.api.InTouchService;
+import com.example.android.intouch_android.api.InTouchServiceProvider;
 import com.example.android.intouch_android.api.Webservice;
 import com.example.android.intouch_android.api.WebserviceProvider;
 import com.example.android.intouch_android.database.LocalDatabase;
@@ -18,25 +25,20 @@ import com.example.android.intouch_android.model.container.ApiException;
 import com.example.android.intouch_android.model.container.ApiExceptionType;
 import com.example.android.intouch_android.model.container.HTTPCode;
 import com.example.android.intouch_android.model.container.UpdateTokenRequest;
-import com.example.android.intouch_android.model.container.UpdateTokenResponse;
 import com.example.android.intouch_android.utils.AppExecutors;
 import com.example.android.intouch_android.utils.AppState;
 
 import java.util.Date;
-import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.exceptions.Exceptions;
-import io.reactivex.schedulers.Schedulers;
 
 public class UserRepository {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private final Context mContext;
     private final Webservice mWebservice;
     private final AuthService mAuthService;
+    private final InTouchService mInTouchService;
     private final LocalDatabase mDB;
     private final AppExecutors mExecutors;
     private final AppState mAppState;
@@ -45,6 +47,7 @@ public class UserRepository {
         mContext = context;
         mWebservice = WebserviceProvider.getInstance();
         mAuthService = AuthServiceProvider.getInstance();
+        mInTouchService = InTouchServiceProvider.getInstance();
         mDB = LocalDatabase.getInstance(context);
         mExecutors = AppExecutors.getInstance();
         mAppState = AppState.getInstance();
@@ -80,25 +83,44 @@ public class UserRepository {
         );
     }
 
-    public Single<String> getAccessToken() {
+    /* ************************************************************ */
+    /*                       SEND LETTER FLOW                       */
+    /* ************************************************************ */
+
+    public Single<User> getUser() {
+        Log.d(LOG_TAG, "getUser");
         User user = mAppState.getUser();
         if (user == null) {
             throw Exceptions.propagate(new Exception("No user stored in app state"));
         }
-
-        if (isAccessTokenExpired()) {
-            return getNewAccessToken(user);
+        else if (user.isTemporaryUser()) {
+            return registerTemporaryUser(user);
         }
         else {
-            return Single.just(user.getAccessToken());
+            return Single.just(user);
+        }
+    }
+
+    public Single<String> getAccessToken(@NonNull User user) {
+
+        if (user.isTemporaryUser()) {
+            return getAccessTokenForTemporaryUser(user);
+        }
+        else {
+            if (isAccessTokenExpired()) {
+                return renewAccessToken(user);
+            }
+            else {
+                return Single.just(user.getAccessToken());
+            }
         }
     }
 
     /* ************************************************************ */
-    /*                       Private Functions                      */
+    /*                   getAccessToken Helper                      */
     /* ************************************************************ */
 
-    private Single<String> getNewAccessToken(@NonNull User user) {
+    private Single<String> renewAccessToken(@NonNull User user) {
         UpdateTokenRequest body = new UpdateTokenRequest(
                 "refresh_token",
                 mContext.getString(R.string.com_auth0_client_id),
@@ -121,6 +143,48 @@ public class UserRepository {
                 });
     }
 
+    private Single<String> getAccessTokenForTemporaryUser(@NonNull User user) {
+        Auth0 account = new Auth0(mContext);
+        account.setOIDCConformant(true);
+        AuthenticationAPIClient client = new AuthenticationAPIClient(account);
+
+        return Single.create(subscriber -> {
+            Log.d(LOG_TAG, "username" + user.getUsername() + "password" + user.getTemporaryPassword());
+            client.login(
+                    user.getUsername(),
+                    user.getTemporaryPassword(),
+                    mContext.getString(R.string.auth0_connection)
+            )
+                    .start(new BaseCallback<Credentials, AuthenticationException>() {
+                        @Override
+                        public void onSuccess(Credentials payload) {
+                            Log.d(LOG_TAG, "Temp User Credentials:" +
+                                            "ACCESS" + payload.getAccessToken() +
+                                            "ID" + payload.getIdToken() +
+                                            "REFRESH" + payload.getRefreshToken()
+                            );
+                            upgradeTemporaryUser(
+                                    payload.getAccessToken(),
+                                    payload.getIdToken(),
+                                    payload.getRefreshToken()
+                            );
+                            subscriber.onSuccess(payload.getAccessToken());
+                        }
+
+                        @Override
+                        public void onFailure(AuthenticationException error) {
+                            Log.d(
+                                    LOG_TAG,
+                                    "\nAuth0 Error Code:" + error.getCode() + "\n" +
+                                            "Auth0 Error Description:" + error.getDescription() + "\n" +
+                                            "Auth0 Status Code:" + error.getStatusCode()
+                            );
+                            subscriber.onError(error);
+                        }
+                    });
+        });
+    }
+
     private boolean isAccessTokenExpired() {
         User user = mAppState.getUser();
         if (user == null) {
@@ -138,5 +202,38 @@ public class UserRepository {
         mExecutors.diskIO().execute(() -> {
             mDB.userDao().setAccessToken(accessToken, mAppState.getUsername());
         });
+    }
+
+    // Convert a temporary user to a full user
+    private void upgradeTemporaryUser(String accessToken, String idToken, String refreshToken) {
+        mAppState.setUserAccessToken(accessToken);
+        mAppState.setUserIdToken(idToken);
+        mAppState.setUserRefreshToken(refreshToken);
+        mAppState.removeUserTemporaryPassword();
+
+        mExecutors.diskIO().execute(() -> {
+            mDB.userDao().upgradeTemporaryUser(accessToken, idToken, refreshToken, mAppState.getUsername());
+        });
+    }
+
+    /* ************************************************************ */
+    /*                       getUser Helpers                        */
+    /* ************************************************************ */
+
+    // Registers the existence of the temporary user on the server, making the user no longer a
+    // temporary user
+    private Single<User> registerTemporaryUser(@NonNull User user) {
+        return mInTouchService.createUser(user)
+                .map(response -> {
+                    if (response.code() == 201) {
+                        return user;
+                    }
+                    else {
+                        throw Exceptions.propagate(new ApiException(
+                                ApiExceptionType.CREATE_TEMPORARY_USER,
+                                "Could not create temporary user on backend"
+                        ));
+                    }
+                });
     }
 }
