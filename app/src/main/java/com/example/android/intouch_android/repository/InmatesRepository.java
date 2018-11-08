@@ -93,16 +93,16 @@ public class InmatesRepository {
 //                            )
 //                    );
 //                }
-                mDB.inmateDao().insertInmate_TEST(
-                        new Inmate(
-                                "99",
-                                "Johannes Hutama Cahya Trisna Triawan Putra",
-                                "Kusuma",
-                                "AAAAA99",
-                                new Date(),
-                                "CT Prison Long Longer Longest"
-                        )
-                );
+//                mDB.inmateDao().insertInmate_TEST(
+//                        new Inmate(
+//                                "99",
+//                                "Johannes Hutama Cahya Trisna Triawan Putra",
+//                                "Kusuma",
+//                                "AAAAA99",
+//                                new Date(),
+//                                "CT Prison Long Longer Longest"
+//                        )
+//                );
                 mDB.setTransactionSuccessful();
             }
             catch(Exception e) {

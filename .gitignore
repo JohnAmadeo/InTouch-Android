@@ -8,3 +8,6 @@
 /build
 /captures
 .externalNativeBuild
+app/src/main/java/com/example/android/intouch_android/RxFragment.java
+app/src/main/res/drawable/letters.xml
+app/src/main/res/layout/fragment_rx.xml
