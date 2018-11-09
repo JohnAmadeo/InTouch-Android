@@ -88,10 +88,11 @@ public class UserRepository {
     /* ************************************************************ */
 
     public Single<User> getUser() {
-        Log.d(LOG_TAG, "getUser");
         User user = mAppState.getUser();
         if (user == null) {
-            throw Exceptions.propagate(new Exception("No user stored in app state"));
+            return Single.error(new ApiException(
+                    ApiExceptionType.GET_USER, "No user stored in app state"
+            ));
         }
         else if (user.isTemporaryUser()) {
             return registerTemporaryUser(user);
@@ -102,7 +103,6 @@ public class UserRepository {
     }
 
     public Single<String> getAccessToken(@NonNull User user) {
-
         if (user.isTemporaryUser()) {
             return getAccessTokenForTemporaryUser(user);
         }
@@ -135,10 +135,10 @@ public class UserRepository {
                         return accessToken;
                     }
                     else {
-                        throw Exceptions.propagate(new ApiException(
+                        throw new ApiException(
                                 ApiExceptionType.GET_NEW_ACCESS_TOKEN,
                                 "Failed to get new access token using refresh token"
-                        ));
+                        );
                     }
                 });
     }
@@ -229,10 +229,10 @@ public class UserRepository {
                         return user;
                     }
                     else {
-                        throw Exceptions.propagate(new ApiException(
+                        throw new ApiException(
                                 ApiExceptionType.CREATE_TEMPORARY_USER,
                                 "Could not create temporary user on backend"
-                        ));
+                        );
                     }
                 });
     }

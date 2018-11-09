@@ -32,6 +32,9 @@
             android:id="@+id/exitEditorAction"
             app:destination="@id/sentLettersFragment"
             app:popUpTo="@+id/sentLettersFragment" />
+        <action
+            android:id="@+id/action_letterEditorFragment_to_confirmationFragment"
+            app:destination="@id/confirmationFragment" />
     </fragment>
     <fragment
         android:id="@+id/inmateSearchFragment"
@@ -54,4 +57,9 @@
             android:id="@+id/action_authenticationFragment_to_sentLettersFragment"
             app:destination="@id/sentLettersFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/confirmationFragment"
+        android:name="com.example.android.intouch_android.ConfirmationFragment"
+        android:label="fragment_confirmation"
+        tools:layout="@layout/fragment_confirmation" />
 </navigation>

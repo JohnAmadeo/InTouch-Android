@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -17,10 +18,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.Letter;
+import com.example.android.intouch_android.model.container.ApiException;
+import com.example.android.intouch_android.repository.UserRepository;
 import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.utils.VoidFunction;
 import com.example.android.intouch_android.viewmodel.LetterEditorViewModel;
@@ -30,6 +34,10 @@ import java.util.List;
 
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.exceptions.CompositeException;
+import retrofit2.http.POST;
 
 public class LetterEditorFragment extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
@@ -37,12 +45,16 @@ public class LetterEditorFragment extends Fragment {
 
     // View Model
     private LetterEditorViewModel mViewModel;
+    private CompositeDisposable mDisposables = new CompositeDisposable();
     // UI
     private View mEditorView;
     private TextView mInmateNameView;
     private EditText mSubjectInput;
     private EditText mTextEditor;
     private MenuItem mSendLetterButton;
+    private ProgressBar mProgressBar;
+    private SendDialogFragment mDialog;
+
 
     public LetterEditorFragment() { }
 
@@ -62,6 +74,8 @@ public class LetterEditorFragment extends Fragment {
         mInmateNameView = mEditorView.findViewById(R.id.inmate_search_bar);
         mSubjectInput = mEditorView.findViewById(R.id.subject_input);
         mTextEditor = mEditorView.findViewById(R.id.text_editor);
+        mProgressBar = mEditorView.findViewById(R.id.send_letter_progress_bar);
+        mDialog = new SendDialogFragment();
 
         mViewModel = ViewModelProviders.of(this).get(LetterEditorViewModel.class);
         /* -------------------------------------------------------------------------------------- */
@@ -93,6 +107,24 @@ public class LetterEditorFragment extends Fragment {
                 createOnTextChangeListener(mViewModel::setDraftText)
         );
 
+        mDialog.setOnDialogPositiveClickListener(() -> {
+            mProgressBar.setIndeterminate(true);
+            ViewUtils.dismissKeyboard(getActivity());
+
+            Disposable stream = mViewModel.sendLetter(mViewModel.getDraft())
+                    .subscribe(status -> {
+                        // TODO: Navigate to confirmation page
+                        mProgressBar.setIndeterminate(false);
+                        Navigation.findNavController(mEditorView).navigate(R.id.confirmationFragment);
+                    }, error -> {
+                        ViewUtils.dismissKeyboard(getActivity());
+                        mProgressBar.setIndeterminate(false);
+                        logErrors(error);
+                        showErrorSnackbar();
+                    });
+            mDisposables.add(stream);
+        });
+
         return mEditorView;
     }
 
@@ -105,7 +137,7 @@ public class LetterEditorFragment extends Fragment {
 
         mSendLetterButton = menu.findItem(R.id.send_letter);
         mSendLetterButton.setOnMenuItemClickListener(menuItem -> {
-            showSendDialog();
+            mDialog.show(getActivity().getSupportFragmentManager(), "SendDialogFragment");
             return true;
         });
     }
@@ -114,6 +146,7 @@ public class LetterEditorFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         ViewUtils.dismissKeyboard(getActivity());
+        mDisposables.clear();
     }
 
     @Override
@@ -181,10 +214,23 @@ public class LetterEditorFragment extends Fragment {
                 draft.getRecipientId() != null;
     }
 
-    private void showSendDialog() {
-        SendDialogFragment dialog = new SendDialogFragment();
-        dialog.setOnDialogPositiveClickListener(() -> Log.d(LOG_TAG, "Dialog clicked!"));
-        dialog.show(getActivity().getSupportFragmentManager(), "SendDialogFragment");
+    private void showErrorSnackbar() {
+        Snackbar snackbar = Snackbar.make(
+                mEditorView,
+                R.string.snackbar_send_letter_error,
+                Snackbar.LENGTH_LONG
+        );
+        snackbar.setAction("Dismiss", view -> snackbar.dismiss());
+        snackbar.show();
+    }
+
+    private void logErrors(Throwable error) {
+        if (error instanceof CompositeException) {
+            for (Throwable singleError:((CompositeException) error).getExceptions()) {
+                Log.d(LOG_TAG, singleError.getMessage());
+            }
+        } else {
+            Log.d(LOG_TAG, error.getMessage());
+        }
     }
  }
-

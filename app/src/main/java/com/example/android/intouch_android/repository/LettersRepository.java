@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.api.WebserviceProvider;
 import com.example.android.intouch_android.model.container.ApiException;
 import com.example.android.intouch_android.model.container.ApiExceptionType;
@@ -25,9 +24,8 @@ import com.example.android.intouch_android.utils.AppState;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.exceptions.Exceptions;
 
@@ -121,16 +119,15 @@ public class LettersRepository {
     }
 
     public Single<Status> createLetter(Letter draft, String accessToken) {
-        HashMap<String, String> headers = new HashMap<String, String>();
+        HashMap<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         headers.put("Authorization", "Bearer " + accessToken);
 
         draft.setIsDraft(false);
         draft.setTimeSent(new Date());
 
-        Log.d(LOG_TAG, headers.toString());
-
         return mWebservice.createLetter(draft, headers)
+                // TODO: Add timeout operator here?
                 .map(response -> {
                     if (response.code() == HTTPCode.CREATED) {
                         mExecutors.diskIO().execute(() -> mDB.letterDao().insertLetter(draft));
@@ -143,11 +140,17 @@ public class LettersRepository {
                         draft.setTimeSent(null);
                         mExecutors.diskIO().execute(() -> mDB.letterDao().insertLetter(draft));
 
-                        throw Exceptions.propagate(new ApiException(
-                                ApiExceptionType.SEND_LETTER,
+                        throw new ApiException(
+                                ApiExceptionType.CREATE_LETTER,
                                 "Failed to send letter on backend"
-                        ));
+                        );
                     }
+                })
+                .doOnError(error -> {
+                    throw new ApiException(
+                            ApiExceptionType.CREATE_LETTER,
+                            "Network=" + error.getMessage() + " Desc=Failed to send letter on backend"
+                    );
                 });
     }
 

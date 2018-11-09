@@ -14,15 +14,27 @@ import android.util.Pair;
 
 import com.example.android.intouch_android.model.Letter;
 import com.example.android.intouch_android.model.container.Resource;
+import com.example.android.intouch_android.model.container.Status;
 import com.example.android.intouch_android.repository.LettersRepository;
+import com.example.android.intouch_android.repository.UserRepository;
 import com.example.android.intouch_android.utils.Transforms;
+
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class LetterEditorViewModel extends AndroidViewModel {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private LettersRepository mLettersRepository;
+    private UserRepository mUserRepository;
     private MutableLiveData<String> mLoadRequest = new MutableLiveData<>();
     private MutableLiveData<String> mSubjectInput = new MutableLiveData<>();
     private MutableLiveData<String> mTextInput = new MutableLiveData<>();
+
     private MediatorLiveData<Letter> mDraft;
     private LiveData<Letter> mInitialDraft;
 
@@ -32,6 +44,7 @@ public class LetterEditorViewModel extends AndroidViewModel {
     public LetterEditorViewModel(@NonNull Application application) {
         super(application);
         mLettersRepository = new LettersRepository(application.getApplicationContext());
+        mUserRepository = new UserRepository(application.getApplicationContext());
         mDraft = new MediatorLiveData<>();
 
         mInitialDraft = Transforms.startWith(
@@ -97,4 +110,13 @@ public class LetterEditorViewModel extends AndroidViewModel {
     public void setDraftSubject(String subject) { mSubjectInput.setValue(subject); }
     public void setDraftText(String text) { mTextInput.setValue(text); }
 
+    // TODO: Return Single and subscribe to Observable inside the Fragment
+    public Single<Status> sendLetter(Letter draft) {
+        return mUserRepository.getUser()
+                .flatMap(user -> mUserRepository.getAccessToken(user))
+                .flatMap(accessToken -> mLettersRepository.createLetter(draft, accessToken))
+                // TODO: .flatMap(inmateId -> mInmatesRepository.cacheInmateCorrespondent(inmateId))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }
