@@ -59,7 +59,23 @@
     </fragment>
     <fragment
         android:id="@+id/confirmationFragment"
-        android:name="com.example.android.intouch_android.ConfirmationFragment"
+        android:name="com.example.android.intouch_android.ui.confirmation.ConfirmationFragment"
         android:label="fragment_confirmation"
-        tools:layout="@layout/fragment_confirmation" />
+        tools:layout="@layout/fragment_confirmation" >
+        <action
+            android:id="@+id/action_confirmationFragment_to_sentLettersFragment"
+            app:destination="@id/sentLettersFragment" />
+        <action
+            android:id="@+id/action_confirmationFragment_to_signupPlaceholderUserFragment"
+            app:destination="@id/signupPlaceholderUserFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signupPlaceholderUserFragment"
+        android:name="com.example.android.intouch_android.signupPlaceholderUserFragment"
+        android:label="fragment_signup_placeholder_user"
+        tools:layout="@layout/fragment_signup_placeholder_user" >
+        <action
+            android:id="@+id/action_signupPlaceholderUserFragment_to_sentLettersFragment"
+            app:destination="@id/sentLettersFragment" />
+    </fragment>
 </navigation>

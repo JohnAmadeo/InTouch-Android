@@ -62,7 +62,7 @@ public class LaunchFragment extends Fragment {
 
         mGetStartedButton.setOnClickListener(view -> {
             Log.d(LOG_TAG, "Get started");
-            mLaunchViewModel.saveUser(User.createTemporaryUser());
+            mLaunchViewModel.saveUser(User.createPlaceholderUser());
             navigateAwayFromLaunchScreen();
         });
 

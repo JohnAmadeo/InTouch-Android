@@ -1,7 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ConfirmationFragment">
-</FrameLayout>
+    android:background="@color/colorPrimary"
+    tools:context=".ui.confirmation.ConfirmationFragment"
+    >
+    <ImageButton
+        android:id="@+id/confirmation_close_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/close_icon"
+        android:background="@android:color/transparent"
+
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <TextView
+        android:id="@+id/confirmation_text"
+        android:layout_width="280dp"
+        android:layout_height="100dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:layout_marginBottom="140dp"
+
+        android:text="Your letter is on its way! Your letter should arrive in around 1 week."
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:gravity="center"
+        />
+</android.support.constraint.ConstraintLayout>

@@ -3,8 +3,10 @@ package com.example.android.intouch_android.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
+import com.example.android.intouch_android.R;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.UUID;
@@ -32,11 +34,14 @@ public class User {
     @SerializedName("temporaryPassword")
     private String temporaryPassword = null;
 
-    public static User createTemporaryUser() {
+    @Ignore
+    public static final String PLACEHOLDER_EMAIL_DOMAIN = "@intouch.placeholder.com";
+
+    public static User createPlaceholderUser() {
         String id = UUID.randomUUID().toString().substring(0, 15);
         return new User(
                 id,
-                id + "@intouch.com",
+                id + PLACEHOLDER_EMAIL_DOMAIN,
                 null,
                 null,
                 null,
@@ -106,5 +111,11 @@ public class User {
         return this.getAccessToken() == null &&
                 this.getIdToken() == null &&
                 this.getRefreshToken() == null;
+    }
+
+    // A placeholder user is a user whose username and email has been auto-generated (this occurs
+    // when users opt to get started w/o explicitly signing up or logging in)
+    public boolean isPlaceholderUser() {
+        return this.getEmail().contains(PLACEHOLDER_EMAIL_DOMAIN);
     }
 }
