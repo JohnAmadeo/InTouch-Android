@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,15 +15,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.Letter;
-import com.example.android.intouch_android.model.container.ApiException;
-import com.example.android.intouch_android.repository.UserRepository;
 import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.utils.VoidFunction;
 import com.example.android.intouch_android.viewmodel.LetterEditorViewModel;
@@ -37,7 +33,6 @@ import androidx.navigation.Navigation;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.exceptions.CompositeException;
-import retrofit2.http.POST;
 
 public class LetterEditorFragment extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
@@ -120,7 +115,7 @@ public class LetterEditorFragment extends Fragment {
                         ViewUtils.dismissKeyboard(getActivity());
                         mProgressBar.setIndeterminate(false);
                         logErrors(error);
-                        showErrorSnackbar();
+                        showSnackbar(R.string.snackbar_send_letter_error);
                     });
             mDisposables.add(stream);
         });
@@ -137,7 +132,13 @@ public class LetterEditorFragment extends Fragment {
 
         mSendLetterButton = menu.findItem(R.id.send_letter);
         mSendLetterButton.setOnMenuItemClickListener(menuItem -> {
-            mDialog.show(getActivity().getSupportFragmentManager(), "SendDialogFragment");
+            if (isNonEmptyDraft(mViewModel.getDraft())) {
+                mDialog.show(getActivity().getSupportFragmentManager(), "SendDialogFragment");
+            }
+            else {
+                ViewUtils.dismissKeyboard(getActivity());
+                showSnackbar(R.string.snackbar_empty_letter_error);
+            }
             return true;
         });
     }
@@ -155,7 +156,7 @@ public class LetterEditorFragment extends Fragment {
         if (item.getItemId() == android.R.id.home) {
             boolean draftSaved = false;
             Letter draft = mViewModel.getDraft();
-            if (shouldSaveAsDraft(draft)) {
+            if (isNonEmptyDraft(draft)) {
                 mViewModel.saveDraft(draft);
                 draftSaved = true;
             }
@@ -208,16 +209,15 @@ public class LetterEditorFragment extends Fragment {
     /*                           Helpers                            */
     /* ************************************************************ */
 
-    private boolean shouldSaveAsDraft(Letter draft) {
-        return draft.getText().length() > 0 ||
-                draft.getSubject().length() > 0 ||
-                draft.getRecipientId() != null;
+    private boolean isNonEmptyDraft(Letter draft) {
+        return draft.getText().trim().length() > 0 ||
+                draft.getSubject().trim().length() > 0;
     }
 
-    private void showErrorSnackbar() {
+    private void showSnackbar(int messageResId) {
         Snackbar snackbar = Snackbar.make(
                 mEditorView,
-                R.string.snackbar_send_letter_error,
+                messageResId,
                 Snackbar.LENGTH_LONG
         );
         snackbar.setAction("Dismiss", view -> snackbar.dismiss());

@@ -17,5 +17,5 @@
     <string name="send_dialog_negative">Cancel</string>
     <string name="auth0_connection">Username-Password-Authentication</string>
     <string name="snackbar_send_letter_error">"Failed to send letter. Please retry later. Your letter has also been saved as a draft. "</string>
-
+    <string name="snackbar_empty_letter_error">Letter subject and body cannot be empty.</string>
 </resources>
