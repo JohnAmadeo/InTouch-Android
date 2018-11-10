@@ -3,10 +3,8 @@ package com.example.android.intouch_android.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
-import com.example.android.intouch_android.R;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.UUID;
@@ -31,8 +29,8 @@ public class User {
     private String refreshToken;
 
     // Only set for temporary users
-    @SerializedName("temporaryPassword")
-    private String temporaryPassword = null;
+    @SerializedName("placeholderPassword")
+    private String placeholderPassword = null;
 
     @Ignore
     public static final String PLACEHOLDER_EMAIL_DOMAIN = "@intouch.placeholder.com";
@@ -71,14 +69,14 @@ public class User {
             String accessToken,
             String idToken,
             String refreshToken,
-            String temporaryPassword
+            String placeholderPassword
     ) {
         this.username = username;
         this.email = email;
         this.accessToken = accessToken;
         this.idToken = idToken;
         this.refreshToken = refreshToken;
-        this.temporaryPassword = temporaryPassword;
+        this.placeholderPassword = placeholderPassword;
     }
 
     public String getUsername() { return this.username; }
@@ -86,13 +84,13 @@ public class User {
     public String getAccessToken() { return this.accessToken; }
     public String getIdToken() { return this.idToken; }
     public String getRefreshToken() { return this.refreshToken; }
-    public String getTemporaryPassword() { return this.temporaryPassword; }
+    public String getPlaceholderPassword() { return this.placeholderPassword; }
 
     public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
     public void setIdToken(String idToken) { this.idToken = idToken; }
     public void setRefreshToken(String refreshToken) { this.refreshToken = refreshToken; }
-    public void setTemporaryPassword(String temporaryPassword) {
-        this.temporaryPassword = temporaryPassword;
+    public void setPlaceholderPassword(String placeholderPassword) {
+        this.placeholderPassword = placeholderPassword;
     }
 
     @Override
@@ -103,6 +101,7 @@ public class User {
                 "accessToken=" + getAccessToken() + "\n" +
                 "idToken=" + getIdToken() + "\n" +
                 "refreshToken=" + getRefreshToken() + "\n" +
+                "placeholderPassword=" + getPlaceholderPassword() + "\n" +
                 ")";
     }
 

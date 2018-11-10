@@ -10,6 +10,7 @@ import com.auth0.android.Auth0;
 import com.auth0.android.authentication.AuthenticationAPIClient;
 import com.auth0.android.authentication.AuthenticationException;
 import com.auth0.android.callback.BaseCallback;
+import com.auth0.android.jwt.DecodeException;
 import com.auth0.android.jwt.JWT;
 import com.auth0.android.result.Credentials;
 import com.example.android.intouch_android.R;
@@ -31,7 +32,6 @@ import com.example.android.intouch_android.utils.AppState;
 import java.util.Date;
 
 import io.reactivex.Single;
-import io.reactivex.exceptions.Exceptions;
 
 public class UserRepository {
     private final String LOG_TAG = this.getClass().getSimpleName();
@@ -103,8 +103,12 @@ public class UserRepository {
     }
 
     public Single<String> getAccessToken(@NonNull User user) {
-        if (user.isTemporaryUser()) {
-            return getAccessTokenForTemporaryUser(user);
+        // TODO: If user is placeholder user, we have no way of verifying whether access token has
+        // expired, so maybe we should just re-fetch the access token each time. But to do that,
+        // we cannot get rid of temporary password (which should be renamed as placeholder password)
+        // and should think of it as a placeholder password
+        if (user.isPlaceholderUser()) {
+            return getAccessTokenForPlaceholderUser(user);
         }
         else {
             if (isAccessTokenExpired()) {
@@ -143,31 +147,28 @@ public class UserRepository {
                 });
     }
 
-    private Single<String> getAccessTokenForTemporaryUser(@NonNull User user) {
+    private Single<String> getAccessTokenForPlaceholderUser(@NonNull User user) {
         Auth0 account = new Auth0(mContext);
         account.setOIDCConformant(true);
         AuthenticationAPIClient client = new AuthenticationAPIClient(account);
 
         return Single.create(subscriber -> {
-            Log.d(LOG_TAG, "username" + user.getUsername() + "password" + user.getTemporaryPassword());
+            Log.d(LOG_TAG, "username" + user.getUsername() + "password" + user.getPlaceholderPassword());
             client.login(
                     user.getUsername(),
-                    user.getTemporaryPassword(),
+                    user.getPlaceholderPassword(),
                     mContext.getString(R.string.auth0_connection)
             )
                     .start(new BaseCallback<Credentials, AuthenticationException>() {
                         @Override
                         public void onSuccess(Credentials payload) {
                             Log.d(LOG_TAG, "Temp User Credentials:" +
-                                            "ACCESS" + payload.getAccessToken() +
-                                            "ID" + payload.getIdToken() +
+                                            "ACCESS" + payload.getAccessToken() + "\n" +
+                                            "ID" + payload.getIdToken() + "\n" +
                                             "REFRESH" + payload.getRefreshToken()
                             );
-                            upgradeTemporaryUser(
-                                    payload.getAccessToken(),
-                                    payload.getIdToken(),
-                                    payload.getRefreshToken()
-                            );
+                            setAccessToken(payload.getAccessToken());
+                            setIdToken(payload.getIdToken());
                             subscriber.onSuccess(payload.getAccessToken());
                         }
 
@@ -191,10 +192,16 @@ public class UserRepository {
             return true;
         }
 
-        JWT jwt = new JWT(user.getAccessToken());
-        Date now = new Date();
+        try {
+            JWT jwt = new JWT(user.getAccessToken());
+            Date now = new Date();
 
-        return now.after(jwt.getExpiresAt());
+            return now.after(jwt.getExpiresAt());
+        }
+        // If access token is an opaque string, refetch
+        catch (DecodeException e) {
+            return false;
+        }
     }
 
     private void setAccessToken(String accessToken) {
@@ -204,15 +211,11 @@ public class UserRepository {
         });
     }
 
-    // Convert a temporary user to a full user
-    private void upgradeTemporaryUser(String accessToken, String idToken, String refreshToken) {
-        mAppState.setUserAccessToken(accessToken);
-        mAppState.setUserIdToken(idToken);
-        mAppState.setUserRefreshToken(refreshToken);
-        mAppState.removeUserTemporaryPassword();
 
+    private void setIdToken(String idToken) {
+        mAppState.setUserIdToken(idToken);
         mExecutors.diskIO().execute(() -> {
-            mDB.userDao().upgradeTemporaryUser(accessToken, idToken, refreshToken, mAppState.getUsername());
+            mDB.userDao().setIdToken(idToken, mAppState.getUsername());
         });
     }
 

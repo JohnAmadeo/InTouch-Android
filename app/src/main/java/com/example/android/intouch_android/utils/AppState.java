@@ -24,5 +24,4 @@ public class AppState {
     public void setUserAccessToken(String accessToken) { user.setAccessToken(accessToken); }
     public void setUserIdToken(String idToken) { user.setIdToken(idToken); }
     public void setUserRefreshToken(String refreshToken) { user.setRefreshToken(refreshToken); }
-    public void removeUserTemporaryPassword() { user.setTemporaryPassword(null); }
 }

@@ -28,8 +28,6 @@ public interface UserDao {
     @Query("UPDATE users SET accessToken = :accessToken WHERE username = :username")
     void setAccessToken(String accessToken, String username);
 
-    @Query("UPDATE users " +
-            "SET accessToken = :accessToken, idToken = :idToken, refreshToken = :refreshToken, temporaryPassword = null " +
-            "WHERE username = :username")
-    void upgradeTemporaryUser(String accessToken, String idToken, String refreshToken, String username);
+    @Query("UPDATE users SET idToken = :idToken WHERE username = :username")
+    void setIdToken(String idToken, String username);
 }
