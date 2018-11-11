@@ -21,17 +21,16 @@ public class MainActivity
 
         BottomNavigationView bottomNavigationView= findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.navigation_home:
+            case R.id.navigation_drafts:
                 return true;
-            case R.id.navigation_dashboard:
+            case R.id.navigation_letters:
                 return true;
-            case R.id.navigation_notifications:
+            case R.id.navigation_profile:
                 return true;
         }
         return false;
