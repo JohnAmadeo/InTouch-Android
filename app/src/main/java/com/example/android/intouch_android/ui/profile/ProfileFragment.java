@@ -32,7 +32,8 @@ public class ProfileFragment extends Fragment {
         ViewUtils.setupBottomNavigation(
                 getActivity(),
                 mParentView,
-                R.id.navigation_profile
+                R.id.navigation_profile,
+                R.id.profileFragment
         );
 
         return mParentView;

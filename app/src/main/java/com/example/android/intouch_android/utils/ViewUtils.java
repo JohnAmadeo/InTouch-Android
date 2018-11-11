@@ -85,7 +85,8 @@ public class ViewUtils {
     public static void setupBottomNavigation(
             Activity activity,
             View view,
-            int selectedItemResId
+            int selectedItemResId,
+            int selectedFragmentResId
     ) {
         BottomNavigationView bottomNav = activity.findViewById(R.id.bottom_navigation);
         bottomNav.setVisibility(View.VISIBLE);
@@ -97,15 +98,40 @@ public class ViewUtils {
                 return true;
             }
 
+            // TODO: Figure out back nav
             switch (menuItem.getItemId()) {
                 case R.id.navigation_drafts:
-                    Navigation.findNavController(view).navigate(R.id.draftsFragment);
+                    Navigation.findNavController(view).navigate(
+                            R.id.draftsFragment,
+                            null,
+                            new NavOptions.Builder()
+                                    .setPopUpTo(
+                                            selectedFragmentResId,
+                                            true
+                                    ).build()
+                    );
                     return true;
                 case R.id.navigation_letters:
-                    Navigation.findNavController(view).navigate(R.id.sentLettersFragment);
+                    Navigation.findNavController(view).navigate(
+                            R.id.sentLettersFragment,
+                            null,
+                            new NavOptions.Builder()
+                                    .setPopUpTo(
+                                            selectedFragmentResId,
+                                            true
+                                    ).build()
+                    );
                     return true;
                 case R.id.navigation_profile:
-                    Navigation.findNavController(view).navigate(R.id.profileFragment);
+                    Navigation.findNavController(view).navigate(
+                            R.id.profileFragment,
+                            null,
+                            new NavOptions.Builder()
+                                    .setPopUpTo(
+                                            selectedFragmentResId,
+                                            true
+                                    ).build()
+                    );
                     return true;
             }
 

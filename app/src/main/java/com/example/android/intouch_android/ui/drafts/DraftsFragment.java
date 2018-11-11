@@ -45,7 +45,8 @@ public class DraftsFragment extends Fragment {
         ViewUtils.setupBottomNavigation(
                 getActivity(),
                 mParentView,
-                R.id.navigation_drafts
+                R.id.navigation_drafts,
+                R.id.draftsFragment
         );
 
         return mParentView;

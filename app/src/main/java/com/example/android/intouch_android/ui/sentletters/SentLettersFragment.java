@@ -75,7 +75,8 @@ public class SentLettersFragment extends Fragment {
         ViewUtils.setupBottomNavigation(
                 getActivity(),
                 mParentView,
-                R.id.navigation_letters
+                R.id.navigation_letters,
+                R.id.sentLettersFragment
         );
 
         /* Setup observers */
