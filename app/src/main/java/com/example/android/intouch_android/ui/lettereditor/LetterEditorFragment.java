@@ -110,7 +110,13 @@ public class LetterEditorFragment extends Fragment {
                     .subscribe(status -> {
                         // TODO: Navigate to confirmation page
                         mProgressBar.setIndeterminate(false);
-                        Navigation.findNavController(mEditorView).navigate(R.id.confirmationFragment);
+                        Navigation.findNavController(mEditorView).navigate(
+                                R.id.confirmationFragment,
+                                null,
+                                new NavOptions.Builder()
+                                        .setPopUpTo(R.id.sentLettersFragment, false)
+                                        .build()
+                        );
                     }, error -> {
                         ViewUtils.dismissKeyboard(getActivity());
                         mProgressBar.setIndeterminate(false);

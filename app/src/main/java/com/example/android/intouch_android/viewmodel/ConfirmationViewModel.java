@@ -18,4 +18,6 @@ public class ConfirmationViewModel extends AndroidViewModel {
     public boolean isPlaceholderUser() {
         return mUserRepository.getUserFromAppState().isPlaceholderUser();
     }
+
+    public void saveUser(User user) { mUserRepository.saveUser(user); }
 }

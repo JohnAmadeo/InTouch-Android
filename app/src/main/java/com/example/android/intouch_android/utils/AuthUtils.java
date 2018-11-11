@@ -1,31 +1,39 @@
 package com.example.android.intouch_android.utils;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.auth0.android.Auth0;
-import com.auth0.android.authentication.AuthenticationException;
 import com.auth0.android.jwt.JWT;
 import com.auth0.android.provider.AuthCallback;
 import com.auth0.android.provider.WebAuthProvider;
 import com.auth0.android.result.Credentials;
-import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.User;
+
+import java.util.HashMap;
 
 public class AuthUtils {
     private String LOG_TAG = this.getClass().getSimpleName();
 
-    public static void login(Activity activity, AuthCallback authCallback) {
-        Auth0 account = new Auth0(activity.getApplicationContext());
-        account.setOIDCConformant(true);
+    public static void authenticate(Activity activity, AuthCallback authCallback) {
+        showAuthenticationPage(
+                activity,
+                authCallback,
+                new AuthLoginPageParamsBuilder()
+                        .prefillWithPlaceholderEmail()
+                        .build()
+        );
+    }
 
-        WebAuthProvider.init(account)
-                .withScheme("demo")
-                .withScope("openid profile email offline_access")
-                .withAudience("https://intouch-android-backend.herokuapp.com/")
-                .start(activity, authCallback);
+    public static void signup(Activity activity, AuthCallback authCallback) {
+        showAuthenticationPage(
+                activity,
+                authCallback,
+                new AuthLoginPageParamsBuilder()
+                        .disableLogin()
+                        .prefillWithPlaceholderEmail()
+                        .setEmailInstructionsOnSignup("Use the pre-filled email if you don't use email")
+                        .build()
+        );
     }
 
     public static User getUserFromCredentials(Credentials credentials) {
@@ -39,7 +47,23 @@ public class AuthUtils {
                 credentials.getAccessToken(),
                 credentials.getIdToken(),
                 credentials.getRefreshToken()
-
         );
     }
+
+    private static void showAuthenticationPage(
+            Activity activity,
+            AuthCallback authCallback,
+            HashMap<String, Object> params
+    ) {
+        Auth0 account = new Auth0(activity.getApplicationContext());
+        account.setOIDCConformant(true);
+
+        WebAuthProvider.init(account)
+                .withScheme("demo")
+                .withScope("openid profile email offline_access")
+                .withAudience("https://intouch-android-backend.herokuapp.com/")
+                .withParameters(params)
+                .start(activity, authCallback);
+    }
+
 }

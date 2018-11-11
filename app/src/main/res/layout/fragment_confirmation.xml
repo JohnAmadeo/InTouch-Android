@@ -30,12 +30,44 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
 
-        android:layout_marginBottom="140dp"
+        android:layout_marginBottom="200dp"
 
-        android:text="Your letter is on its way! Your letter should arrive in around 1 week."
+        android:text="@string/confirmation_letter_text"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:gravity="center"
+        />
+    <TextView
+        android:id="@+id/placeholder_user_signup_text"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/confirmation_text"
+        android:layout_marginTop="60dp"
+
+        android:text="@string/confirmation_placeholder_user_signup_text"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:gravity="center"
+        />
+
+    <Button android:id="@+id/signup_button"
+        android:layout_width="140dp"
+        android:layout_height="48dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/placeholder_user_signup_text"
+        android:layout_marginTop="10dp"
+
+        android:text="@string/confirmation_signup_button"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:background="@drawable/login_signup_button"
         />
 </android.support.constraint.ConstraintLayout>

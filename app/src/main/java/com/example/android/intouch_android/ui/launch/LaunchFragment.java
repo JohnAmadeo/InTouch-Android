@@ -68,7 +68,7 @@ public class LaunchFragment extends Fragment {
 
         mLogInSignUpButton.setOnClickListener(view -> {
             Log.d(LOG_TAG, "Log in / Sign up");
-            AuthUtils.login(mParentActivity, createLoginSignUpAuthCallback());
+            AuthUtils.authenticate(mParentActivity, createLoginSignUpAuthCallback());
         });
 
         return mParentView;

@@ -162,10 +162,10 @@ public class UserRepository {
                     .start(new BaseCallback<Credentials, AuthenticationException>() {
                         @Override
                         public void onSuccess(Credentials payload) {
-                            Log.d(LOG_TAG, "Temp User Credentials:" +
-                                            "ACCESS" + payload.getAccessToken() + "\n" +
-                                            "ID" + payload.getIdToken() + "\n" +
-                                            "REFRESH" + payload.getRefreshToken()
+                            Log.d(LOG_TAG, "\nTemp User Credentials:" + "\n" +
+                                            "accessToken=" + payload.getAccessToken() + "\n" +
+                                            "idToken=" + payload.getIdToken() + "\n" +
+                                            "refreshToken=" + payload.getRefreshToken()
                             );
                             setAccessToken(payload.getAccessToken());
                             setIdToken(payload.getIdToken());
