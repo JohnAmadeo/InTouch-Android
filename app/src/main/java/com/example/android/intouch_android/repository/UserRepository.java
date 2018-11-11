@@ -25,6 +25,7 @@ import com.example.android.intouch_android.model.User;
 import com.example.android.intouch_android.model.container.ApiException;
 import com.example.android.intouch_android.model.container.ApiExceptionType;
 import com.example.android.intouch_android.model.container.HTTPCode;
+import com.example.android.intouch_android.model.container.Status;
 import com.example.android.intouch_android.model.container.UpdateTokenRequest;
 import com.example.android.intouch_android.utils.AppExecutors;
 import com.example.android.intouch_android.utils.AppState;
@@ -64,6 +65,26 @@ public class UserRepository {
             } finally {
                 mDB.endTransaction();
             }
+        });
+    }
+
+    public Single<Status> saveUserWithObservable(User user) {
+        return Single.create(subscriber -> {
+            mAppState.setUser(user);
+            mExecutors.diskIO().execute(() -> {
+                mDB.beginTransaction();
+                try {
+                    mDB.userDao().deleteAllUsers();
+                    mDB.userDao().saveUser(user);
+                    mDB.setTransactionSuccessful();
+                    subscriber.onSuccess(Status.SUCCESS);
+                }
+                catch (Exception e) {
+                    subscriber.onError(e);
+                } finally {
+                    mDB.endTransaction();
+                }
+            });
         });
     }
 

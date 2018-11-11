@@ -1,20 +1,39 @@
 package com.example.android.intouch_android.ui.profile;
 
+import android.app.Dialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.auth0.android.authentication.AuthenticationException;
+import com.auth0.android.provider.AuthCallback;
+import com.auth0.android.result.Credentials;
 import com.example.android.intouch_android.R;
+import com.example.android.intouch_android.model.User;
+import com.example.android.intouch_android.utils.AuthUtils;
 import com.example.android.intouch_android.utils.ViewUtils;
+import com.example.android.intouch_android.viewmodel.ProfileViewModel;
 
-import androidx.navigation.Navigation;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class ProfileFragment extends Fragment {
+    private final String LOG_TAG = this.getClass().getSimpleName();
+
     private View mParentView;
+    private TextView mUsernameView;
+    private TextView mEmailView;
+    private TextView mSignupPrompt;
+
+    private ProfileViewModel mViewModel;
+    private CompositeDisposable mDisposables = new CompositeDisposable();
 
     public ProfileFragment() { }
 
@@ -28,6 +47,44 @@ public class ProfileFragment extends Fragment {
         ViewUtils.setupActionBarOptions(getActivity(), "InTouch", false);
 
         mParentView = inflater.inflate(R.layout.fragment_profile, container, false);
+        mUsernameView = mParentView.findViewById(R.id.profile_username);
+        mEmailView = mParentView.findViewById(R.id.profile_email);
+        mSignupPrompt = mParentView.findViewById(R.id.profile_signup_prompt);
+
+        mViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+
+        User user = mViewModel.getUser();
+        if (user.isPlaceholderUser()) {
+            mUsernameView.setVisibility(View.GONE);
+            mEmailView.setVisibility(View.GONE);
+            mSignupPrompt.setVisibility(View.VISIBLE);
+
+            mSignupPrompt.setText(R.string.profile_signup_prompt);
+
+            mParentView.setOnClickListener(view -> {
+                AuthUtils.authenticate(getActivity(), new AuthCallback() {
+                    @Override
+                    public void onFailure(@NonNull Dialog dialog) { dialog.show(); }
+
+                    @Override
+                    public void onFailure(AuthenticationException e) { Log.d(LOG_TAG, e.toString()); }
+
+                    @Override
+                    public void onSuccess(@NonNull Credentials credentials) {
+                        mDisposables.add(
+                                mViewModel
+                                        .saveUser(AuthUtils.getUserFromCredentials(credentials))
+                                        .subscribe(__ -> {
+                                            displayUserProfile(mViewModel.getUser());
+                                            mParentView.setEnabled(false);
+                                        })
+                        );
+                    }
+                });
+            });
+        } else {
+            displayUserProfile(user);
+        }
 
         ViewUtils.setupBottomNavigation(
                 getActivity(),
@@ -43,5 +100,17 @@ public class ProfileFragment extends Fragment {
     public void onAttach(Context context) { super.onAttach(context); }
 
     @Override
-    public void onDetach() { super.onDetach(); }
+    public void onDetach() {
+        super.onDetach();
+        mDisposables.clear();
+    }
+
+    private void displayUserProfile(User user) {
+        mUsernameView.setVisibility(View.VISIBLE);
+        mEmailView.setVisibility(View.VISIBLE);
+        mSignupPrompt.setVisibility(View.GONE);
+
+        mUsernameView.setText(getString(R.string.profile_username_label, user.getUsername()));
+        mEmailView.setText(getString(R.string.profile_email_label, user.getEmail()));
+    }
 }
