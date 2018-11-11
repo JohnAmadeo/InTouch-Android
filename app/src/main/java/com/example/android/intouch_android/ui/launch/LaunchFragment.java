@@ -44,7 +44,7 @@ public class LaunchFragment extends Fragment {
                              Bundle savedInstanceState) {
         mParentActivity = getActivity();
         ViewUtils.setActionBarVisible(mParentActivity, false);
-        ViewUtils.setBottomNavigationVisible(mParentActivity, false);
+        ViewUtils.hideBottomNavigation(mParentActivity);
 
         mParentView = inflater.inflate(R.layout.fragment_launch, container, false);
         mGetStartedButton = mParentView.findViewById(R.id.get_started);

@@ -16,6 +16,12 @@
         <argument
             android:name="DraftSaved"
             app:argType="boolean" />
+        <action
+            android:id="@+id/action_sentLettersFragment_to_draftsFragment"
+            app:destination="@id/draftsFragment" />
+        <action
+            android:id="@+id/action_sentLettersFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/letterEditorFragment"
@@ -65,5 +71,32 @@
         <action
             android:id="@+id/action_confirmationFragment_to_sentLettersFragment"
             app:destination="@id/sentLettersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/draftsFragment"
+        android:name="com.example.android.intouch_android.ui.drafts.DraftsFragment"
+        android:label="fragment_drafts"
+        tools:layout="@layout/fragment_drafts" >
+        <action
+            android:id="@+id/action_draftsFragment_to_sentLettersFragment"
+            app:destination="@id/sentLettersFragment" />
+        <action
+            android:id="@+id/action_draftsFragment_to_letterEditorFragment"
+            app:destination="@id/letterEditorFragment" />
+        <action
+            android:id="@+id/action_draftsFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.android.intouch_android.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_sentLettersFragment"
+            app:destination="@id/sentLettersFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_draftsFragment"
+            app:destination="@id/draftsFragment" />
     </fragment>
 </navigation>

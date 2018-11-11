@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:layout_marginBottom="56dp"
+    android:name="com.example.android.intouch_android.SentLettersFragment"
+    tools:context=".ui.sentletters.SentLettersFragment"
     >
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_letters_list"
-        android:name="com.example.android.intouch_android.SentLettersFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="80dp"
         android:clipToPadding="false"
-        tools:context=".ui.sentletters.SentLettersFragment"
         tools:listitem="@layout/fragment_letters_list_item" />
 
     <android.support.design.widget.FloatingActionButton

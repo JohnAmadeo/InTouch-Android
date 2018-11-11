@@ -47,7 +47,7 @@ public class ConfirmationFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewUtils.setActionBarVisible(getActivity(), false);
         setHasOptionsMenu(false);
-        ViewUtils.setBottomNavigationVisible(getActivity(), false);
+        ViewUtils.hideBottomNavigation(getActivity());
 
         // Inflate the layout for this fragment
         mParentView = inflater.inflate(R.layout.fragment_confirmation, container, false);

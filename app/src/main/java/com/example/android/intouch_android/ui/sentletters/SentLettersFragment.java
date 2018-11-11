@@ -66,12 +66,17 @@ public class SentLettersFragment extends Fragment {
         ViewUtils.setActionBarVisible(getActivity(), true);
         ViewUtils.setupActionBarOptions(getActivity(), "InTouch", false);
         setHasOptionsMenu(true);
-        ViewUtils.setBottomNavigationVisible(getActivity(), true);
 
         /* Setup views */
         mParentView = inflater.inflate(R.layout.fragment_letters_list, container, false);
         mNewLetterButton = mParentView.findViewById(R.id.new_letter_fab);
+
         setupRecyclerView();
+        ViewUtils.setupBottomNavigation(
+                getActivity(),
+                mParentView,
+                R.id.navigation_letters
+        );
 
         /* Setup observers */
         mSentLettersViewModel =

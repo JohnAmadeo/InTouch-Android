@@ -5,6 +5,8 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -25,6 +27,10 @@ import com.example.android.intouch_android.ui.sentletters.SentLettersFragment;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 
 public class ViewUtils {
     private static final String LOG_TAG = "ViewUtils";
@@ -72,9 +78,40 @@ public class ViewUtils {
         }
     }
 
-    public static void setBottomNavigationVisible(Activity activity, boolean isVisible) {
-        activity.findViewById(R.id.bottom_navigation)
-                .setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    public static void hideBottomNavigation(Activity activity) {
+        activity.findViewById(R.id.bottom_navigation).setVisibility(View.GONE);
+    }
+
+    public static void setupBottomNavigation(
+            Activity activity,
+            View view,
+            int selectedItemResId
+    ) {
+        BottomNavigationView bottomNav = activity.findViewById(R.id.bottom_navigation);
+        bottomNav.setVisibility(View.VISIBLE);
+        bottomNav.setSelectedItemId(selectedItemResId);
+        bottomNav.setOnNavigationItemSelectedListener(menuItem -> {
+            int menuItemId = menuItem.getItemId();
+            // if selected destination that the user is already on, do nothing
+            if (menuItemId == selectedItemResId) {
+                return true;
+            }
+
+            switch (menuItem.getItemId()) {
+                case R.id.navigation_drafts:
+                    Navigation.findNavController(view).navigate(R.id.draftsFragment);
+                    return true;
+                case R.id.navigation_letters:
+                    Navigation.findNavController(view).navigate(R.id.sentLettersFragment);
+                    return true;
+                case R.id.navigation_profile:
+                    Navigation.findNavController(view).navigate(R.id.profileFragment);
+                    return true;
+            }
+
+            // Should never reach here
+            return false;
+        });
     }
 
     public static void setupActionBarOptions(

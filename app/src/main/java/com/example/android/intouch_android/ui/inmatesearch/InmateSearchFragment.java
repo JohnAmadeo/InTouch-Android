@@ -59,7 +59,7 @@ public class InmateSearchFragment
         ViewUtils.setActionBarVisible(getActivity(), true);
         ViewUtils.setupActionBarOptions(getActivity(), "", false);
         setHasOptionsMenu(true);
-        ViewUtils.setBottomNavigationVisible(getActivity(), false);
+        ViewUtils.hideBottomNavigation(getActivity());
         setupStateFromBundleArgs();
 
         mParentView = inflater.inflate(R.layout.fragment_inmate_search, container,false);
