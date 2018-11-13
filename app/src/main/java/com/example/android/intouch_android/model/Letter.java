@@ -7,6 +7,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -157,7 +158,7 @@ public class Letter {
         // if the two letters are not drafts, then we only need to compare their IDs since the
         // content of letters cannot be edited
         else if (!this.isDraft()) {
-            return this.getId() == letter.getId();
+            return this.getId().equals(letter.getId());
         }
         else {
             return getId().equals(letter.getId()) &&
@@ -165,17 +166,18 @@ public class Letter {
                     getRecipientId().equals(letter.getRecipientId()) &&
                     getSubject().equals(letter.getSubject()) &&
                     getText().equals(letter.getText()) &&
-                    getTimeSent().equals(letter.getTimeSent()) &&
+                    getTimeLastEdited().equals(letter.getTimeLastEdited()) &&
                     isDraft() == letter.isDraft();
         }
     }
 
     public boolean contains(String searchQuery) {
         searchQuery = searchQuery.toLowerCase();
+        String timeString = isDraft() ? getTimeLastEditedString() : getTimeSentString();
         return getRecipient().toLowerCase().contains(searchQuery) ||
                 getRecipientId().toLowerCase().contains(searchQuery) ||
                 getSubject().toLowerCase().contains(searchQuery) ||
                 getText().toLowerCase().contains(searchQuery) ||
-                getTimeSentString().contains(searchQuery);
+                timeString.contains(searchQuery);
     }
 }
