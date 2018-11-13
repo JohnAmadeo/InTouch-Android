@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -130,7 +131,7 @@ public class SentLettersFragment extends Fragment {
     private void setupRecyclerView() {
         mRecyclerView = mParentView.findViewById(R.id.fragment_letters_list);
         Context context = mRecyclerView.getContext();
-        LettersAdapter recyclerViewAdapter = new LettersAdapter();
+        LettersAdapter recyclerViewAdapter = new LettersAdapter(letter -> Log.d(LOG_TAG, "Clicked"));
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
 
         // set layout of RecyclerView to a list of vertically scrolling items

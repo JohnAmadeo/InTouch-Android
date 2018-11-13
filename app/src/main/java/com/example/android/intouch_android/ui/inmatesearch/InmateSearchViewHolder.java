@@ -33,7 +33,7 @@ public class InmateSearchViewHolder extends RecyclerView.ViewHolder {
         mView.setOnClickListener(__ -> onClickListener.apply(inmate));
     }
 
-    public Inmate getmInmate() { return mInmate; }
+    public Inmate getInmate() { return mInmate; }
 
     @Override
     public String toString() {

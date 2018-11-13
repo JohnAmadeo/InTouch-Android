@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.Letter;
+import com.example.android.intouch_android.utils.OnListItemClickListener;
 
 import java.util.List;
 
 public class LettersAdapter extends RecyclerView.Adapter<LetterViewHolder> {
     private final String LOG_TAG = this.getClass().getSimpleName();
 
+    private final OnListItemClickListener<Letter> mOnClick;
     private final SortedList<Letter> mSortedLetters = new SortedList<>(
             Letter.class,
             new SortedList.Callback<Letter>() {
@@ -74,8 +76,7 @@ public class LettersAdapter extends RecyclerView.Adapter<LetterViewHolder> {
             }
     );
 
-    public LettersAdapter() {
-    }
+    public LettersAdapter(OnListItemClickListener<Letter> onClick) { mOnClick = onClick; }
 
     @Override
     public LetterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -86,20 +87,7 @@ public class LettersAdapter extends RecyclerView.Adapter<LetterViewHolder> {
 
     @Override
     public void onBindViewHolder(final LetterViewHolder holder, int position) {
-        holder.mItem = mSortedLetters.get(position);
-        holder.mRecipientView.setText(holder.mItem.getRecipient());
-        if (!holder.mItem.getSubject().isEmpty()) {
-            holder.mSubjectView.setText(holder.mItem.getSubject());
-        } else {
-            holder.mSubjectView.setVisibility(View.GONE);
-        }
-        holder.mTextView.setText(holder.mItem.getText());
-        if (holder.mItem.isDraft()) {
-            holder.mTimeView.setText(holder.mItem.getTimeLastEditedString());
-        }
-        else {
-            holder.mTimeView.setText(holder.mItem.getTimeSentString());
-        }
+        holder.bind(mSortedLetters.get(position), mOnClick);
     }
 
     @Override
