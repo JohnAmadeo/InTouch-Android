@@ -22,10 +22,19 @@ public class LettersAdapter extends RecyclerView.Adapter<LetterViewHolder> {
                 @Override
                 public int compare(Letter letter1, Letter letter2) {
                     if (letter1.isDraft() && letter2.isDraft()) {
-                        return letter2.getTimeLastEdited().compareTo(letter1.getTimeLastEdited());
+                        int timeComparison =
+                                letter2.getTimeLastEdited().compareTo(letter1.getTimeLastEdited());
+
+                        return timeComparison != 0 ?
+                                timeComparison :
+                                letter1.getRecipient().compareTo(letter2.getRecipient());
                     }
                     else if (!letter1.isDraft() && !letter2.isDraft()) {
-                        return letter2.getTimeSent().compareTo(letter1.getTimeSent());
+                        int timeComparison = letter2.getTimeSent().compareTo(letter1.getTimeSent());
+
+                        return timeComparison != 0 ?
+                                timeComparison :
+                                letter1.getRecipient().compareTo(letter2.getRecipient());
                     }
                     else {
                         Log.d(LOG_TAG, "Warning: Comparing letter to draft!");
