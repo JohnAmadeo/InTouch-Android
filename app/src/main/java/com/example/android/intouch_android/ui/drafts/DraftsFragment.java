@@ -46,7 +46,8 @@ public class DraftsFragment extends Fragment {
                 getActivity(),
                 mParentView,
                 R.id.navigation_drafts,
-                R.id.draftsFragment
+                R.id.draftsFragment,
+                () -> { mSearchMenuItem.collapseActionView(); }
         );
 
         return mParentView;

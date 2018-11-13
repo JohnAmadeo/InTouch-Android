@@ -77,7 +77,8 @@ public class SentLettersFragment extends Fragment {
                 getActivity(),
                 mParentView,
                 R.id.navigation_letters,
-                R.id.sentLettersFragment
+                R.id.sentLettersFragment,
+                () -> { mSearchMenuItem.collapseActionView(); }
         );
 
         /* Setup observers */

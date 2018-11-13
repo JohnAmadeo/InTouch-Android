@@ -3,6 +3,7 @@ package com.example.android.intouch_android.utils;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
+import android.arch.core.util.Function;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
@@ -80,7 +81,8 @@ public class ViewUtils {
             Activity activity,
             View view,
             int selectedItemResId,
-            int selectedFragmentResId
+            int selectedFragmentResId,
+            SideEffect onWillNavigateAway
     ) {
         BottomNavigationView bottomNav = activity.findViewById(R.id.bottom_navigation);
         bottomNav.setVisibility(View.VISIBLE);
@@ -92,7 +94,10 @@ public class ViewUtils {
                 return true;
             }
 
-            // TODO: Figure out back nav
+            if (onWillNavigateAway != null) {
+                onWillNavigateAway.run();
+            }
+
             switch (menuItem.getItemId()) {
                 case R.id.navigation_drafts:
                     Navigation.findNavController(view).navigate(

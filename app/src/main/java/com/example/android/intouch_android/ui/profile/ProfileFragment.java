@@ -90,7 +90,8 @@ public class ProfileFragment extends Fragment {
                 getActivity(),
                 mParentView,
                 R.id.navigation_profile,
-                R.id.profileFragment
+                R.id.profileFragment,
+                null
         );
 
         return mParentView;
