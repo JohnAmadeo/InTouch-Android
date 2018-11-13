@@ -4,8 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.drafts.DraftsFragment">
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_drafts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Drafts" />
+        android:paddingBottom="80dp"
+        android:clipToPadding="false"
+        tools:listitem="@layout/fragment_letters_list_item" />
 </FrameLayout>
