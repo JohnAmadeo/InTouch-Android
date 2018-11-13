@@ -1,7 +1,8 @@
-package com.example.android.intouch_android.ui.sentletters;
+package com.example.android.intouch_android.common;
 
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +12,25 @@ import com.example.android.intouch_android.model.Letter;
 
 import java.util.List;
 
-public class SentLettersAdapter extends RecyclerView.Adapter<SentLetterViewHolder> {
+public class LettersAdapter extends RecyclerView.Adapter<LetterViewHolder> {
+    private final String LOG_TAG = this.getClass().getSimpleName();
+
     private final SortedList<Letter> mSortedLetters = new SortedList<>(
             Letter.class,
             new SortedList.Callback<Letter>() {
                 // TODO: Need to implement proper date comparison
                 @Override
                 public int compare(Letter letter1, Letter letter2) {
-                    return letter2.getTimeSent().compareTo(letter1.getTimeSent());
+                    if (letter1.isDraft() && letter2.isDraft()) {
+                        return letter2.getTimeLastEdited().compareTo(letter1.getTimeLastEdited());
+                    }
+                    else if (!letter1.isDraft() && !letter2.isDraft()) {
+                        return letter2.getTimeSent().compareTo(letter1.getTimeSent());
+                    }
+                    else {
+                        Log.d(LOG_TAG, "Warning: Comparing letter to draft!");
+                        return -1;
+                    }
                 }
 
                 @Override
@@ -53,18 +65,18 @@ public class SentLettersAdapter extends RecyclerView.Adapter<SentLetterViewHolde
             }
     );
 
-    public SentLettersAdapter() {
+    public LettersAdapter() {
     }
 
     @Override
-    public SentLetterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public LetterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_letters_list_item, parent, false);
-        return new SentLetterViewHolder(view);
+        return new LetterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final SentLetterViewHolder holder, int position) {
+    public void onBindViewHolder(final LetterViewHolder holder, int position) {
         holder.mItem = mSortedLetters.get(position);
         holder.mRecipientView.setText(holder.mItem.getRecipient());
         if (!holder.mItem.getSubject().isEmpty()) {
@@ -73,7 +85,12 @@ public class SentLettersAdapter extends RecyclerView.Adapter<SentLetterViewHolde
             holder.mSubjectView.setVisibility(View.GONE);
         }
         holder.mTextView.setText(holder.mItem.getText());
-        holder.mTimeSentView.setText(holder.mItem.getTimeSentString());
+        if (holder.mItem.isDraft()) {
+            holder.mTimeView.setText(holder.mItem.getTimeLastEditedString());
+        }
+        else {
+            holder.mTimeView.setText(holder.mItem.getTimeSentString());
+        }
     }
 
     @Override

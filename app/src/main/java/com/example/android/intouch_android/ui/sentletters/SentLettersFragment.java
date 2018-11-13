@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.android.intouch_android.R;
+import com.example.android.intouch_android.common.LettersAdapter;
 import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.viewmodel.SentLettersViewModel;
 
@@ -128,7 +129,7 @@ public class SentLettersFragment extends Fragment {
     private void setupRecyclerView() {
         mRecyclerView = mParentView.findViewById(R.id.fragment_letters_list);
         Context context = mRecyclerView.getContext();
-        SentLettersAdapter recyclerViewAdapter = new SentLettersAdapter();
+        LettersAdapter recyclerViewAdapter = new LettersAdapter();
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
 
         // set layout of RecyclerView to a list of vertically scrolling items
@@ -198,7 +199,7 @@ public class SentLettersFragment extends Fragment {
     /*                              Helpers                         */
     /* ************************************************************ */
 
-    private SentLettersAdapter getRecyclerViewAdapter() {
-        return (SentLettersAdapter) mRecyclerView.getAdapter();
+    private LettersAdapter getRecyclerViewAdapter() {
+        return (LettersAdapter) mRecyclerView.getAdapter();
     }
 }
