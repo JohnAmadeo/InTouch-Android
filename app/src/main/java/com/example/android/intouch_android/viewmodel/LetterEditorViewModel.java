@@ -63,7 +63,7 @@ public class LetterEditorViewModel extends AndroidViewModel {
                         }
                 ),
                 // Start with an empty letter
-                Letter.createEmptyLetter()
+                Letter.createEmptyLetter(mUserRepository.getUserFromAppState().getUsername())
         );
 
         // Initial load

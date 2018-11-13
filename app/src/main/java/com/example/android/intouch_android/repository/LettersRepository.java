@@ -109,6 +109,7 @@ public class LettersRepository {
     }
 
     public void saveDraft(Letter draft) {
+        draft.setTimeLastEdited(new Date());
         mExecutors.diskIO().execute(() -> mDB.letterDao().insertLetter(draft));
     }
 
