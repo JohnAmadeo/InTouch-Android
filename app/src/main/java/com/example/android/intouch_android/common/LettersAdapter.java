@@ -113,8 +113,10 @@ public class LettersAdapter extends RecyclerView.Adapter<LetterViewHolder> {
                 }
             }
 
-            // SortedList's addAll function does not add duplicates based on areContentsTheSame()
-            mSortedLetters.addAll(letters);
+            for (Letter letter:letters) {
+                // SortedList#add checks for duplicates
+                mSortedLetters.add(letter);
+            }
             mSortedLetters.endBatchedUpdates();
         }
     }
