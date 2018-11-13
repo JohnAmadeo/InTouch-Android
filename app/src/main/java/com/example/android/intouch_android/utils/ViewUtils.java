@@ -5,7 +5,6 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +12,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,14 +19,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.android.intouch_android.R;
-import com.example.android.intouch_android.ui.sentletters.SentLettersAdapter;
-import com.example.android.intouch_android.ui.sentletters.SentLettersFragment;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
-import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
