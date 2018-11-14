@@ -1,14 +1,12 @@
 package com.example.android.intouch_android.model;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
+import com.example.android.intouch_android.utils.NullSafe;
 import com.google.gson.annotations.SerializedName;
 
 import java.text.DateFormat;
@@ -162,8 +160,8 @@ public class Letter {
         }
         else {
             return getId().equals(letter.getId()) &&
-                    getRecipient().equals(letter.getRecipient()) &&
-                    getRecipientId().equals(letter.getRecipientId()) &&
+                    NullSafe.equals(getRecipient(), letter.getRecipient()) &&
+                    NullSafe.equals(getRecipientId(), letter.getRecipientId()) &&
                     getSubject().equals(letter.getSubject()) &&
                     getText().equals(letter.getText()) &&
                     getTimeLastEdited().equals(letter.getTimeLastEdited()) &&
@@ -174,8 +172,9 @@ public class Letter {
     public boolean contains(String searchQuery) {
         searchQuery = searchQuery.toLowerCase();
         String timeString = isDraft() ? getTimeLastEditedString() : getTimeSentString();
-        return getRecipient().toLowerCase().contains(searchQuery) ||
-                getRecipientId().toLowerCase().contains(searchQuery) ||
+
+        return NullSafe.strContains(getRecipient(), searchQuery) ||
+                NullSafe.strContains(getRecipientId(), searchQuery) ||
                 getSubject().toLowerCase().contains(searchQuery) ||
                 getText().toLowerCase().contains(searchQuery) ||
                 timeString.contains(searchQuery);
