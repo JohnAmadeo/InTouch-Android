@@ -12,12 +12,14 @@ import com.example.android.intouch_android.utils.OnListItemClickListener;
  * Specifies the logic for individual list components
  */
 public class LetterViewHolder extends RecyclerView.ViewHolder {
+    private final String NO_RECIPIENT = "(No recipient)";
+    private final String NO_SUBJECT = "(No subject)";
+
     private final View mView;
     private final TextView mRecipientView;
     private final TextView mSubjectView;
     private final TextView mTextView;
     private final TextView mTimeView;
-    private Letter mItem;
 
     public LetterViewHolder(View view) {
         super(view);
@@ -29,13 +31,26 @@ public class LetterViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(final Letter letter, final OnListItemClickListener<Letter> onClick) {
-        mRecipientView.setText(letter.getRecipient());
-        if (!letter.getSubject().isEmpty()) {
-            mSubjectView.setText(letter.getSubject());
-        } else {
-            mSubjectView.setVisibility(View.GONE);
+        if (letter.getRecipient() == null || letter.getRecipient().isEmpty()) {
+            mRecipientView.setText(NO_RECIPIENT);
         }
-        mTextView.setText(letter.getText());
+        else {
+            mRecipientView.setText(letter.getRecipient());
+        }
+
+        if (letter.getSubject().isEmpty()) {
+            mSubjectView.setText(NO_SUBJECT);
+        } else {
+            mSubjectView.setText(letter.getSubject());
+        }
+
+        if (letter.getText().isEmpty()) {
+            mTextView.setVisibility(View.GONE);
+        }
+        else {
+            mTextView.setText(letter.getText());
+        }
+
         if (letter.isDraft()) {
             mTimeView.setText(letter.getTimeLastEditedString());
         }
