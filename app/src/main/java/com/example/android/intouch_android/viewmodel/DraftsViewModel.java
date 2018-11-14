@@ -41,7 +41,6 @@ public class DraftsViewModel extends AndroidViewModel {
         );
 
         mDisplayedDrafts.addSource(mSearchQuery, searchQuery -> {
-            Log.d(LOG_TAG, "Search query: " + searchQuery);
             mDisplayedDrafts.setValue(filterLetters(mDrafts.getValue(), searchQuery));
         });
 

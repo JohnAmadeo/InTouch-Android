@@ -18,7 +18,7 @@
     <string name="auth0_connection">Username-Password-Authentication</string>
     <string name="snackbar_send_letter_error">"Failed to send letter. Please retry later. Your letter has also been saved as a draft. "</string>
     <string name="snackbar_empty_letter_error">Letter subject and body cannot be empty.</string>
-    <string name="toast_saved_draft">Saved as draft!</string>
+    <string name="toast_saved_draft">Saved draft!</string>
     <string name="confirmation_letter_text">Your letter is on its way! Your letter should arrive in around 1 week.</string>
     <string name="confirmation_placeholder_user_signup_text">Sign up for an account to access and send letters from our website intouchproject.org</string>
     <string name="confirmation_signup_button">Sign Up</string>

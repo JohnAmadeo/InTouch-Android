@@ -78,7 +78,7 @@
             android:id="@+id/action_draftsFragment_to_sentLettersFragment"
             app:destination="@id/sentLettersFragment" />
         <action
-            android:id="@+id/action_draftsFragment_to_letterEditorFragment"
+            android:id="@+id/openEditorWithDraft"
             app:destination="@id/letterEditorFragment" />
         <action
             android:id="@+id/action_draftsFragment_to_profileFragment"

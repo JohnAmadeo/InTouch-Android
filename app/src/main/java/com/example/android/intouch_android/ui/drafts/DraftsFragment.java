@@ -97,6 +97,12 @@ public class DraftsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mViewModel.setRefreshRequest();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         ViewUtils.setSelectedFragment(this);
@@ -108,7 +114,11 @@ public class DraftsFragment extends Fragment {
     private void setupRecyclerView() {
         mRecyclerView = mParentView.findViewById(R.id.fragment_drafts);
         Context context = mRecyclerView.getContext();
-        LettersAdapter recyclerViewAdapter = new LettersAdapter(letter -> Log.d(LOG_TAG, "Clicked"));
+        LettersAdapter recyclerViewAdapter = new LettersAdapter(letter ->
+                Navigation.findNavController(mParentView).navigate(
+                        DraftsFragmentDirections.openEditorWithDraft(letter.getId())
+                )
+        );
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
 
         // set layout of RecyclerView to a list of vertically scrolling items
