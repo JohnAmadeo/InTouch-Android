@@ -13,6 +13,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -86,7 +87,6 @@ public class ViewUtils {
     ) {
         BottomNavigationView bottomNav = activity.findViewById(R.id.bottom_navigation);
         bottomNav.setVisibility(View.VISIBLE);
-        bottomNav.setSelectedItemId(selectedItemResId);
         bottomNav.setOnNavigationItemSelectedListener(menuItem -> {
             int menuItemId = menuItem.getItemId();
             // if selected destination that the user is already on, do nothing
@@ -99,17 +99,6 @@ public class ViewUtils {
             }
 
             switch (menuItem.getItemId()) {
-                case R.id.navigation_drafts:
-                    Navigation.findNavController(view).navigate(
-                            R.id.draftsFragment,
-                            null,
-                            new NavOptions.Builder()
-                                    .setPopUpTo(
-                                            selectedFragmentResId,
-                                            true
-                                    ).build()
-                    );
-                    return true;
                 case R.id.navigation_letters:
                     Navigation.findNavController(view).navigate(
                             R.id.sentLettersFragment,
@@ -121,6 +110,19 @@ public class ViewUtils {
                                     ).build()
                     );
                     return true;
+
+                case R.id.navigation_drafts:
+                    Navigation.findNavController(view).navigate(
+                            R.id.draftsFragment,
+                            null,
+                            new NavOptions.Builder()
+                                    .setPopUpTo(
+                                            selectedFragmentResId,
+                                            true
+                                    ).build()
+                    );
+                    return true;
+
                 case R.id.navigation_profile:
                     Navigation.findNavController(view).navigate(
                             R.id.profileFragment,
