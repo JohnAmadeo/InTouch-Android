@@ -201,4 +201,17 @@ public class ViewUtils {
         }
     }
 
+    public static void printBackStack_TEST(Activity activity) {
+        for (Fragment f:
+                ((AppCompatActivity) activity)
+                        .getSupportFragmentManager()
+                        .getFragments()
+                        // NavHost Fragment is one and only fragment
+                        .get(0)
+                        .getChildFragmentManager()
+                        .getFragments()
+        ) {
+            Log.d(LOG_TAG, f.getClass().getSimpleName());
+        }
+    }
 }
