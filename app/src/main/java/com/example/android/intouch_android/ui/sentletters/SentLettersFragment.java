@@ -134,7 +134,12 @@ public class SentLettersFragment extends Fragment {
     private void setupRecyclerView() {
         mRecyclerView = mParentView.findViewById(R.id.fragment_letters_list);
         Context context = mRecyclerView.getContext();
-        LettersAdapter recyclerViewAdapter = new LettersAdapter(letter -> Log.d(LOG_TAG, "Clicked"));
+        LettersAdapter recyclerViewAdapter = new LettersAdapter(letter ->
+                Navigation.findNavController(mParentView).navigate(
+                        SentLettersFragmentDirections.openViewer(letter.getId())
+                )
+        );
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
 
         // set layout of RecyclerView to a list of vertically scrolling items

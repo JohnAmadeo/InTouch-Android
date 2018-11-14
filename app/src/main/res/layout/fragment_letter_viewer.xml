@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".LetterViewerFragment"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+
+            android:text="@string/title_recipient"
+            android:textSize="18sp"
+            android:textColor="@android:color/darker_gray"
+            />
+        <TextView
+            android:id="@+id/letter_viewer_recipient"
+
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+
+            android:textSize="18sp"
+            android:gravity="center_vertical|start"
+
+            android:paddingStart="8dp"
+            android:paddingLeft="8dp"
+            android:paddingEnd="16dp"
+            android:paddingRight="16dp"
+            />
+    </LinearLayout>
+    <View
+        android:id="@+id/letter_viewer_border_one"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DDD"/>
+    <TextView
+        android:id="@+id/letter_viewer_subject"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+
+        android:gravity="center_vertical|start"
+        android:singleLine="false"
+
+        android:textSize="18sp"
+
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        />
+    <View
+        android:id="@+id/letter_viewer_border_two"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DDD"/>
+    <TextView
+        android:id="@+id/letter_viewer_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="20dp"
+
+        android:textSize="18sp"
+        android:scrollbars="vertical"
+        android:lineHeight="22sp"
+
+        android:gravity="top|start"
+        />
+</LinearLayout>

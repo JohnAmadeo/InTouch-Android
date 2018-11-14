@@ -108,6 +108,10 @@ public class LettersRepository {
         return result;
     }
 
+    public Single<Letter> getLetterAsObservable(String letterId) {
+        return mDB.letterDao().getLetter(letterId);
+    }
+
     public void saveDraft(Letter draft) {
         draft.setTimeLastEdited(new Date());
         mExecutors.diskIO().execute(() -> mDB.letterDao().insertLetter(draft));

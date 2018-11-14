@@ -11,11 +11,17 @@ import com.example.android.intouch_android.model.Letter;
 
 import java.util.List;
 
+import io.reactivex.Single;
+import retrofit2.http.GET;
+
 @Dao
 public interface LetterDao {
 
     @Query("SELECT * FROM letters WHERE NOT(isDraft) ORDER BY timeSent DESC ")
     LiveData<List<Letter>> getLetters();
+
+    @Query("SELECT * FROM letters WHERE id = :letterId")
+    Single<Letter> getLetter(String letterId);
 
     @Query("SELECT * FROM letters WHERE isDraft ORDER BY timeSent DESC ")
     LiveData<List<Letter>> getDrafts();

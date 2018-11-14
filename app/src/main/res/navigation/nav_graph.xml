@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_sentLettersFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/openViewer"
+            app:destination="@id/letterViewerFragment" />
     </fragment>
     <fragment
         android:id="@+id/letterEditorFragment"
@@ -95,5 +98,14 @@
         <action
             android:id="@+id/action_profileFragment_to_draftsFragment"
             app:destination="@id/draftsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/letterViewerFragment"
+        android:name="com.example.android.intouch_android.LetterViewerFragment"
+        android:label="fragment_letter_viewer"
+        tools:layout="@layout/fragment_letter_viewer" >
+        <argument
+            android:name="LetterId"
+            app:argType="string" />
     </fragment>
 </navigation>

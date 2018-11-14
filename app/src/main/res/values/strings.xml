@@ -6,7 +6,7 @@
     <string name="title_letters">Letters</string>
     <string name="title_drafts">Drafts</string>
     <string name="title_profile">Profile</string>
-    <string name="title_inmate_search_bar">To</string>
+    <string name="title_recipient">To</string>
     <string name="title_letter_editor_subject">Subject</string>
     <string name="hello_blank_fragment">Hello!</string>
     <string name="send_letter_title">Send Letter</string>
