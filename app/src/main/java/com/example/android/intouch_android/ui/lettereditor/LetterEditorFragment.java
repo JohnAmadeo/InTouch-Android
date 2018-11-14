@@ -1,14 +1,17 @@
 package com.example.android.intouch_android.ui.lettereditor;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,9 +21,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.android.intouch_android.MainActivity;
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.Letter;
+import com.example.android.intouch_android.utils.BackPressListener;
+import com.example.android.intouch_android.utils.BackPressSetter;
 import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.utils.VoidFunction;
 import com.example.android.intouch_android.viewmodel.LetterEditorViewModel;
@@ -34,7 +41,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.exceptions.CompositeException;
 
-public class LetterEditorFragment extends Fragment {
+public class LetterEditorFragment extends Fragment implements BackPressListener {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private static List<Integer> VISIBLE_MENU_ITEMS = Arrays.asList(R.id.send_letter);
 
@@ -52,6 +59,16 @@ public class LetterEditorFragment extends Fragment {
 
 
     public LetterEditorFragment() { }
+
+    @Override
+    public void onBackPressed() {
+        Log.d(LOG_TAG, "#onBackPressed");
+        Letter draft = mViewModel.getDraft();
+        if (isNonEmptyDraft(draft)) {
+            mViewModel.saveDraft(draft);
+            showToast(R.string.toast_saved_draft);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
@@ -160,22 +177,24 @@ public class LetterEditorFragment extends Fragment {
     public boolean onOptionsItemSelected (MenuItem item) {
         // Back button on action bar selected
         if (item.getItemId() == android.R.id.home) {
-            boolean draftSaved = false;
+            Log.d(LOG_TAG, "Up Navigation");
             Letter draft = mViewModel.getDraft();
             if (isNonEmptyDraft(draft)) {
                 mViewModel.saveDraft(draft);
-                draftSaved = true;
+                showToast(R.string.toast_saved_draft);
             }
 
-            Navigation.findNavController(mEditorView).navigate(
-                    LetterEditorFragmentDirections.exitEditorAction(draftSaved),
-                    new NavOptions.Builder()
-                            .setPopUpTo(R.id.sentLettersFragment, false)
-                            .build()
-            );
+            Navigation.findNavController(mEditorView).popBackStack();
+
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ViewUtils.setSelectedFragment(this);
     }
 
     /* ************************************************************ */
@@ -228,6 +247,12 @@ public class LetterEditorFragment extends Fragment {
         );
         snackbar.setAction("Dismiss", view -> snackbar.dismiss());
         snackbar.show();
+    }
+
+    private void showToast(int messageResId) {
+        Toast toast = Toast.makeText(getContext(), getString(messageResId), Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.BOTTOM, 0, 200);
+        toast.show();
     }
 
     private void logErrors(Throwable error) {

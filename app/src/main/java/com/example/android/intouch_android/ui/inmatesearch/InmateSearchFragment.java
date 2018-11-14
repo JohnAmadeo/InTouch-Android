@@ -110,6 +110,13 @@ public class InmateSearchFragment
         // Go back to letter editor on hitting up button
         mSearchMenuItem.setOnActionExpandListener(createSearchCollapseListener());
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ViewUtils.setSelectedFragment(this);
+    }
+
     /* ************************************************************ */
     /*                            Setup Helpers                     */
     /* ************************************************************ */
@@ -170,7 +177,7 @@ public class InmateSearchFragment
                 Navigation.findNavController(mParentView).navigate(
                         InmateSearchFragmentDirections.selectInmateAction(mLetterId),
                         new NavOptions.Builder()
-                                .setPopUpTo(R.id.letterEditorFragment, false)
+                                .setPopUpTo(R.id.letterEditorFragment, true)
                                 .build()
                 );
                 return true;

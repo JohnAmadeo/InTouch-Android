@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_lettersFragment_to_letterEditorFragment"
             app:destination="@id/letterEditorFragment" />
-        <argument
-            android:name="DraftSaved"
-            app:argType="boolean" />
         <action
             android:id="@+id/action_sentLettersFragment_to_draftsFragment"
             app:destination="@id/draftsFragment" />

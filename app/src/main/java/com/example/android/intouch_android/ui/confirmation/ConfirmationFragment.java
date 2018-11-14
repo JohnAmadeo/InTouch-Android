@@ -87,6 +87,12 @@ public class ConfirmationFragment extends Fragment {
     @Override
     public void onDetach() { super.onDetach(); }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        ViewUtils.setSelectedFragment(this);
+    }
+
     private void navigateHome() {
         Navigation.findNavController(mParentView).navigate(
                 R.id.sentLettersFragment,

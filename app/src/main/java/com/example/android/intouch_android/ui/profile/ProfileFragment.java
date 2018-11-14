@@ -106,6 +106,12 @@ public class ProfileFragment extends Fragment {
         mDisposables.clear();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        ViewUtils.setSelectedFragment(this);
+    }
+
     private void displayUserProfile(User user) {
         mUsernameView.setVisibility(View.VISIBLE);
         mEmailView.setVisibility(View.VISIBLE);

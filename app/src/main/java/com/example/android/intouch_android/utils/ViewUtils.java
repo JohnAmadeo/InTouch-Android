@@ -7,6 +7,7 @@ import android.arch.core.util.Function;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -192,4 +193,12 @@ public class ViewUtils {
 
         return new Pair<>(searchMenuItem, searchView);
     }
+
+    public static void setSelectedFragment(Fragment fragment) {
+        Activity activity = fragment.getActivity();
+        if (activity instanceof BackPressSetter) {
+            ((BackPressSetter) activity).setSelectedFragment(fragment);
+        }
+    }
+
 }

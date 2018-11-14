@@ -11,14 +11,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.util.Pair;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.common.LettersAdapter;
@@ -28,6 +26,7 @@ import com.example.android.intouch_android.viewmodel.SentLettersViewModel;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 public class SentLettersFragment extends Fragment {
@@ -94,8 +93,6 @@ public class SentLettersFragment extends Fragment {
                 view -> Navigation.findNavController(view).navigate(R.id.letterEditorFragment)
         );
 
-        setupFromBundleArgs();
-
         return mParentView;
     }
 
@@ -125,6 +122,12 @@ public class SentLettersFragment extends Fragment {
         getActivity().invalidateOptionsMenu();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        ViewUtils.setSelectedFragment(this);
+    }
+
     /* ************************************************************ */
     /*                            Setup Helpers                     */
     /* ************************************************************ */
@@ -146,19 +149,6 @@ public class SentLettersFragment extends Fragment {
                         (LinearLayoutManager) mRecyclerView.getLayoutManager()
                 )
         );
-    }
-
-    private void setupFromBundleArgs() {
-        Bundle argsBundle = getArguments();
-        if (ViewUtils.containsArgs(argsBundle, "DraftSaved")) {
-            SentLettersFragmentArgs args = SentLettersFragmentArgs.fromBundle(argsBundle);
-
-            if (args.getDraftSaved()) {
-                Toast toast = Toast.makeText(getContext(), "Saved as draft!", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM, 0, 200);
-                toast.show();
-            }
-        }
     }
 
     /* ************************************************************ */

@@ -74,6 +74,12 @@ public class LaunchFragment extends Fragment {
         return mParentView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        ViewUtils.setSelectedFragment(this);
+    }
+
     public AuthCallback createLoginSignUpAuthCallback() {
         return new AuthCallback() {
             @Override

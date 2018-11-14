@@ -24,6 +24,8 @@ import com.example.android.intouch_android.viewmodel.DraftsViewModel;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.navigation.Navigation;
+
 public class DraftsFragment extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private List<Integer> VISIBLE_MENU_ITEMS = Arrays.asList(R.id.menu_search);
@@ -92,6 +94,12 @@ public class DraftsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         getActivity().invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ViewUtils.setSelectedFragment(this);
     }
 
     /* ************************************************************ */
