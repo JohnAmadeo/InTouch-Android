@@ -88,6 +88,11 @@ public class ViewUtils {
     ) {
         BottomNavigationView bottomNav = activity.findViewById(R.id.bottom_navigation);
         bottomNav.setVisibility(View.VISIBLE);
+
+        // TODO: We should have a new BottomNav inside each Fragment, vs. a BottomNav that lives outside of the NavHost fragment
+        bottomNav.setOnNavigationItemSelectedListener(null);
+        bottomNav.setSelectedItemId(selectedItemResId);
+
         bottomNav.setOnNavigationItemSelectedListener(menuItem -> {
             int menuItemId = menuItem.getItemId();
             // if selected destination that the user is already on, do nothing
