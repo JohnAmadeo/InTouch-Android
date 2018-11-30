@@ -17,8 +17,9 @@ public class InTouchServiceProvider {
         if (sInstance == null) {
             synchronized (LOCK) {
                 sInstance = new Retrofit.Builder()
-                        .baseUrl("https://intouch-android-backend.herokuapp.com/")
+                        .baseUrl("https://intouchgo.herokuapp.com/")
                         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                        .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                         .addConverterFactory(
                                 GsonConverterFactory.create(new GsonBuilder()
                                         .setDateFormat(Letter.dateFormat)

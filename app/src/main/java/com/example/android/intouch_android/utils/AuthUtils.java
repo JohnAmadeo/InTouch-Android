@@ -50,6 +50,8 @@ public class AuthUtils {
         );
     }
 
+    public static String formatAuthHeader(String accessToken) { return "Bearer " + accessToken; }
+
     private static void showAuthenticationPage(
             Activity activity,
             AuthCallback authCallback,
@@ -65,5 +67,4 @@ public class AuthUtils {
                 .withParameters(params)
                 .start(activity, authCallback);
     }
-
 }

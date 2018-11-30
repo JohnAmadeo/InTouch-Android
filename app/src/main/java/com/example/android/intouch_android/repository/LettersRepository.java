@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.android.intouch_android.api.InTouchService;
+import com.example.android.intouch_android.api.InTouchServiceProvider;
 import com.example.android.intouch_android.api.WebserviceProvider;
 import com.example.android.intouch_android.model.container.ApiException;
 import com.example.android.intouch_android.model.container.ApiExceptionType;
@@ -20,6 +22,7 @@ import com.example.android.intouch_android.model.container.ApiResponse;
 import com.example.android.intouch_android.model.container.NetworkBoundResource;
 import com.example.android.intouch_android.model.container.Resource;
 import com.example.android.intouch_android.utils.AppState;
+import com.example.android.intouch_android.utils.AuthUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -32,6 +35,7 @@ import io.reactivex.exceptions.Exceptions;
 public class LettersRepository {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private final Webservice mWebservice;
+    private final InTouchService mInTouchService;
     private final LocalDatabase mDB;
     private final AppExecutors mExecutors;
     private final AppState mAppState;
@@ -44,6 +48,7 @@ public class LettersRepository {
     public LettersRepository(Context context) {
         mContext = context;
         mWebservice = WebserviceProvider.getInstance();
+        mInTouchService = InTouchServiceProvider.getInstance();
         mDB = LocalDatabase.getInstance(mContext);
         mExecutors = AppExecutors.getInstance();
         mAppState = AppState.getInstance();
@@ -60,7 +65,10 @@ public class LettersRepository {
             @NonNull
             @Override
             protected LiveData<ApiResponse<List<Letter>>> loadFromApi() {
-                return mWebservice.getLetters();
+                return mInTouchService.getLetters(
+                        mAppState.getUsername(),
+                        AuthUtils.formatAuthHeader(mAppState.getUser().getAccessToken())
+                );
             }
 
             @Override

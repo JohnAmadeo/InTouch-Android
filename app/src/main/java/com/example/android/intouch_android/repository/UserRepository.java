@@ -125,9 +125,7 @@ public class UserRepository {
 
     public Single<String> getAccessToken(@NonNull User user) {
         // TODO: If user is placeholder user, we have no way of verifying whether access token has
-        // expired, so maybe we should just re-fetch the access token each time. But to do that,
-        // we cannot get rid of temporary password (which should be renamed as placeholder password)
-        // and should think of it as a placeholder password
+        // expired, so maybe we should just re-fetch the access token each time.
         if (user.isPlaceholderUser()) {
             return getAccessTokenForPlaceholderUser(user);
         }

@@ -6,6 +6,8 @@ import android.arch.lifecycle.Transformations;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.android.intouch_android.api.InTouchService;
+import com.example.android.intouch_android.api.InTouchServiceProvider;
 import com.example.android.intouch_android.api.Webservice;
 import com.example.android.intouch_android.model.Correspondence;
 import com.example.android.intouch_android.model.Inmate;
@@ -15,6 +17,7 @@ import com.example.android.intouch_android.database.LocalDatabase;
 import com.example.android.intouch_android.model.container.ApiResponse;
 import com.example.android.intouch_android.model.container.Resource;
 import com.example.android.intouch_android.utils.AppState;
+import com.example.android.intouch_android.utils.AuthUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +26,7 @@ import java.util.List;
 public class InmatesRepository {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private final Webservice mWebservice;
+    private final InTouchService mIntouchService;
     private final LocalDatabase mDB;
     private final AppExecutors mExecutors;
     private final AppState mAppState;
@@ -33,6 +37,7 @@ public class InmatesRepository {
 
     public InmatesRepository(Context context) {
         mWebservice = WebserviceProvider.getInstance();
+        mIntouchService = InTouchServiceProvider.getInstance();
         mDB = LocalDatabase.getInstance(context);
         mExecutors = AppExecutors.getInstance();
         mAppState = AppState.getInstance();
@@ -52,11 +57,12 @@ public class InmatesRepository {
         MediatorLiveData<Resource<List<Inmate>>> result = new MediatorLiveData<>();
         result.setValue(Resource.loading(null));
 
-        HashMap<String, String> queryParameters = new HashMap<String, String>();
-        queryParameters.put("q", searchQuery);
-
         LiveData<ApiResponse<List<Inmate>>> apiInmates =
-                mWebservice.getInmatesByName(queryParameters);
+                mIntouchService.getInmatesByName(
+                        searchQuery,
+                        AuthUtils.formatAuthHeader(mAppState.getUser().getAccessToken())
+                );
+
         result.addSource(apiInmates, response -> {
             result.removeSource(apiInmates);
 
