@@ -20,6 +20,7 @@ public class AuthUtils {
                 authCallback,
                 new AuthLoginPageParamsBuilder()
                         .prefillWithPlaceholderEmail()
+                        .setEmailInstructionsOnSignup("Use the pre-filled email if you don't use email")
                         .build()
         );
     }

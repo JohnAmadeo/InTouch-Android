@@ -29,7 +29,7 @@ public class LaunchFragment extends Fragment {
 
     private Activity mParentActivity;
     private View mParentView;
-    private Button mGetStartedButton;
+//    private Button mGetStartedButton;
     private Button mLogInSignUpButton;
 
     private LaunchViewModel mLaunchViewModel;
@@ -47,7 +47,7 @@ public class LaunchFragment extends Fragment {
         ViewUtils.hideBottomNavigation(mParentActivity);
 
         mParentView = inflater.inflate(R.layout.fragment_launch, container, false);
-        mGetStartedButton = mParentView.findViewById(R.id.get_started);
+//        mGetStartedButton = mParentView.findViewById(R.id.get_started);
         mLogInSignUpButton = mParentView.findViewById(R.id.login_signup);
 
         /* Setup observers */
@@ -60,11 +60,11 @@ public class LaunchFragment extends Fragment {
             }
         });
 
-        mGetStartedButton.setOnClickListener(view -> {
-            Log.d(LOG_TAG, "Get started");
-            mLaunchViewModel.saveUser(User.createPlaceholderUser());
-            navigateAwayFromLaunchScreen();
-        });
+//        mGetStartedButton.setOnClickListener(view -> {
+//            Log.d(LOG_TAG, "Get started");
+//            mLaunchViewModel.saveUser(User.createPlaceholderUser());
+//            navigateAwayFromLaunchScreen();
+//        });
 
         mLogInSignUpButton.setOnClickListener(view -> {
             Log.d(LOG_TAG, "Log in / Sign up");
@@ -90,6 +90,7 @@ public class LaunchFragment extends Fragment {
 
             @Override
             public void onSuccess(@NonNull Credentials credentials) {
+                Log.d(LOG_TAG, credentials.getAccessToken());
                 mLaunchViewModel.saveUser(AuthUtils.getUserFromCredentials(credentials));
                 navigateAwayFromLaunchScreen();
             }
