@@ -2,11 +2,10 @@ package com.example.android.intouch_android.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import com.example.android.intouch_android.utils.NullSafe;
+import com.example.android.intouch_android.utils.BaseUtils;
 import com.google.gson.annotations.SerializedName;
 
 import java.text.DateFormat;
@@ -162,14 +161,14 @@ public class Letter {
         }
         else {
             return getId().equals(letter.getId()) &&
-                    NullSafe.equals(getRecipient(), letter.getRecipient()) &&
-                    NullSafe.equals(getRecipientId(), letter.getRecipientId()) &&
+                    BaseUtils.equals(getRecipient(), letter.getRecipient()) &&
+                    BaseUtils.equals(getRecipientId(), letter.getRecipientId()) &&
                     getSubject().equals(letter.getSubject()) &&
                     getText().equals(letter.getText()) &&
                     getTimeLastEdited().equals(letter.getTimeLastEdited()) &&
-                    NullSafe.equals(getTimeDeliveredEstimate(), letter.getTimeDeliveredEstimate()) &&
+                    BaseUtils.equals(getTimeDeliveredEstimate(), letter.getTimeDeliveredEstimate()) &&
                     isDraft() == letter.isDraft() &&
-                    NullSafe.equals(getLobLetterId(), letter.getLobLetterId());
+                    BaseUtils.equals(getLobLetterId(), letter.getLobLetterId());
         }
     }
 
@@ -177,10 +176,10 @@ public class Letter {
         searchQuery = searchQuery.toLowerCase();
         String timeString = isDraft() ? getTimeLastEditedString() : getTimeSentString();
 
-        return NullSafe.strContains(getRecipient(), searchQuery) ||
-                NullSafe.strContains(getRecipientId(), searchQuery) ||
-                getSubject().toLowerCase().contains(searchQuery) ||
-                getText().toLowerCase().contains(searchQuery) ||
-                timeString.contains(searchQuery);
+        return BaseUtils.matches(getRecipient(), searchQuery) ||
+                BaseUtils.matches(getRecipientId(), searchQuery) ||
+                BaseUtils.matches(getSubject(), searchQuery) ||
+                BaseUtils.matches(getText(), searchQuery) ||
+                BaseUtils.matches(timeString, searchQuery);
     }
 }

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.Letter;
-import com.example.android.intouch_android.utils.NullSafe;
+import com.example.android.intouch_android.utils.BaseUtils;
 import com.example.android.intouch_android.utils.OnListItemClickListener;
 
 import java.util.List;
@@ -30,14 +30,14 @@ public class LettersAdapter extends RecyclerView.Adapter<LetterViewHolder> {
 
                         return timeComparison != 0 ?
                                 timeComparison :
-                                NullSafe.compareTo(letter1.getRecipient(), letter2.getRecipient());
+                                BaseUtils.compareTo(letter1.getRecipient(), letter2.getRecipient());
                     }
                     else if (!letter1.isDraft() && !letter2.isDraft()) {
                         int timeComparison = letter2.getTimeSent().compareTo(letter1.getTimeSent());
 
                         return timeComparison != 0 ?
                                 timeComparison :
-                                NullSafe.compareTo(letter1.getRecipient(), letter2.getRecipient());
+                                BaseUtils.compareTo(letter1.getRecipient(), letter2.getRecipient());
                     }
                     else {
                         Log.d(LOG_TAG, "Warning: Comparing letter to draft!");

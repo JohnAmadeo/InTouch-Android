@@ -1,6 +1,6 @@
 package com.example.android.intouch_android.utils;
 
-public class NullSafe {
+public class BaseUtils {
     // Null safe #equals for objects
     public static boolean equals(Object o1, Object o2) {
         if (o1 == null) {
@@ -28,10 +28,15 @@ public class NullSafe {
     }
 
     // Null-safe #contains for objects
-    public static boolean strContains(String s1, String s2) {
+    public static boolean contains(String s1, String s2) {
         if (s1 == null || s2 == null) {
             return false;
         }
         return s1.contains(s2);
+    }
+
+    // Null-safe, case-insensitive check for whether s1 is a substring of s2
+    public static boolean matches(String s1, String s2) {
+        return contains(s1.toLowerCase(), s2.toLowerCase());
     }
 }
