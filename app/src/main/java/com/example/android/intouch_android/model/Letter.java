@@ -49,8 +49,14 @@ public class Letter {
     @SerializedName("timeLastEdited")
     private Date timeLastEdited;
 
+    @SerializedName("timeDeliveredEstimate")
+    private Date timeDeliveredEstimate;
+
     @SerializedName("isDraft")
     private boolean isDraft;
+
+    @SerializedName("lobLetterId")
+    private String lobLetterId;
 
     public static final String dateFormat = "MM/dd/yy";
 
@@ -64,7 +70,9 @@ public class Letter {
                 null,
                 null,
                 new Date(),
-                true
+                null,
+                true,
+                null
         );
     }
 
@@ -77,7 +85,9 @@ public class Letter {
             String text,
             Date timeSent,
             Date timeLastEdited,
-            boolean isDraft
+            Date timeDeliveredEstimate,
+            boolean isDraft,
+            String lobLetterId
     ) {
         this.id = id;
         this.recipient = recipient;
@@ -87,22 +97,9 @@ public class Letter {
         this.text = text;
         this.timeSent = timeSent;
         this.timeLastEdited = timeLastEdited;
+        this.timeDeliveredEstimate = timeDeliveredEstimate;
         this.isDraft = isDraft;
-    }
-
-    @Ignore
-    public Letter(
-            String id,
-            String recipient,
-            String subject,
-            String text
-    ) {
-        this.id = id;
-        this.recipient = recipient;
-        this.subject = subject;
-        this.text = text;
-        this.timeSent = null;
-        this.isDraft = true;
+        this.lobLetterId = lobLetterId;
     }
 
     @Override
@@ -116,7 +113,9 @@ public class Letter {
                 "text=" + this.getText() + "\n" +
                 "timeSent=" + this.getTimeSentString() + "\n" +
                 "timeLastEdited=" + this.getTimeLastEditedString() + "\n" +
-                "isDraft=" + this.isDraft + "\n" +
+                "timeDeliveredEstimate=" + this.getTimeDeliveredEstimateString() + "\n" +
+                "isDraft=" + this.isDraft() + "\n" +
+                "lobLetterId=" + this.getLobLetterId() + "\n" +
                 ")";
     }
 
@@ -126,11 +125,14 @@ public class Letter {
     public String getAuthor() { return this.author; }
     public String getSubject() { return this.subject; }
     public String getText() { return this.text; }
+    public String getLobLetterId() { return this.lobLetterId; }
 
     public Date getTimeSent() { return this.timeSent; }
     public String getTimeSentString() { return dateToString(this.timeSent); }
     public Date getTimeLastEdited() { return this.timeLastEdited; }
     public String getTimeLastEditedString() { return dateToString(this.timeLastEdited); }
+    public Date getTimeDeliveredEstimate() { return this.timeLastEdited; }
+    public String getTimeDeliveredEstimateString() { return dateToString(this.timeDeliveredEstimate); }
     public static String dateToString(Date date) {
         if (date == null) {
             return null;
@@ -165,7 +167,9 @@ public class Letter {
                     getSubject().equals(letter.getSubject()) &&
                     getText().equals(letter.getText()) &&
                     getTimeLastEdited().equals(letter.getTimeLastEdited()) &&
-                    isDraft() == letter.isDraft();
+                    NullSafe.equals(getTimeDeliveredEstimate(), letter.getTimeDeliveredEstimate()) &&
+                    isDraft() == letter.isDraft() &&
+                    NullSafe.equals(getLobLetterId(), letter.getLobLetterId());
         }
     }
 

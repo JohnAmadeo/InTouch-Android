@@ -111,7 +111,7 @@ public class LetterEditorViewModel extends AndroidViewModel {
     public void setDraftText(String text) { mTextInput.setValue(text); }
 
     // TODO: Return Single and subscribe to Observable inside the Fragment
-    public Single<Status> sendLetter(Letter draft) {
+    public Single<String> sendLetter(Letter draft) {
         return mUserRepository.getUser()
                 .flatMap(user -> mUserRepository.getAccessToken(user))
                 .flatMap(accessToken -> mLettersRepository.createLetter(draft, accessToken))

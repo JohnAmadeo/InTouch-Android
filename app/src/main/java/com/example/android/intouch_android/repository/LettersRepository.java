@@ -131,20 +131,18 @@ public class LettersRepository {
         });
     }
 
-    public Single<Status> createLetter(Letter draft, String accessToken) {
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
-        headers.put("Authorization", "Bearer " + accessToken);
-
+    public Single<String> createLetter(Letter draft, String accessToken) {
         draft.setIsDraft(false);
         draft.setTimeSent(new Date());
 
-        return mWebservice.createLetter(draft, headers)
+        return mInTouchService.createLetter(draft, AuthUtils.formatAuthHeader(accessToken))
                 // TODO: Add timeout operator here?
                 .map(response -> {
                     if (response.code() == HTTPCode.CREATED) {
-                        mExecutors.diskIO().execute(() -> mDB.letterDao().insertLetter(draft));
-                        return Status.SUCCESS;
+                        Letter letter = response.body();
+                        Log.d(LOG_TAG, letter.toString());
+                        mExecutors.diskIO().execute(() -> mDB.letterDao().insertLetter(letter));
+                        return letter.getId();
                     }
                     else {
                         // Automatically save the letter as a draft if it cannot be saved on the

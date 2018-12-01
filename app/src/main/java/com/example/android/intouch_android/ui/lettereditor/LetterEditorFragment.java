@@ -124,12 +124,10 @@ public class LetterEditorFragment extends Fragment implements BackPressListener 
             ViewUtils.dismissKeyboard(getActivity());
 
             Disposable stream = mViewModel.sendLetter(mViewModel.getDraft())
-                    .subscribe(status -> {
-                        // TODO: Navigate to confirmation page
+                    .subscribe(letterId -> {
                         mProgressBar.setIndeterminate(false);
                         Navigation.findNavController(mEditorView).navigate(
-                                R.id.confirmationFragment,
-                                null,
+                                LetterEditorFragmentDirections.showConfirmation(letterId),
                                 new NavOptions.Builder()
                                         .setPopUpTo(R.id.sentLettersFragment, false)
                                         .build()

@@ -39,7 +39,7 @@
             app:destination="@id/sentLettersFragment"
             app:popUpTo="@+id/sentLettersFragment" />
         <action
-            android:id="@+id/action_letterEditorFragment_to_confirmationFragment"
+            android:id="@+id/showConfirmation"
             app:destination="@id/confirmationFragment" />
     </fragment>
     <fragment
@@ -71,6 +71,9 @@
         <action
             android:id="@+id/action_confirmationFragment_to_sentLettersFragment"
             app:destination="@id/sentLettersFragment" />
+        <argument
+            android:name="LetterId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/draftsFragment"

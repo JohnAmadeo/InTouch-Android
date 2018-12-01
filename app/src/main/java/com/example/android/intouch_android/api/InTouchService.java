@@ -15,6 +15,7 @@ import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.HeaderMap;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -36,6 +37,13 @@ public interface InTouchService {
     @GET("/inmates")
     LiveData<ApiResponse<List<Inmate>>> getInmatesByName(
             @Query("query") String searchQuery,
+            @Header("Authorization") String authentication
+    );
+
+    @Headers("Content-Type: application/json")
+    @POST("/letter")
+    Single<Response<Letter>> createLetter(
+            @Body Letter draft,
             @Header("Authorization") String authentication
     );
 }
