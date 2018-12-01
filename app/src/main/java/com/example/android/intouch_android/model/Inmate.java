@@ -1,19 +1,13 @@
 package com.example.android.intouch_android.model;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.parceler.Parcel;
-import org.parceler.ParcelConstructor;
-
 import java.util.Date;
 
-@Parcel
 @Entity(tableName = "inmates")
 public class Inmate {
     /*
@@ -59,7 +53,6 @@ public class Inmate {
 
     public static final String dateFormat = "MM/dd/yy";
 
-    @ParcelConstructor
     public Inmate(
             String id,
             String firstName,
