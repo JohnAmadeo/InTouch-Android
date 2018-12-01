@@ -54,6 +54,9 @@ public class Inmate {
     @SerializedName("facility")
     String facility;
 
+    @SerializedName("active")
+    Boolean active;
+
     public static final String dateFormat = "MM/dd/yy";
 
     @ParcelConstructor
@@ -63,7 +66,8 @@ public class Inmate {
             String lastName,
             String inmateNumber,
             Date dateOfBirth,
-            String facility
+            String facility,
+            Boolean active
     ) {
         this.id = id;
         this.firstName = firstName;
@@ -71,16 +75,18 @@ public class Inmate {
         this.inmateNumber = inmateNumber;
         this.dateOfBirth = dateOfBirth;
         this.facility = facility;
+        this.active = active;
     }
 
     @Override
     public String toString() {
-        return "Inmate(" +
-                "id=" + this.getId() +
-                " name=" + this.getName() +
-                " inmateNumber=" + this.getInmateNumber() +
-                " dob=" + this.getDateOfBirth() +
-                " facility=" + this.getFacility() +
+        return "Inmate(" + "\n" +
+                "id=" + this.getId() + "\n" +
+                "name=" + this.getName() + "\n" +
+                "inmateNumber=" + this.getInmateNumber() + "\n" +
+                "dob=" + this.getDateOfBirth() + "\n" +
+                "facility=" + this.getFacility() + "\n" +
+                "active =" + this.isActive() + "\n" +
                 ")";
     }
 
@@ -92,6 +98,7 @@ public class Inmate {
     public String getInmateNumber() { return this.inmateNumber; }
     public Date getDateOfBirth() { return this.dateOfBirth; }
     public String getFacility() { return this.facility; }
+    public Boolean isActive() { return this.active; }
 
     public boolean equals(Inmate inmate) { return this.getId().equals(inmate.getId()); }
 }
