@@ -22,6 +22,9 @@
         <action
             android:id="@+id/openViewer"
             app:destination="@id/letterViewerFragment" />
+        <action
+            android:id="@+id/action_sentLettersFragment_to_launchFragment"
+            app:destination="@id/launchFragment" />
     </fragment>
     <fragment
         android:id="@+id/letterEditorFragment"
@@ -34,10 +37,6 @@
         <argument
             android:name="LetterId"
             app:argType="string" />
-        <action
-            android:id="@+id/exitEditorAction"
-            app:destination="@id/sentLettersFragment"
-            app:popUpTo="@+id/sentLettersFragment" />
         <action
             android:id="@+id/showConfirmation"
             app:destination="@id/confirmationFragment" />
@@ -89,6 +88,9 @@
         <action
             android:id="@+id/action_draftsFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_draftsFragment_to_launchFragment"
+            app:destination="@id/launchFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -101,6 +103,9 @@
         <action
             android:id="@+id/action_profileFragment_to_draftsFragment"
             app:destination="@id/draftsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_launchFragment"
+            app:destination="@id/launchFragment" />
     </fragment>
     <fragment
         android:id="@+id/letterViewerFragment"

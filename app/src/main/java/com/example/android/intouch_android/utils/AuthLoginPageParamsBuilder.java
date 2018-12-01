@@ -15,6 +15,11 @@ public class AuthLoginPageParamsBuilder {
         return this;
     }
 
+    public AuthLoginPageParamsBuilder forceLogin() {
+        params.put("prompt", "login");
+        return this;
+    }
+
     public AuthLoginPageParamsBuilder prefillWithPlaceholderEmail() {
         params.put(
                 "emailHint",

@@ -31,7 +31,8 @@ import androidx.navigation.Navigation;
 
 public class ViewUtils {
     private static final String LOG_TAG = "ViewUtils";
-    private static List<Integer> MENU_ITEMS = Arrays.asList(R.id.send_letter, R.id.menu_search);
+    private static List<Integer> MENU_ITEMS =
+            Arrays.asList(R.id.send_letter, R.id.menu_search, R.id.logout);
 
     public static boolean containsArgs(Bundle bundle, String ...arguments) {
         for (String arg:arguments) {

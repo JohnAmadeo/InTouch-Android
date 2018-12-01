@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.common.LettersAdapter;
+import com.example.android.intouch_android.utils.AuthUtils;
 import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.viewmodel.SentLettersViewModel;
 
@@ -32,7 +33,7 @@ import androidx.navigation.Navigation;
 public class SentLettersFragment extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private List<Integer> VISIBLE_MENU_ITEMS = Arrays.asList(R.id.menu_search);
+    private List<Integer> VISIBLE_MENU_ITEMS = Arrays.asList(R.id.menu_search, R.id.logout);
 
     /* ************************************************************ */
     /*                        UI Components                         */
@@ -40,6 +41,7 @@ public class SentLettersFragment extends Fragment {
     private View mParentView;
     private RecyclerView mRecyclerView;
     private MenuItem mSearchMenuItem;
+    private MenuItem mLogout;
     private SearchView mSearchView;
     private FloatingActionButton mNewLetterButton;
 
@@ -114,6 +116,12 @@ public class SentLettersFragment extends Fragment {
 
         mSearchView.setOnQueryTextListener(createQueryListener());
         mSearchMenuItem.setOnActionExpandListener(createSearchMenuItemListener());
+
+        mLogout = menu.findItem(R.id.logout);
+        mLogout.setOnMenuItemClickListener(menuItem -> {
+            AuthUtils.logout(getActivity(), mParentView, R.id.sentLettersFragment);
+            return true;
+        });
     }
 
     @Override

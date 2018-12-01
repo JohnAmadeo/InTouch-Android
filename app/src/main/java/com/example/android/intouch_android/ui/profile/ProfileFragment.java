@@ -6,8 +6,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,21 +26,29 @@ import com.example.android.intouch_android.utils.AuthUtils;
 import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.viewmodel.ProfileViewModel;
 
+import java.util.Arrays;
+import java.util.List;
+
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 public class ProfileFragment extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
+    private List<Integer> VISIBLE_MENU_ITEMS = Arrays.asList(R.id.logout);
 
     private View mParentView;
     private TextView mUsernameView;
     private TextView mEmailView;
     private TextView mSignupPrompt;
+    private MenuItem mLogout;
 
     private ProfileViewModel mViewModel;
     private CompositeDisposable mDisposables = new CompositeDisposable();
 
     public ProfileFragment() { }
+
+    @Override
+    public void onAttach(Context context) { super.onAttach(context); }
 
     @Override
     public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
@@ -45,6 +58,7 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewUtils.setActionBarVisible(getActivity(), true);
         ViewUtils.setupActionBarOptions(getActivity(), "InTouch", false);
+        setHasOptionsMenu(true);
 
         mParentView = inflater.inflate(R.layout.fragment_profile, container, false);
         mUsernameView = mParentView.findViewById(R.id.profile_username);
@@ -98,7 +112,18 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) { super.onAttach(context); }
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.options_menu, menu);
+
+        ViewUtils.setupMenuItems(menu, VISIBLE_MENU_ITEMS);
+
+        mLogout = menu.findItem(R.id.logout);
+        mLogout.setOnMenuItemClickListener(menuItem -> {
+            AuthUtils.logout(getActivity(), mParentView, R.id.sentLettersFragment);
+            return true;
+        });
+    }
 
     @Override
     public void onDetach() {

@@ -26,4 +26,5 @@
     <string name="profile_email_label">Email: %s</string>
     <string name="profile_signup_prompt">No account found. Tap to log in to an existing account, or sign up and get access to view and send letters from our website intouchproject.org</string>
     <string name="drafts_search_hint">Search drafts</string>
+    <string name="options_menu_logout">Log out</string>
 </resources>

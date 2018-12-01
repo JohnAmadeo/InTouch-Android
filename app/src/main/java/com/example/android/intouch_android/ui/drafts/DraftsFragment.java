@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.common.LettersAdapter;
+import com.example.android.intouch_android.utils.AuthUtils;
 import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.viewmodel.DraftsViewModel;
 
@@ -28,11 +29,12 @@ import androidx.navigation.Navigation;
 
 public class DraftsFragment extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
-    private List<Integer> VISIBLE_MENU_ITEMS = Arrays.asList(R.id.menu_search);
+    private List<Integer> VISIBLE_MENU_ITEMS = Arrays.asList(R.id.menu_search, R.id.logout);
 
     private View mParentView;
     private RecyclerView mRecyclerView;
     private MenuItem mSearchMenuItem;
+    private MenuItem mLogout;
     private SearchView mSearchView;
 
     private DraftsViewModel mViewModel;
@@ -88,6 +90,12 @@ public class DraftsFragment extends Fragment {
         mSearchView = views.second;
 
         mSearchView.setOnQueryTextListener(createQueryListener());
+
+        mLogout = menu.findItem(R.id.logout);
+        mLogout.setOnMenuItemClickListener(menuItem -> {
+            AuthUtils.logout(getActivity(), mParentView, R.id.sentLettersFragment);
+            return true;
+        });
     }
 
     @Override

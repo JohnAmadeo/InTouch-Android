@@ -54,6 +54,11 @@ public class UserRepository {
         mAppState = AppState.getInstance();
     }
 
+    public void clearUser() {
+        mAppState.setUser(null);
+        mExecutors.diskIO().execute(() -> mDB.userDao().deleteAllUsers());
+    }
+
     public void saveUser(User user) {
         mAppState.setUser(user);
         mExecutors.diskIO().execute(() -> {

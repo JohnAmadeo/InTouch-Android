@@ -12,4 +12,9 @@
         android:icon="@android:drawable/ic_menu_send"
         android:title="@string/send_letter_title"
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/logout"
+        android:title="@string/options_menu_logout"
+        app:showAsAction="collapseActionView"/>
 </menu>
