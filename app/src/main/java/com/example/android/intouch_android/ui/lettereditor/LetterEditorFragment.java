@@ -234,7 +234,8 @@ public class LetterEditorFragment extends Fragment implements BackPressListener 
 
     private boolean isNonEmptyDraft(Letter draft) {
         return draft.getText().trim().length() > 0 ||
-                draft.getSubject().trim().length() > 0;
+                draft.getSubject().trim().length() > 0 ||
+                draft.getRecipient() != null;
     }
 
     private void showSnackbar(int messageResId) {
