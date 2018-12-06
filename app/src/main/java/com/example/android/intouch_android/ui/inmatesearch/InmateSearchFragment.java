@@ -3,6 +3,7 @@ package com.example.android.intouch_android.ui.inmatesearch;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,9 +16,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.android.intouch_android.R;
 import com.example.android.intouch_android.model.Inmate;
+import com.example.android.intouch_android.model.container.Status;
 import com.example.android.intouch_android.utils.OnListItemClickListener;
 import com.example.android.intouch_android.utils.ViewUtils;
 import com.example.android.intouch_android.viewmodel.InmateSearchViewModel;
@@ -43,10 +46,10 @@ public class InmateSearchFragment
     /*                        UI Components                         */
     /* ************************************************************ */
     private View mParentView;
+    private ProgressBar mProgressBar;
+    private RecyclerView mRecyclerView;
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
-
-    private RecyclerView mRecyclerView;
 
     public InmateSearchFragment() { }
 
@@ -63,6 +66,7 @@ public class InmateSearchFragment
         setupStateFromBundleArgs();
 
         mParentView = inflater.inflate(R.layout.fragment_inmate_search, container,false);
+        mProgressBar = mParentView.findViewById(R.id.inmate_list_progress_bar);
         setupRecyclerView();
 
         /* Setup observers */
@@ -70,9 +74,23 @@ public class InmateSearchFragment
                 ViewModelProviders.of(this).get(InmateSearchViewModel.class);
 
         mInmateSearchViewModel.getInmates().observe(this, resource -> {
-            if (resource != null && resource.data != null) {
+            if (resource != null && resource.status == Status.SUCCESS) {
+                mProgressBar.setIndeterminate(false);
+
                 List<Inmate> inmates = resource.data;
                 getRecyclerViewAdapter().setInmates(inmates);
+            }
+            else if (resource.status == Status.ERROR) {
+                mProgressBar.setIndeterminate(false);
+
+                ViewUtils.dismissKeyboard(getActivity());
+                Snackbar snackbar = Snackbar.make(
+                        mParentView,
+                        R.string.snackbar_server_fail_inmate,
+                        Snackbar.LENGTH_INDEFINITE
+                );
+                snackbar.setAction("Dismiss", view -> snackbar.dismiss());
+                snackbar.show();
             }
         });
 
@@ -158,6 +176,7 @@ public class InmateSearchFragment
             @Override
             public boolean onQueryTextChange(String searchQuery) {
                 mInmateSearchViewModel.setQuery(searchQuery);
+                mProgressBar.setIndeterminate(true);
                 mRecyclerView.scrollToPosition(0);
                 return true;
             }
