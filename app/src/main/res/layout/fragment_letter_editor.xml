@@ -75,7 +75,9 @@
                 android:inputType="text"
                 android:selectAllOnFocus="false"
                 android:singleLine="false"
-                android:background="@null"/>
+                android:background="@null"
+                android:imeOptions="flagNoExtractUi"
+                />
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -90,6 +92,7 @@
             android:hint="Write letter"
             android:inputType="textMultiLine"
             android:selectAllOnFocus="false"
+            android:imeOptions="flagNoExtractUi"
             />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
