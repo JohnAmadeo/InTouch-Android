@@ -37,6 +37,12 @@ public class BaseUtils {
 
     // Null-safe, case-insensitive check for whether s1 is a substring of s2
     public static boolean matches(String s1, String s2) {
-        return contains(s1.toLowerCase(), s2.toLowerCase());
+        if (s1 != null) {
+            s1 = s1.toLowerCase();
+        }
+        if (s2 != null) {
+            s2 = s2.toLowerCase();
+        }
+        return contains(s1, s2);
     }
 }
