@@ -21,11 +21,11 @@ public interface InmateDao {
     )
     LiveData<List<Inmate>> getPastInmateCorrespondents(String username);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertInmate_TEST(Inmate inmate);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertInmate(Inmate inmate);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertCorrespondence_TEST(Correspondence correspondence);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertCorrespondence(Correspondence correspondence);
 
     @Query("DELETE FROM inmates")
     void deleteInmates_TEST();
