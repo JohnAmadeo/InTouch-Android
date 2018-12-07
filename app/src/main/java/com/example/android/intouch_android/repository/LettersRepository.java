@@ -59,7 +59,7 @@ public class LettersRepository {
             @NonNull
             @Override
             protected LiveData<List<Letter>> loadFromDb() {
-                return mDB.letterDao().getLetters();
+                return mDB.letterDao().getLetters(mAppState.getUsername());
             }
 
             @NonNull
@@ -107,7 +107,7 @@ public class LettersRepository {
         MediatorLiveData<Resource<List<Letter>>> result = new MediatorLiveData<>();
         result.setValue(Resource.loading(null));
 
-        LiveData<List<Letter>> dbResult = mDB.letterDao().getDrafts();
+        LiveData<List<Letter>> dbResult = mDB.letterDao().getDrafts(mAppState.getUsername());
         result.addSource(dbResult, drafts -> {
             result.removeSource(dbResult);
             result.setValue(Resource.success(drafts));
